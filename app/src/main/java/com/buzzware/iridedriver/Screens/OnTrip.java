@@ -16,6 +16,7 @@ import androidx.databinding.DataBindingUtil;
 
 import com.buzzware.iridedriver.LocationServices.LocationTracker;
 import com.buzzware.iridedriver.Models.RideModel;
+import com.buzzware.iridedriver.Models.SearchedPlaceModel;
 import com.buzzware.iridedriver.Models.response.directions.DirectionsApiResponse;
 import com.buzzware.iridedriver.Models.response.directions.Leg;
 import com.buzzware.iridedriver.Models.response.directions.Route;
@@ -34,6 +35,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
@@ -108,7 +110,7 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
         if (rideModel.status.equalsIgnoreCase("driverAccepted")) {
 
-           rideModel.status = "driverReached";
+            rideModel.status = "driverReached";
 
         } else if (rideModel.status.equalsIgnoreCase("driverReached")) {
 
@@ -116,9 +118,31 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
         } else if (rideModel.status.equalsIgnoreCase("rideStarted")) {
 
-            rideModel.status = "rideCompleted";
+            if (AppConstants.RideStatus.isRideInProgress(rideModel.status)) {
 
-            stopLocationService();
+                if (rideModel.tripDetail.destinations.size() > 1) {
+
+                    if (rideModel.tripDetail.destinations.get(0).status.equalsIgnoreCase(AppConstants.RideDetailStatus.NOT_REACHED)) {
+
+                        rideModel.tripDetail.destinations.get(0).status = "1";
+
+                    } else {
+
+                        rideModel.status = "rideCompleted";
+
+                        stopLocationService();
+
+                    }
+
+                } else {
+
+                    rideModel.status = "rideCompleted";
+
+                    stopLocationService();
+
+                }
+
+            }
 
         }
 
@@ -138,7 +162,41 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
     private void performNavigation() {
 
-        Uri gmmIntentUri = Uri.parse("google.navigation:q="+rideModel.destination.lat+","+rideModel.destination.lng);
+        double destLat = 0, destLng = 0;
+
+        if (AppConstants.RideStatus.isRideDriverArriving(rideModel.status)) {
+
+            destLat = rideModel.tripDetail.pickUp.lat;
+            destLng = rideModel.tripDetail.pickUp.lng;
+
+        } else if (AppConstants.RideStatus.isRideInProgress(rideModel.status)) {
+
+            List<SearchedPlaceModel> destinations = rideModel.tripDetail.destinations;
+
+            if (destinations.size() == 1) {
+
+                destLat = rideModel.tripDetail.destinations.get(0).lat;
+                destLng = rideModel.tripDetail.destinations.get(0).lng;
+
+            } else if (destinations.size() == 2) {
+
+                if (destinations.get(0).status.equalsIgnoreCase(AppConstants.RideStatus.DRIVER_REACHED)) {
+
+
+                    destLat = rideModel.tripDetail.destinations.get(1).lat;
+                    destLng = rideModel.tripDetail.destinations.get(1).lng;
+
+                } else {
+
+
+                    destLat = rideModel.tripDetail.destinations.get(0).lat;
+                    destLng = rideModel.tripDetail.destinations.get(0).lng;
+
+                }
+
+            }
+        }
+        Uri gmmIntentUri = Uri.parse("google.navigation:q=" + destLat + "," + destLng);
 
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
 
@@ -158,7 +216,37 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
     void calculateDistance() {
 
-        String url = "/maps/api/distancematrix/json?departure_time&origins=" + location.getLatitude() + "," + location.getLongitude() + "&destinations=" + rideModel.destination.lat + "," + rideModel.destination.lng + "&key=" + AppConstants.GOOGLE_PLACES_API_KEY;
+
+        String url = null;
+
+        if (AppConstants.RideStatus.isRideDriverArriving(rideModel.status))
+
+            url = "/maps/api/distancematrix/json?departure_time&origins=" + location.getLatitude() + "," + location.getLongitude() + "&destinations=" + rideModel.tripDetail.pickUp.lat + "," + rideModel.tripDetail.pickUp.lng + "&key=" + AppConstants.GOOGLE_PLACES_API_KEY;
+
+        else if (AppConstants.RideStatus.isRideInProgress(rideModel.status)) {
+
+            List<SearchedPlaceModel> destinations = rideModel.tripDetail.destinations;
+
+            if (destinations.size() == 1) {
+
+                url = "/maps/api/distancematrix/json?departure_time&origins=" + location.getLatitude() + "," + location.getLongitude() + "&destinations=" + rideModel.tripDetail.destinations.get(0).lat + "," + rideModel.tripDetail.destinations.get(0).lng + "&key=" + AppConstants.GOOGLE_PLACES_API_KEY;
+
+            } else if (destinations.size() == 2) {
+
+                if (destinations.get(0).status.equalsIgnoreCase(AppConstants.RideStatus.DRIVER_REACHED)) {
+
+                    url = "/maps/api/distancematrix/json?departure_time&origins=" + location.getLatitude() + "," + location.getLongitude() + "&destinations=" + rideModel.tripDetail.destinations.get(1).lat + "," + rideModel.tripDetail.destinations.get(1).lng + "&key=" + AppConstants.GOOGLE_PLACES_API_KEY;
+
+                } else {
+
+                    url = "/maps/api/distancematrix/json?departure_time&origins=" + location.getLatitude() + "," + location.getLongitude() + "&destinations=" + rideModel.tripDetail.destinations.get(0).lat + "," + rideModel.tripDetail.destinations.get(0).lng + "&key=" + AppConstants.GOOGLE_PLACES_API_KEY;
+
+                }
+
+            }
+
+
+        }
 
         if (reverseCall != null) {
 
@@ -183,6 +271,14 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
                     setDistance(resp);
 
+                    if (AppConstants.RideStatus.RIDE_STARTED.equalsIgnoreCase(rideModel.status) && rideModel.tripDetail.destinations.get(0).status.equalsIgnoreCase(AppConstants.RideDetailStatus.NOT_REACHED)) {
+
+                        //ride is started handle case for driver hasn't reached any location yet draw polyline draw from dest 1 to dest 2
+                        //drawing polyline from dest1 to second drop off 2
+
+                        drawSecondPolyline(rideModel);
+
+                    }
                 }
             }
 
@@ -192,6 +288,46 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
             }
         });
     }
+
+    void calculateDistance2() {
+
+        String url = "/maps/api/distancematrix/json?departure_time&origins=" + rideModel.tripDetail.destinations.get(0).lat + "," + rideModel.tripDetail.destinations.get(0).lng + "&destinations=" + rideModel.tripDetail.destinations.get(1).lat + "," + rideModel.tripDetail.destinations.get(1).lng + "&key=" + AppConstants.GOOGLE_PLACES_API_KEY;
+
+        if (reverseCall != null) {
+
+            reverseCall.cancel();
+
+            reverseCall = null;
+        }
+
+        reverseCall = Controller.getApi().getPlaces(url, "asdasd");
+
+        reverseCall.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
+
+                reverseCall = null;
+
+                Gson gson = new Gson();
+
+                if (response.body() != null && response.isSuccessful()) {
+
+                    DistanceMatrixResponse resp = gson.fromJson(response.body(), DistanceMatrixResponse.class);
+
+                    setDistance2(resp);
+
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
+                reverseCall = null;
+            }
+        });
+    }
+
+    double km = 0;
+    double seconds = 0;
 
     private void setDistance(DistanceMatrixResponse resp) {
 
@@ -213,13 +349,19 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
                 Element element = row.elements.get(0);
 
-                if (element.distance != null)
+                if (element.distance != null) {
 
+                    km = element.distance.value;
                     distance = element.distance.text;
 
-                if (element.duration != null)
+                }
+
+
+                if (element.duration != null) {
 
                     time = element.duration.text;
+                    seconds = element.duration.value;
+                }
 
             }
 
@@ -230,9 +372,86 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
         mBinding.currentLocationTV.setText(currentAddress);
     }
 
+    private void setDistance2(DistanceMatrixResponse resp) {
+
+        String distance = "";
+        String time = "";
+        String currentAddress = "";
+
+        if (resp.origin_addresses != null && resp.origin_addresses.size() > 0) {
+
+            currentAddress = resp.origin_addresses.get(0);
+
+        }
+
+        if (resp.rows != null && resp.rows.size() > 0) {
+
+            Row row = resp.rows.get(0);
+
+            if (row.elements != null && row.elements.size() > 0) {
+
+                Element element = row.elements.get(0);
+
+                if (element.distance != null) {
+                    distance = element.distance.text;
+                    km = element.distance.value + km;
+                }
+
+                if (element.duration != null) {
+
+                    time = element.duration.text;
+                    seconds = element.duration.value + seconds;
+                }
+
+            }
+
+        }
+
+        double min = seconds / 60;
+        km = km / 1000;
+
+        mBinding.timeTV.setText(min + " min");
+        mBinding.kmTV.setText(km + " km");
+        mBinding.currentLocationTV.setText(currentAddress);
+    }
+
     void getDirections() {
 
-        String url = "/maps/api/directions/json?origin=" + location.getLatitude() + "," + location.getLongitude() + "&destination=" + rideModel.destination.lat + "," + rideModel.destination.lng + "&key=" + AppConstants.GOOGLE_PLACES_API_KEY;
+        String url = null;
+
+        if (rideModel.status.equalsIgnoreCase(AppConstants.RideStatus.DRIVER_ACCEPTED) || rideModel.status.equalsIgnoreCase(AppConstants.RideStatus.DRIVER_REACHED)) {
+
+            //moving directions towards user
+
+            url = "/maps/api/directions/json?origin=" + location.getLatitude() + "," + location.getLongitude() + "&destination=" + rideModel.tripDetail.pickUp.lat + "," + rideModel.tripDetail.pickUp.lng + "&key=" + AppConstants.GOOGLE_PLACES_API_KEY;
+
+        } else if (rideModel.status.equalsIgnoreCase(AppConstants.RideStatus.RIDE_STARTED)) {
+
+            List<SearchedPlaceModel> destinations = rideModel.tripDetail.destinations;
+
+            if (destinations.size() == 1) {
+
+                url = "/maps/api/directions/json?origin=" + location.getLatitude() + "," + location.getLongitude() + "&destination=" + rideModel.tripDetail.destinations.get(0).lat + "," + rideModel.tripDetail.destinations.get(0).lng + "&key=" + AppConstants.GOOGLE_PLACES_API_KEY;
+
+
+            } else if (destinations.size() > 1) {
+
+                if (destinations.get(0).status.equalsIgnoreCase(AppConstants.RideDetailStatus.REACHED)) {
+
+                    //from driver to destination 2
+
+                    url = "/maps/api/directions/json?origin=" + location.getLatitude() + "," + location.getLongitude() + "&destination=" + rideModel.tripDetail.destinations.get(1).lat + "," + rideModel.tripDetail.destinations.get(1).lng + "&key=" + AppConstants.GOOGLE_PLACES_API_KEY;
+
+                } else {
+
+                    // from driver to dest 1 then 2
+                    url = "/maps/api/directions/json?origin=" + location.getLatitude() + "," + location.getLongitude() + "&destination=" + rideModel.tripDetail.destinations.get(0).lat + "," + rideModel.tripDetail.destinations.get(0).lng + "&key=" + AppConstants.GOOGLE_PLACES_API_KEY;
+
+                }
+
+            }
+
+        }
 
         if (reverseCall != null) {
 
@@ -259,7 +478,7 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
                 }
 
-                calculateDistance();
+
             }
 
             @Override
@@ -271,7 +490,7 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
     private void drawPaths(DirectionsApiResponse res) {
 
-        ArrayList<LatLng> path = new ArrayList<>();
+        path = new ArrayList<>();
 
         try {
 
@@ -313,6 +532,10 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
         }
 
+        if (polyline != null)
+
+            polyline.remove();
+
         //Draw the polyline
         if (path.size() > 0) {
 
@@ -322,10 +545,132 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
         }
 
+        calculateDistance();
+
+
     }
 
-    void setRideButton() {
+    private void hideSecondPolyline() {
 
+    }
+
+    Call<String> reverseCall1;
+
+    private void drawSecondPolyline(RideModel rideModel) {
+
+        SearchedPlaceModel pickUp = rideModel.tripDetail.destinations.get(0);
+        SearchedPlaceModel destination = rideModel.tripDetail.destinations.get(1);
+
+        getDirections2(pickUp.lat, pickUp.lng, destination.lat, destination.lng, false);
+    }
+
+    private void getDirections2(double lat, double lng, double lat1, double lng1, boolean b) {
+
+        String url = "/maps/api/directions/json?origin=" + lat + "," + lng + "&destination=" + lat1 + "," + lng1 + "&key=" + AppConstants.GOOGLE_PLACES_API_KEY;
+
+        if (reverseCall1 != null) {
+
+            reverseCall1.cancel();
+
+            reverseCall1 = null;
+        }
+
+        reverseCall1 = Controller.getApi().getPlaces(url, "asdasd");
+
+        reverseCall1.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
+
+                reverseCall1 = null;
+
+                Gson gson = new Gson();
+
+                if (response.body() != null && response.isSuccessful()) {
+
+                    DirectionsApiResponse resp = gson.fromJson(response.body(), DirectionsApiResponse.class);
+
+                    drawPaths2(resp);
+
+                    calculateDistance2();
+
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
+                reverseCall = null;
+            }
+        });
+
+    }
+
+    ArrayList<LatLng> path = new ArrayList<>();
+
+
+    private void drawPaths2(DirectionsApiResponse res) {
+
+
+        try {
+
+            if (res.routes != null && res.routes.size() > 0) {
+
+                Route route = res.routes.get(0);
+
+                if (route.legs != null) {
+
+                    for (int i = 0; i < route.legs.size(); i++) {
+
+                        Leg leg = route.legs.get(i);
+
+                        if (leg.steps != null) {
+
+                            for (int j = 0; j < leg.steps.size(); j++) {
+
+                                Step step1 = leg.steps.get(j);
+
+                                if (step1.polyline != null) {
+
+                                    List<LatLng> decoded = PolyUtil.decode(step1.polyline.points);
+
+                                    path.addAll(decoded);
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        } catch (Exception ex) {
+
+        }
+
+        if (polyline != null) {
+
+            polyline.remove();
+
+        }
+        //Draw the polyline
+        if (path.size() > 0) {
+
+            PolylineOptions opts = new PolylineOptions().addAll(path).color(Color.BLUE).width(8);
+
+            polyline = mMap.addPolyline(opts);
+
+
+        }
+
+    }
+
+    Polyline polyline;
+
+    void setRideButton() {
+        mBinding.actionTV.setText("Complete First Drop Off");
         if (rideModel.status.equalsIgnoreCase("driverAccepted")) {
 
             mBinding.actionTV.setText("Arrived");
@@ -335,8 +680,26 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
             mBinding.actionTV.setText("Start Ride");
 
         } else if (rideModel.status.equalsIgnoreCase("rideStarted")) {
-            
-            mBinding.actionTV.setText("Complete");
+
+            if (AppConstants.RideStatus.isRideInProgress(rideModel.status)) {
+
+                if (rideModel.tripDetail.destinations.size() > 1) {
+
+                    if (rideModel.tripDetail.destinations.get(0).status.equalsIgnoreCase(AppConstants.RideDetailStatus.NOT_REACHED)) {
+
+                        mBinding.actionTV.setText("Complete First Drop Off");
+
+                    } else {
+
+                        mBinding.actionTV.setText("Complete");
+
+                    }
+
+                } else
+
+                    mBinding.actionTV.setText("Complete");
+
+            }
 
         } else {
 
@@ -455,12 +818,48 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
         mMap.setMyLocationEnabled(true);
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 16.0F));
 
-        mMap.addMarker(new MarkerOptions()
-                .position(new LatLng(rideModel.destination.lat, rideModel.destination.lng))
-                .title("Destination")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+        List<SearchedPlaceModel> destinations = rideModel.tripDetail.destinations;
+
+        if (AppConstants.RideStatus.isRideDriverArriving(rideModel.status)) {
+
+            mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(rideModel.tripDetail.pickUp.lat, rideModel.tripDetail.pickUp.lng))
+                    .title("Destination")
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+
+        } else {
+
+            mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(destinations.get(0).lat, destinations.get(0).lng))
+                    .title("Destination")
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+
+            if (destinations.size() > 1) {
+
+                mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(destinations.get(1).lat, destinations.get(1).lng))
+                        .title("Destination")
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+
+            }
+
+        }
 
         getDirections();
+
+        if (AppConstants.RideStatus.isRideInProgress(rideModel.status)) {
+
+            if (rideModel.tripDetail.destinations.size() > 1) {
+
+                if (rideModel.tripDetail.destinations.get(0).status.equalsIgnoreCase(AppConstants.RideDetailStatus.NOT_REACHED)) {
+
+                    mBinding.actionTV.setText("Complete First Drop Off");
+
+                }
+
+            }
+
+        }
 
         mBinding.currentLocationIV.setOnClickListener(v -> showCurrentLocation());
 

@@ -15,13 +15,21 @@ public class RideModel implements Parcelable {
 
     public long bookingDate;
 
+    public Double driverLat;
+
+    public Double driverLng;
+
+    public String username;
+
+    public String rideType;
+
+    public TripDetail tripDetail;
+
     public String status;
 
     public String price;
 
-    public AddressModel pickUp;
 
-    public AddressModel destination;
 
     public RideModel() {
 
@@ -32,6 +40,8 @@ public class RideModel implements Parcelable {
         this.driverId = driverId;
         this.vehicleId = vehicleId;
         this.bookingDate = bookingDate;
+        this.driverLat = driverLat;
+        this.driverLng = driverLng;
         this.status = status;
     }
 
@@ -41,10 +51,21 @@ public class RideModel implements Parcelable {
         driverId = in.readString();
         vehicleId = in.readString();
         bookingDate = in.readLong();
+        if (in.readByte() == 0) {
+            driverLat = null;
+        } else {
+            driverLat = in.readDouble();
+        }
+        if (in.readByte() == 0) {
+            driverLng = null;
+        } else {
+            driverLng = in.readDouble();
+        }
+        username = in.readString();
+        rideType = in.readString();
+        tripDetail = in.readParcelable(TripDetail.class.getClassLoader());
         status = in.readString();
         price = in.readString();
-        pickUp = in.readParcelable(AddressModel.class.getClassLoader());
-        destination = in.readParcelable(AddressModel.class.getClassLoader());
     }
 
     public static final Creator<RideModel> CREATOR = new Creator<RideModel>() {
@@ -71,9 +92,22 @@ public class RideModel implements Parcelable {
         dest.writeString(driverId);
         dest.writeString(vehicleId);
         dest.writeLong(bookingDate);
+        if (driverLat == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(driverLat);
+        }
+        if (driverLng == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(driverLng);
+        }
+        dest.writeString(username);
+        dest.writeString(rideType);
+        dest.writeParcelable(tripDetail, flags);
         dest.writeString(status);
         dest.writeString(price);
-        dest.writeParcelable(pickUp, flags);
-        dest.writeParcelable(destination, flags);
     }
 }

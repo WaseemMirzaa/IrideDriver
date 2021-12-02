@@ -100,18 +100,18 @@ public class UpcomingRidesAdapter extends RecyclerView.Adapter<UpcomingRidesAdap
 
     private String getPickUpAddress(RideModel ride) {
 
-        if (ride.pickUp != null && ride.pickUp.address != null)
+        if (ride.tripDetail.pickUp != null && ride.tripDetail.pickUp.address != null)
 
-            return ride.pickUp.address;
+            return ride.tripDetail.pickUp.address;
 
         return "";
     }
 
     private String getDestinationAddress(RideModel ride) {
 
-        if (ride.destination != null && ride.destination.address != null)
+        if (ride.tripDetail.destinations.get(0) != null && ride.tripDetail.destinations.get(0).address != null)
 
-            return ride.destination.address;
+            return ride.tripDetail.destinations.get(0).address;
 
         return "";
     }
