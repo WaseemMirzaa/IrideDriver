@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".Screens.Authentication">
+
+        <com.google.android.material.tabs.TabLayout
+            android:elevation="@dimen/_10sdp"
+            android:id="@+id/tabLay"
+            app:tabTextAppearance="@style/QText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabSelectedTextColor="@color/purple_700"
+            app:tabIndicatorColor="@color/purple_700"
+            app:tabTextColor="@color/gray">
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/signinTab"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="SIGN IN" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/signupTab"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="SIGN UP" />
+        </com.google.android.material.tabs.TabLayout>
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/tabLay"/>
+    </RelativeLayout>
+</layout>

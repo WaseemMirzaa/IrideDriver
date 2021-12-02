@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context=".Screens.ProfileActivity">
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/dummy_two"
+            android:adjustViewBounds="true"/>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_marginTop="-20dp"
+            android:background="@drawable/rounded_corner_white_two_top"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/image">
+
+            <LinearLayout
+                android:paddingLeft="@dimen/_20sdp"
+                android:paddingRight="@dimen/_20sdp"
+                android:paddingBottom="@dimen/_20sdp"
+                android:paddingTop="@dimen/_10sdp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_marginTop="20dp"
+                    android:layout_gravity="start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Maria Snow"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_18sdp"
+                    android:textStyle="normal"
+                    android:fontFamily="@font/gibson_regular"/>
+
+                <TextView
+                    android:layout_marginTop="5dp"
+                    android:layout_gravity="start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="San Francisco, CA"
+                    android:textColor="@color/gray"
+                    android:textSize="@dimen/_10sdp"
+                    android:textStyle="normal"
+                    android:fontFamily="@font/gibson_regular"/>
+
+                <TextView
+                    android:layout_marginTop="5dp"
+                    android:layout_gravity="start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="20 Years"
+                    android:textColor="@color/gray"
+                    android:textSize="@dimen/_10sdp"
+                    android:textStyle="normal"
+                    android:fontFamily="@font/gibson_regular"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:weightSum="3"
+                android:layout_marginLeft="@dimen/_20sdp"
+                android:layout_marginRight="@dimen/_20sdp"
+                android:elevation="@dimen/_8sdp"
+                android:background="@drawable/rounded_corner_white"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_20sdp">
+                <RelativeLayout
+                    android:id="@+id/btnChat"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <LinearLayout
+                        android:layout_centerInParent="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <ImageView
+                            android:layout_gravity="center"
+                            android:adjustViewBounds="true"
+                            android:layout_width="@dimen/_18sdp"
+                            android:layout_height="@dimen/_18sdp"
+                            android:src="@drawable/chat_icon"/>
+
+                        <TextView
+                            android:layout_marginTop="10dp"
+                            android:layout_gravity="center"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Chat"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_10sdp"
+                            android:textStyle="normal"
+                            android:fontFamily="@font/gibson_regular"/>
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/btnNotifications"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <LinearLayout
+                        android:layout_centerInParent="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <ImageView
+                            android:layout_gravity="center"
+                            android:adjustViewBounds="true"
+                            android:layout_width="@dimen/_18sdp"
+                            android:layout_height="@dimen/_18sdp"
+                            android:src="@drawable/notification_bell"/>
+
+                        <TextView
+                            android:layout_marginTop="10dp"
+                            android:layout_gravity="center"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Notfications"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_10sdp"
+                            android:textStyle="normal"
+                            android:fontFamily="@font/gibson_regular"/>
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/btnSettings"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <LinearLayout
+                        android:layout_centerInParent="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <ImageView
+                            android:layout_gravity="center"
+                            android:adjustViewBounds="true"
+                            android:layout_width="@dimen/_18sdp"
+                            android:layout_height="@dimen/_18sdp"
+                            android:src="@drawable/settings"/>
+
+                        <TextView
+                            android:layout_marginTop="10dp"
+                            android:layout_gravity="center"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Settings"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_10sdp"
+                            android:textStyle="normal"
+                            android:fontFamily="@font/gibson_regular"/>
+                    </LinearLayout>
+                </RelativeLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_marginTop="@dimen/_25sdp"
+            android:id="@+id/drawerIcon"
+            android:layout_marginLeft="@dimen/_12sdp"
+            android:layout_width="40dp"
+            android:layout_height="40dp">
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/drawer_white"
+                android:layout_centerVertical="true" />
+        </RelativeLayout>
+    </RelativeLayout>
+</layout>

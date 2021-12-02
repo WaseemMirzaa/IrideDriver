@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".Screens.Home"
+        android:fitsSystemWindows="true"
+        tools:openDrawer="start"
+        android:background="@color/white_O_40"
+        android:id="@+id/drawer_layout">
+
+        <include
+            android:id="@+id/mainLay"
+            layout="@layout/content_home"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.google.android.material.navigation.NavigationView
+            android:background="@drawable/rounded_corner_button_light_blue_drawer"
+            android:id="@+id/nav_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:fitsSystemWindows="true"
+            android:layout_marginTop="@dimen/_65sdp"
+            android:layout_marginBottom="@dimen/_65sdp"
+            app:headerLayout="@layout/nav_header_home"
+            app:itemIconTint="@color/white">
+
+            <ScrollView
+                android:layout_marginTop="@dimen/_156sdp"
+                android:fillViewport="true"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <RelativeLayout
+                    android:padding="@dimen/_12sdp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+
+                        <LinearLayout
+                            android:id="@+id/onlineLay"
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_weight="2"
+                            android:layout_height="@dimen/_35sdp">
+
+                            <TextView
+                                android:layout_gravity="center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Go Online"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_12sdp"
+                                android:textStyle="normal"
+                                android:fontFamily="@font/gibson_regular"/>
+
+                            <View
+                                android:layout_weight="1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+
+                            <androidx.appcompat.widget.SwitchCompat
+                                android:layout_width="wrap_content"
+                                android:id="@+id/OnlineSwitch"
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:id="@+id/homeLay"
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_35sdp">
+
+                            <ImageView
+                                android:layout_gravity="center"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/home_white_"/>
+
+                            <TextView
+                                android:layout_marginLeft="@dimen/_15sdp"
+                                android:layout_gravity="center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Home"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_12sdp"
+                                android:textStyle="normal"
+                                android:fontFamily="@font/gibson_regular"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/scheduledRides"
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_35sdp">
+                            <ImageView
+                                android:layout_gravity="center"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/booking"/>
+
+                            <TextView
+                                android:layout_marginLeft="@dimen/_15sdp"
+                                android:layout_gravity="center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Scheduled Rides"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_12sdp"
+                                android:textStyle="normal"
+                                android:fontFamily="@font/gibson_regular"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/promotionsLay"
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_35sdp">
+                            <ImageView
+                                android:layout_gravity="center"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/booking"/>
+
+                            <TextView
+                                android:layout_marginLeft="@dimen/_15sdp"
+                                android:layout_gravity="center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Promotions"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_12sdp"
+                                android:textStyle="normal"
+                                android:fontFamily="@font/gibson_regular"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/vehicleInfoLay"
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_35sdp">
+                            <ImageView
+                                android:layout_gravity="center"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/booking"/>
+
+                            <TextView
+                                android:layout_marginLeft="@dimen/_15sdp"
+                                android:layout_gravity="center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Vehicle Information"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_12sdp"
+                                android:textStyle="normal"
+                                android:fontFamily="@font/gibson_regular"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/documentsLay"
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_35sdp">
+                            <ImageView
+                                android:layout_gravity="center"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/booking"/>
+
+                            <TextView
+                                android:layout_marginLeft="@dimen/_15sdp"
+                                android:layout_gravity="center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Documents"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_12sdp"
+                                android:textStyle="normal"
+                                android:fontFamily="@font/gibson_regular"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/bookingsLay"
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_35sdp">
+                            <ImageView
+                                android:layout_gravity="center"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/booking"/>
+
+                            <TextView
+                                android:layout_marginLeft="@dimen/_15sdp"
+                                android:layout_gravity="center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Bookings"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_12sdp"
+                                android:textStyle="normal"
+                                android:fontFamily="@font/gibson_regular"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/walletLay"
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_35sdp">
+                            <ImageView
+                                android:layout_gravity="center"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/wallet"/>
+
+                            <TextView
+                                android:layout_marginLeft="@dimen/_15sdp"
+                                android:layout_gravity="center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Payout Information"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_12sdp"
+                                android:textStyle="normal"
+                                android:fontFamily="@font/gibson_regular"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/rideHistoryLay"
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_35sdp">
+                            <ImageView
+                                android:layout_gravity="center"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/booking"/>
+
+                            <TextView
+                                android:layout_marginLeft="@dimen/_15sdp"
+                                android:layout_gravity="center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Ride History"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_12sdp"
+                                android:textStyle="normal"
+                                android:fontFamily="@font/gibson_regular"/>
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:id="@+id/profileLay"
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_35sdp">
+                            <ImageView
+                                android:layout_gravity="center"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/profile_"/>
+
+                            <TextView
+                                android:layout_marginLeft="@dimen/_15sdp"
+                                android:layout_gravity="center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Profile"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_12sdp"
+                                android:textStyle="normal"
+                                android:fontFamily="@font/gibson_regular"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/inviteLay"
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_35sdp">
+                            <ImageView
+                                android:layout_gravity="center"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/invite"/>
+
+                            <TextView
+                                android:layout_marginLeft="@dimen/_15sdp"
+                                android:layout_gravity="center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Refer A Driver"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_12sdp"
+                                android:textStyle="normal"
+                                android:fontFamily="@font/gibson_regular"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/csLay"
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_35sdp">
+                            <ImageView
+                                android:layout_gravity="center"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/customer_service"/>
+
+                            <TextView
+                                android:layout_marginLeft="@dimen/_15sdp"
+                                android:layout_gravity="center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Customer Service"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_12sdp"
+                                android:textStyle="normal"
+                                android:fontFamily="@font/gibson_regular"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/aboutUsLay"
+                            android:layout_marginTop="@dimen/_40sdp"
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_35sdp">
+
+                            <TextView
+                                android:layout_gravity="center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="About Us"
+                                android:textColor="@color/white_O_60"
+                                android:textSize="@dimen/_12sdp"
+                                android:textStyle="normal"
+                                android:fontFamily="@font/gibson_regular"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/privacyPolicyLay"
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_35sdp">
+
+                            <TextView
+                                android:layout_gravity="center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Privacy Policy"
+                                android:textColor="@color/white_O_60"
+                                android:textSize="@dimen/_12sdp"
+                                android:textStyle="normal"
+                                android:fontFamily="@font/gibson_regular"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/logoutLay"
+                            android:layout_marginTop="@dimen/_40sdp"
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_35sdp">
+
+                            <TextView
+                                android:layout_gravity="center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Logout"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_12sdp"
+                                android:textStyle="normal"
+                                android:fontFamily="@font/gibson_regular"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </RelativeLayout>
+            </ScrollView>
+        </com.google.android.material.navigation.NavigationView>
+    </androidx.drawerlayout.widget.DrawerLayout>
+</layout>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".Screens.StartUp"
+        android:background="@drawable/startup_bg">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/blackOpacity_30"/>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="3">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+                <ImageView
+                    android:layout_width="@dimen/_120sdp"
+                    android:layout_height="@dimen/_120sdp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/logo"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+                <LinearLayout
+                    android:layout_centerInParent="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_marginLeft="@dimen/_30sdp"
+                        android:layout_marginRight="@dimen/_30sdp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textAlignment="center"
+                        android:text="Welcome to \niRide"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/gibson_regular"
+                        android:textSize="@dimen/_30sdp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:lineSpacingMultiplier="1.3"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginLeft="@dimen/_15sdp"
+                        android:layout_marginRight="@dimen/_15sdp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textAlignment="center"
+                        android:text="The best way to navigate your world and disover new places. Let's get started"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/gibson_regular"
+                        android:lineSpacingExtra="@dimen/_2sdp"
+                        android:textSize="@dimen/_12sdp"
+                        android:textStyle="normal"/>
+                </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:elevation="@dimen/_5sdp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+                <RelativeLayout
+                    android:id="@+id/btnContinue"
+                    android:onClick="Continue"
+                    android:layout_marginLeft="@dimen/_30sdp"
+                    android:layout_marginRight="@dimen/_30sdp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="@dimen/_60sdp"
+                    android:background="@drawable/rounded_corner_button_light_blue"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_45sdp">
+                    <TextView
+                        android:layout_centerInParent="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="center"
+                        android:textStyle="normal"
+                        android:textAllCaps="true"
+                        android:fontFamily="@font/gibson_regular"
+                        android:textSize="@dimen/_11sdp"
+                        android:textColor="@color/white"
+                        android:text="Continue"/>
+                </RelativeLayout>
+            </RelativeLayout>
+        </LinearLayout>
+    </RelativeLayout>
+</layout>

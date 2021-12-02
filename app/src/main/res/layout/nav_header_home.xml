@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/_156sdp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/rounded_corner_button_light_blue_top_one"
+    android:orientation="vertical"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        app:riv_corner_radius_top_right="@dimen/_10sdp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/drawer_header_bg"/>
+
+    <RelativeLayout
+        android:background="@drawable/rounded_corner_button_light_blue_top_one_light"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <LinearLayout
+        android:padding="@dimen/_16sdp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_gravity="end"
+            android:layout_alignParentRight="true"
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
+            android:src="@drawable/drawer_white"
+            android:layout_centerInParent="true"/>
+
+        <RelativeLayout
+            android:layout_gravity="start"
+            android:layout_width="60dp"
+            android:layout_height="60dp">
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/dummy_girl"
+                app:riv_corner_radius="@dimen/_10sdp"/>
+
+            <RelativeLayout
+                android:background="@drawable/rounded_corner_button_yellow_curve"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_width="25dp"
+                android:layout_height="25dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4.9"
+                    android:textSize="@dimen/_8sdp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:layout_centerInParent="true"
+                    android:fontFamily="@font/gibson_semibd"/>
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <TextView
+            android:layout_marginTop="20dp"
+            android:layout_gravity="start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Maria Snow"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_16sdp"
+            android:textStyle="normal"
+            android:fontFamily="@font/gibson_regular"/>
+
+        <TextView
+            android:layout_marginTop="5dp"
+            android:layout_gravity="start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="San Francisco, CA"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_10sdp"
+            android:textStyle="normal"
+            android:fontFamily="@font/gibson_regular"/>
+    </LinearLayout>
+</RelativeLayout>

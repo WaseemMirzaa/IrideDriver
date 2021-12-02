@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context=".Fragments.CustomerServiceFragment">
+
+        <RelativeLayout
+            android:id="@+id/headerLay"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_45sdp">
+            <RelativeLayout
+                android:id="@+id/drawerIcon"
+                android:layout_marginLeft="@dimen/_12sdp"
+                android:layout_centerVertical="true"
+                android:layout_width="40dp"
+                android:layout_height="40dp">
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/back_icon"
+                    android:layout_centerVertical="true" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <TextView
+            android:layout_below="@+id/headerLay"
+            android:id="@+id/tvTitle"
+            android:layout_marginLeft="@dimen/_12sdp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Invite new user"
+            android:paddingBottom="@dimen/_15sdp"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:fontFamily="@font/gibson_regular"
+            android:textSize="18dp"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_below="@+id/tvTitle"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
+                android:layout_marginBottom="@dimen/_15sdp"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/btnContinue"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toTopOf="@+id/btnContinue">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/headerLay"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="@dimen/_12sdp"
+                    android:layout_marginRight="@dimen/_12sdp"
+                    android:fontFamily="@font/gibson_regular"
+                    android:lineSpacingExtra="1.5dp"
+                    android:paddingBottom="@dimen/_15sdp"
+                    android:text="Share the love by inviting \nYour friends"
+                    android:textAlignment="center"
+                    android:textAllCaps="false"
+                    android:textColor="@color/gray_light"
+                    android:textSize="@dimen/_15sdp"
+                    android:textStyle="normal" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_45sdp"
+                    android:layout_marginLeft="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_15sdp"
+                    android:layout_marginRight="@dimen/_20sdp"
+                    android:layout_marginBottom="@dimen/_20sdp"
+                    android:background="@drawable/rounded_corner_white"
+                    android:elevation="@dimen/_5sdp">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:backgroundTint="@android:color/transparent"
+                        android:fontFamily="@font/gibson_regular"
+                        android:hint="vhoWhi"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12sdp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/headerLay"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="@dimen/_12sdp"
+                    android:layout_marginRight="@dimen/_12sdp"
+                    android:fontFamily="@font/gibson_semibd"
+                    android:lineSpacingExtra="1.5dp"
+                    android:text="Share Your Code"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textColor="@color/purple_200"
+                    android:textSize="@dimen/_10sdp"
+                    android:textStyle="normal" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/btnContinue"
+                android:layout_margin="@dimen/_30sdp"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_45sdp"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/rounded_corner_button_dark_blue"
+                android:elevation="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:layout_editor_absoluteX="26dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:fontFamily="@font/gibson_regular"
+                    android:text="Share Now"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_11sdp"
+                    android:textStyle="normal" />
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_margin="@dimen/_30sdp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/logo_black" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </RelativeLayout>
+</layout>

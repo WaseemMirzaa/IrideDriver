@@ -1,0 +1,102 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
+
+    defaultConfig {
+        applicationId "com.buzzware.iridedriver"
+        minSdkVersion 23
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    dataBinding {
+        enabled = true
+    }
+}
+
+dependencies {
+
+    //image downloading
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    implementation 'com.google.firebase:firebase-storage:20.0.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
+
+    //map utils
+    implementation 'com.google.maps.android:android-maps-utils:2.3.0'
+
+    //event bus
+    implementation 'org.greenrobot:eventbus:3.2.0'
+
+    //retro
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-scalars:2.1.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.8.0'
+    implementation 'com.squareup.okhttp3:okhttp-urlconnection:3.4.1'
+
+    //places sdk
+    implementation 'com.google.android.libraries.places:places:2.5.0'
+
+    //location
+    implementation 'com.github.delight-im:Android-SimpleLocation:v1.1.0'
+
+    //permissions
+    implementation 'com.nabinbhandari.android:permissions:3.8'
+
+    //location
+    implementation 'com.github.delight-im:Android-SimpleLocation:v1.1.0'
+
+    //firebase
+    implementation platform('com.google.firebase:firebase-bom:29.0.0')
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-firestore'
+
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.google.android.material:material:1.3.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+
+    //size lib
+    implementation 'com.intuit.sdp:sdp-android:1.0.6'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
+    //google
+    implementation 'com.google.android.gms:play-services-maps:17.0.1'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
+    ///rounded imageview
+    implementation 'com.makeramen:roundedimageview:2.3.0'
+
+    //rounded corner
+    implementation 'com.skyline.widget:round-corner-layout:1.0.1'
+
+    //ratingbar
+    implementation 'me.zhanghai.android.materialratingbar:library:1.4.0'
+
+    //ktx
+    implementation 'androidx.activity:activity-ktx:1.2.0-alpha05'
+    implementation 'androidx.fragment:fragment-ktx:1.3.0-alpha05'
+
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+}
+apply plugin: 'com.google.gms.google-services'

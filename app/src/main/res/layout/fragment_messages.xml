@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/headerLay"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_45sdp">
+            <RelativeLayout
+                android:id="@+id/drawerIcon"
+                android:layout_marginLeft="@dimen/_12sdp"
+                android:layout_centerVertical="true"
+                android:layout_width="40dp"
+                android:layout_height="40dp">
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/back_icon"
+                    android:layout_centerVertical="true" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_below="@+id/headerLay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_marginLeft="@dimen/_12sdp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Alexa"
+                android:singleLine="true"
+                android:layout_marginRight="@dimen/_12sdp"
+                android:paddingBottom="@dimen/_15sdp"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:fontFamily="@font/gibson_regular"
+                android:textSize="18dp"/>
+
+            <RelativeLayout
+                android:layout_below="@+id/tvTitle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_marginBottom="@dimen/_10sdp"
+                    android:layout_above="@+id/bottomLay"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/rv_messages"/>
+
+                <!--                this is dummy layout use recyclerview-->
+                <LinearLayout
+                    android:id="@+id/dummyItems"
+                    android:layout_marginBottom="@dimen/_10sdp"
+                    android:layout_above="@+id/bottomLay"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <include
+                        android:id="@+id/firstItem"
+                        layout="@layout/message_item_left"/>
+
+                    <include
+                        layout="@layout/message_item_right"/>
+
+                    <include
+                        layout="@layout/message_item_left"/>
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:elevation="@dimen/_8sdp"
+                    android:background="@drawable/rounded_corner_white"
+                    android:layout_marginBottom="@dimen/_20sdp"
+                    android:layout_marginLeft="@dimen/_20sdp"
+                    android:layout_marginRight="@dimen/_20sdp"
+                    android:id="@+id/bottomLay"
+                    android:layout_alignParentBottom="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp">
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:backgroundTint="@android:color/transparent"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginRight="@dimen/_58sdp"
+                        android:hint="Say something..."
+                        android:textSize="@dimen/_10sdp"
+                        android:textStyle="normal"
+                        android:inputType="text"
+                        android:fontFamily="@font/gibson_regular"/>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_alignParentRight="true"
+                        android:layout_width="@dimen/_50sdp"
+                        android:layout_height="match_parent">
+                        <View
+                            android:layout_width="0.5dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:layout_marginBottom="@dimen/_10sdp"
+                            android:background="@color/gray_light"/>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+                            <ImageView
+                                android:layout_width="15dp"
+                                android:layout_height="15dp"
+                                android:src="@drawable/add_black"
+                                android:layout_centerInParent="true" />
+                        </RelativeLayout>
+                    </LinearLayout>
+                </RelativeLayout>
+            </RelativeLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+</layout>

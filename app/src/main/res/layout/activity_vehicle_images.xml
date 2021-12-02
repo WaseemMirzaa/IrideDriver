@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/gray_white"
+        tools:context=".fragments.SignUpFragment">
+
+        <include
+            android:id="@+id/appBarTitleInclude"
+            layout="@layout/back_app_bar"></include>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/picsRV"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/btnContinue"
+            app:layout_constraintTop_toBottomOf="@+id/appBarTitleInclude" />
+
+        <RelativeLayout
+            android:id="@+id/btnContinue"
+            android:layout_width="match_parent"
+            android:layout_marginEnd="@dimen/_30sdp"
+            android:layout_marginStart="@dimen/_30sdp"
+            android:layout_marginBottom="@dimen/_30sdp"
+            android:layout_height="@dimen/_45sdp"
+            android:background="@drawable/rounded_corner_button_yellow"
+            android:elevation="10dp"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:fontFamily="@font/gibson_regular"
+                android:text="Continue"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_11sdp"
+                android:textStyle="normal" />
+        </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
