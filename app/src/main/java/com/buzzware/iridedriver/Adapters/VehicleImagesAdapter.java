@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,8 +15,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.buzzware.iridedriver.Models.RideModel;
 import com.buzzware.iridedriver.Models.UploadImageModel;
+import com.buzzware.iridedriver.Models.User;
 import com.buzzware.iridedriver.R;
 import com.buzzware.iridedriver.Screens.OnTrip;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
@@ -99,6 +102,7 @@ public class VehicleImagesAdapter extends RecyclerView.Adapter<VehicleImagesAdap
             placeHolderIV = (ImageView) itemView.findViewById(R.id.placeHolderIV);
 
             titleTV = (TextView) itemView.findViewById(R.id.titleTV);
+
         }
     }
 
@@ -107,4 +111,6 @@ public class VehicleImagesAdapter extends RecyclerView.Adapter<VehicleImagesAdap
         void onImageTapped(UploadImageModel imageModel);
 
     }
+
+
 }

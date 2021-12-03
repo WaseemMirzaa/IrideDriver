@@ -13,4 +13,5 @@ public class User {
     public String token;
     public String zipcode;
     public String email;
+    public String image;
 }
