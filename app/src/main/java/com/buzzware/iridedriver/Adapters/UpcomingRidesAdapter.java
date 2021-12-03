@@ -59,6 +59,23 @@ public class UpcomingRidesAdapter extends RecyclerView.Adapter<UpcomingRidesAdap
 
         holder.destinationAddressTV.setText(getDestinationAddress(ride));
 
+        if (ride.tripDetail.destinations.size() > 0) {
+
+            holder.destinationAddressTV.setText(ride.tripDetail.destinations.get(1).address);
+
+            holder.dropOffTv.setText(ride.tripDetail.destinations.get(0).address);
+
+            holder.dropOffVw.setVisibility(View.VISIBLE);
+            holder.dropOffLL.setVisibility(View.VISIBLE);
+
+        } else {
+
+            holder.dropOffVw.setVisibility(View.GONE);
+
+            holder.dropOffLL.setVisibility(View.GONE);
+
+        }
+
         holder.timeTV.setText(getDateTime(ride.bookingDate));
 
         if (rideType == RideType.completed)
@@ -67,7 +84,7 @@ public class UpcomingRidesAdapter extends RecyclerView.Adapter<UpcomingRidesAdap
 
         else if (rideType == RideType.running) {
 
-            holder.acceptTV.setText("Complete");
+            holder.acceptTV.setText("View");
 
         } else
 
@@ -84,7 +101,6 @@ public class UpcomingRidesAdapter extends RecyclerView.Adapter<UpcomingRidesAdap
                 listener.acceptRide(ride);
 
         });
-
 
     }
 
@@ -132,9 +148,12 @@ public class UpcomingRidesAdapter extends RecyclerView.Adapter<UpcomingRidesAdap
         public TextView acceptTV;
 
         public RelativeLayout acceptNowBt;
+        public RelativeLayout relativeLayout;
+        public View dropOffVw;
+        public RelativeLayout dropOffLL;
+        public TextView dropOffTv;
 
         public UpcomingRidesHolder(View itemView) {
-
             super(itemView);
 
             initView(itemView);
@@ -151,6 +170,10 @@ public class UpcomingRidesAdapter extends RecyclerView.Adapter<UpcomingRidesAdap
             acceptNowBt = itemView.findViewById(R.id.acceptNowBt);
 
             acceptTV = itemView.findViewById(R.id.acceptTV);
+            relativeLayout = (RelativeLayout) itemView.findViewById(R.id.relativeLayout);
+            dropOffVw = (View) itemView.findViewById(R.id.dropOffVw);
+            dropOffLL = (RelativeLayout) itemView.findViewById(R.id.dropOffLL);
+            dropOffTv = (TextView) itemView.findViewById(R.id.dropOffTv);
         }
     }
 

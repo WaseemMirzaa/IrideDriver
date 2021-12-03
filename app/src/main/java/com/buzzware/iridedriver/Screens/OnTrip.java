@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -78,6 +79,44 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
         checkPermissionsAndInit();
 
         setListeners();
+
+        setOrderListener();
+    }
+
+    private void setOrderListener() {
+
+
+        FirebaseFirestore.getInstance().collection("Bookings")
+                .document(rideModel.id)
+                .addSnapshotListener((value, error) -> {
+
+                    try {
+
+                        RideModel r = value.toObject(RideModel.class);
+
+                        if(r.status.equalsIgnoreCase(AppConstants.RideStatus.CANCELLED)) {
+
+                            Toast.makeText(this, "Ride Cancelled", Toast.LENGTH_SHORT).show();
+
+                            finish();
+                        } else if (r.status.equalsIgnoreCase(AppConstants.RideStatus.RIDE_COMPLETED)) {
+
+                            Toast.makeText(this, "Ride Completed", Toast.LENGTH_SHORT).show();
+
+                            finish();
+
+                        } else if (r.status.equalsIgnoreCase(AppConstants.RideStatus.RATED)) {
+
+                            Toast.makeText(this, "Order Rated", Toast.LENGTH_SHORT).show();
+
+                            finish();
+                        }
+
+                    }catch (Exception e) {
+
+                    }
+
+                });
     }
 
 
@@ -151,6 +190,8 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
                 set(rideModel);
 
         setRideButton();
+
+        initPlace();
 
     }
 
@@ -670,14 +711,22 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
     Polyline polyline;
 
     void setRideButton() {
+
+        mBinding.cancelCV.setVisibility(View.GONE);
+
+
+
         mBinding.actionTV.setText("Complete First Drop Off");
         if (rideModel.status.equalsIgnoreCase("driverAccepted")) {
 
             mBinding.actionTV.setText("Arrived");
+            mBinding.cancelCV.setVisibility(View.VISIBLE);
 
         } else if (rideModel.status.equalsIgnoreCase("driverReached")) {
 
             mBinding.actionTV.setText("Start Ride");
+            mBinding.cancelCV.setVisibility(View.VISIBLE);
+
 
         } else if (rideModel.status.equalsIgnoreCase("rideStarted")) {
 
@@ -706,6 +755,21 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
             mBinding.rideBt.setVisibility(View.GONE);
 
         }
+
+        mBinding.cancelCV.setOnClickListener(v -> cancelRide());
+    }
+
+    private void cancelRide() {
+
+        rideModel.driverId = null;
+        rideModel.vehicleId = null;
+        rideModel.status = AppConstants.RideStatus.BOOKED;
+
+        FirebaseFirestore.getInstance().collection("Bookings")
+                .document(rideModel.id).
+                set(rideModel);
+
+        finish();
     }
 
     private void checkPermissionsAndInit() {
@@ -818,28 +882,45 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
         mMap.setMyLocationEnabled(true);
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 16.0F));
 
+        initPlace();
+        mBinding.currentLocationIV.setOnClickListener(v -> showCurrentLocation());
+
+    }
+
+    List<Marker> markers = new ArrayList<>();
+
+    void initPlace() {
+
+        for (Marker marker : markers) {
+
+            marker.remove();
+
+        }
+
+        markers = new ArrayList<>();
+
         List<SearchedPlaceModel> destinations = rideModel.tripDetail.destinations;
 
         if (AppConstants.RideStatus.isRideDriverArriving(rideModel.status)) {
 
-            mMap.addMarker(new MarkerOptions()
+            markers.add(mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(rideModel.tripDetail.pickUp.lat, rideModel.tripDetail.pickUp.lng))
                     .title("Destination")
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
-
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)))
+            );
         } else {
 
-            mMap.addMarker(new MarkerOptions()
+            markers.add(mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(destinations.get(0).lat, destinations.get(0).lng))
                     .title("Destination")
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
-
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)))
+            );
             if (destinations.size() > 1) {
 
-                mMap.addMarker(new MarkerOptions()
+               markers.add( mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(destinations.get(1).lat, destinations.get(1).lng))
                         .title("Destination")
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))));
 
             }
 
@@ -860,8 +941,6 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
             }
 
         }
-
-        mBinding.currentLocationIV.setOnClickListener(v -> showCurrentLocation());
 
     }
 }
