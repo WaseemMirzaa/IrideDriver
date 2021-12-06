@@ -35,6 +35,9 @@
             android:name=".Screens.Home"
             android:theme="@style/Theme.white" />
         <activity
+            android:name=".Fragments.Chat"
+            android:theme="@style/Theme.white" />
+        <activity
             android:name=".Screens.Authentication"
             android:theme="@style/Theme.white" />
         <activity android:name=".Screens.StartUp">
