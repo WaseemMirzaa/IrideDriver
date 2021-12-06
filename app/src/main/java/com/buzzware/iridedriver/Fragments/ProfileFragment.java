@@ -71,6 +71,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         });
 
+        binding.btnChat.setOnClickListener(v->{
+
+        });
+
     }
 
     private void getCurrentUserData() {
@@ -140,7 +144,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         } else if (v == binding.btnSettings) {
             //startActivity(new Intent(this, Settings.class));
         } else if (v == binding.btnChat) {
-            ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ChatFragment()).addToBackStack("chat").commit();
+            startActivity(new Intent(getContext(), Chat.class));
         }
     }
 }
