@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Buzzware/IrideDriver/app/src/main/res/drawable/ic_baseline_send_24.xml" value="0.25462962962962965" />
+        <entry key="..\:/Buzzware/IrideDriver/app/src/main/res/drawable/ic_edit.xml" value="0.2601851851851852" />
+        <entry key="..\:/Buzzware/IrideDriver/app/src/main/res/drawable/rounded_corner_gray_two_top.xml" value="0.15885416666666666" />
+        <entry key="..\:/Buzzware/IrideDriver/app/src/main/res/layout/activity_edit_profile.xml" value="0.27291666666666664" />
+        <entry key="..\:/Buzzware/IrideDriver/app/src/main/res/layout/activity_messages.xml" value="0.25885416666666666" />
+        <entry key="..\:/Buzzware/IrideDriver/app/src/main/res/layout/chat_item_lay.xml" value="0.27291666666666664" />
+        <entry key="..\:/Buzzware/IrideDriver/app/src/main/res/layout/fragment_chat.xml" value="0.27291666666666664" />
+        <entry key="..\:/Buzzware/IrideDriver/app/src/main/res/layout/fragment_profile.xml" value="0.27291666666666664" />
+        <entry key="..\:/Buzzware/IrideDriver/app/src/main/res/layout/messages_item_lay.xml" value="0.27291666666666664" />
+      </map>
+    </option>
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>

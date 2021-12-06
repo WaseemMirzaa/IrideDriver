@@ -35,7 +35,10 @@ public class StartUp extends BaseActivity {
 
         FirebaseApp.initializeApp(this);
 
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_startup);
+        mBinding = ActivityStartupBinding.inflate(getLayoutInflater());
+
+        setContentView(mBinding.getRoot());
+//        DataBindingUtil.setContentView(this, R.layout.activity_startup);
 
     }
 

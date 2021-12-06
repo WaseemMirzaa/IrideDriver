@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -54,7 +53,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
         rideType = RideType.completed;
 
-        getRides();
 
         setListeners();
 
@@ -64,6 +62,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
+
+        getRides();
+
     }
 
     private void setListeners() {
@@ -77,6 +78,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
         mBinding.drawerIcon.setOnClickListener(this);
     }
+
 
 
     private void getRides() {
@@ -105,6 +107,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
         }
 
+        showLoader();
         query.get()
                 .addOnCompleteListener(
                         this::parseSnapshot

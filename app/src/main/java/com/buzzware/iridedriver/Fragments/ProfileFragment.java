@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -13,13 +14,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.buzzware.iridedriver.Models.User;
 import com.buzzware.iridedriver.R;
+import com.buzzware.iridedriver.Screens.EditProfileActivity;
 import com.buzzware.iridedriver.databinding.FragmentProfileBinding;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
-public class ProfileFragment extends Fragment implements View.OnClickListener{
+public class ProfileFragment extends Fragment implements View.OnClickListener {
 
-    FragmentProfileBinding mBinding;
+    FragmentProfileBinding binding;
+
     Context context;
+
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+    FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -27,24 +44,79 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-        mBinding= DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false);
-        try{
+
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false);
+
+        try {
             Init();
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return mBinding.getRoot();
+
+        getCurrentUserData();
+
+        setListener();
+
+        return binding.getRoot();
+    }
+
+
+    private void setListener() {
+
+        binding.editIcon.setOnClickListener(v->{
+
+            startActivity(new Intent(getContext(), EditProfileActivity.class));
+
+        });
+
+        binding.btnChat.setOnClickListener(v->{
+
+        });
+
+    }
+
+    private void getCurrentUserData() {
+
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        if (user != null && user.getUid() != null) {
+
+            DocumentReference documentReferenceBuisnessUser = firebaseFirestore.collection("Users").document(user.getUid());
+            documentReferenceBuisnessUser.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                @Override
+                public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+
+                    User user = value.toObject(User.class);
+
+                    setUserData(user);
+
+                }
+            });
+
+        }
+
+    }
+
+    private void setUserData(User user) {
+
+        if (user.image != null && !user.image.isEmpty()) {
+            Glide.with(getContext()).load(user.image).apply(new RequestOptions().centerCrop()).into(binding.userImageIV);
+        }
+        binding.userNameTV.setText(user.firstName + " " + user.lastName);
+        binding.userAddressTV.setText(user.address);
+        binding.userPhoneNumberTV.setText(user.phoneNumber);
+
     }
 
     private void Init() {
-        context= getContext();
+        context = getContext();
 
         ///init click
-        mBinding.btnNotifications.setOnClickListener(this);
-        mBinding.btnSettings.setOnClickListener(this);
-        mBinding.btnChat.setOnClickListener(this);
+        binding.btnNotifications.setOnClickListener(this);
+        binding.btnSettings.setOnClickListener(this);
+        binding.btnChat.setOnClickListener(this);
     }
 
     @Override
@@ -67,15 +139,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        if(v == mBinding.btnNotifications)
-        {
+        if (v == binding.btnNotifications) {
             //startActivity(new Intent(this, Notifications.class));
-        }else if(v == mBinding.btnSettings)
-        {
+        } else if (v == binding.btnSettings) {
             //startActivity(new Intent(this, Settings.class));
-        }else if(v == mBinding.btnChat)
-        {
-            ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ChatFragment()).addToBackStack("chat").commit();
+        } else if (v == binding.btnChat) {
+            startActivity(new Intent(getContext(), Chat.class));
         }
     }
 }

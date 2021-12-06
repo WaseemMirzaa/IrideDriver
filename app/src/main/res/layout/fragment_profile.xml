@@ -4,15 +4,15 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        tools:context=".Screens.ProfileActivity">
+        android:background="@color/white">
 
         <ImageView
-            android:id="@+id/image"
+            android:id="@+id/userImageIV"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/dummy_two"
-            android:adjustViewBounds="true"/>
+            android:layout_height="@dimen/_250sdp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/dummy_two" />
 
         <LinearLayout
             android:orientation="vertical"
@@ -20,7 +20,7 @@
             android:background="@drawable/rounded_corner_white_two_top"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/image">
+            android:layout_below="@+id/userImageIV">
 
             <LinearLayout
                 android:paddingLeft="@dimen/_20sdp"
@@ -30,18 +30,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
                 <TextView
-                    android:layout_marginTop="20dp"
-                    android:layout_gravity="start"
+                    android:id="@+id/userNameTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/gibson_regular"
                     android:text="Maria Snow"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_18sdp"
-                    android:textStyle="normal"
-                    android:fontFamily="@font/gibson_regular"/>
+                    android:textStyle="normal" />
 
                 <TextView
+                    android:id="@+id/userAddressTV"
                     android:layout_marginTop="5dp"
                     android:layout_gravity="start"
                     android:layout_width="wrap_content"
@@ -53,6 +56,7 @@
                     android:fontFamily="@font/gibson_regular"/>
 
                 <TextView
+                    android:id="@+id/userPhoneNumberTV"
                     android:layout_marginTop="5dp"
                     android:layout_gravity="start"
                     android:layout_width="wrap_content"
@@ -169,15 +173,33 @@
 
         <RelativeLayout
             android:layout_marginTop="@dimen/_25sdp"
-            android:id="@+id/drawerIcon"
-            android:layout_marginLeft="@dimen/_12sdp"
-            android:layout_width="40dp"
+            android:layout_width="match_parent"
             android:layout_height="40dp">
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/drawer_white"
-                android:layout_centerVertical="true" />
+            <RelativeLayout
+                android:id="@+id/drawerIcon"
+                android:layout_marginLeft="@dimen/_12sdp"
+                android:layout_width="40dp"
+                android:layout_height="40dp">
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/drawer_white"
+                    android:layout_centerVertical="true" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_alignParentRight="true"
+                android:id="@+id/editIcon"
+                android:layout_marginLeft="@dimen/_12sdp"
+                android:layout_width="40dp"
+                android:layout_height="40dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_edit" />
+            </RelativeLayout>
         </RelativeLayout>
     </RelativeLayout>
 </layout>
