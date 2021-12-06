@@ -33,7 +33,8 @@
                     android:orientation="horizontal">
 
                     <RelativeLayout
-                        android:layout_width="40dp"
+                        android:id="@+id/backIV"
+                        android:layout_width="33dp"
                         android:layout_height="40dp"
                         android:layout_gravity="center"
                         android:layout_marginLeft="@dimen/_10sdp">

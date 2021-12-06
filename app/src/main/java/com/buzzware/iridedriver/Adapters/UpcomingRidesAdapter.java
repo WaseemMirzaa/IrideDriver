@@ -59,7 +59,7 @@ public class UpcomingRidesAdapter extends RecyclerView.Adapter<UpcomingRidesAdap
 
         holder.destinationAddressTV.setText(getDestinationAddress(ride));
 
-        if (ride.tripDetail.destinations.size() > 0) {
+        if (ride.tripDetail.destinations.size() > 1) {
 
             holder.destinationAddressTV.setText(ride.tripDetail.destinations.get(1).address);
 

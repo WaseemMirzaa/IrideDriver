@@ -14,4 +14,6 @@ public class User {
     public String zipcode;
     public String email;
     public String image;
+    public String userType;
+    public String userRole = "driver";
 }

@@ -78,6 +78,10 @@ public class EditProfileActivity extends BaseActivity {
             uploadDataToFirestore();
         });
 
+        binding.backIV.setOnClickListener(v->{
+            finish();
+        });
+
     }
 
 

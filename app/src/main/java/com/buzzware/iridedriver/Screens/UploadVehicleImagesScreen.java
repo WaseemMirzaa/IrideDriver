@@ -72,6 +72,7 @@ public class UploadVehicleImagesScreen extends BaseActivity implements VehicleIm
 
         onViewCreated();
 
+
     }
 
     private void onViewCreated() {
@@ -110,6 +111,8 @@ public class UploadVehicleImagesScreen extends BaseActivity implements VehicleIm
         binding.appBarTitleInclude.backIcon.setOnClickListener(v -> finish());
 
         binding.btnContinue.setOnClickListener(v -> validateAndMoveToHome());
+
+        binding.appBarTitleInclude.backIcon.setOnClickListener(v->finish());
 
     }
 

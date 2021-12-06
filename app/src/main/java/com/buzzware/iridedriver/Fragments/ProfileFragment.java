@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
@@ -19,6 +20,8 @@ import com.bumptech.glide.request.RequestOptions;
 import com.buzzware.iridedriver.Models.User;
 import com.buzzware.iridedriver.R;
 import com.buzzware.iridedriver.Screens.EditProfileActivity;
+import com.buzzware.iridedriver.Screens.Home;
+import com.buzzware.iridedriver.Screens.Notifications;
 import com.buzzware.iridedriver.databinding.FragmentProfileBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -49,11 +52,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false);
 
-        try {
-            Init();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Init();
+
 
         getCurrentUserData();
 
@@ -65,15 +65,25 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
     private void setListener() {
 
-        binding.editIcon.setOnClickListener(v->{
+        binding.editIcon.setOnClickListener(v -> {
 
             startActivity(new Intent(getContext(), EditProfileActivity.class));
 
         });
 
-        binding.btnChat.setOnClickListener(v->{
-
+        binding.btnChat.setOnClickListener(v -> {
+            startActivity(new Intent(getContext(), Chat.class));
         });
+
+        binding.btnSettings.setOnClickListener(v -> {
+            startActivity(new Intent(getContext(), EditProfileActivity.class));
+        });
+
+        binding.btnNotifications.setOnClickListener(v->{
+            startActivity(new Intent(getContext(), Notifications.class));
+        });
+
+        binding.drawerIcon.setOnClickListener(v -> OpenCloseDrawer());
 
     }
 
@@ -143,8 +153,21 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             //startActivity(new Intent(this, Notifications.class));
         } else if (v == binding.btnSettings) {
             //startActivity(new Intent(this, Settings.class));
-        } else if (v == binding.btnChat) {
-            startActivity(new Intent(getContext(), Chat.class));
         }
     }
+
+    public static void OpenCloseDrawer() {
+
+        if (Home.mBinding.drawerLayout.isDrawerVisible(GravityCompat.START)) {
+
+            Home.mBinding.drawerLayout.closeDrawer(GravityCompat.START);
+
+        } else {
+
+            Home.mBinding.drawerLayout.openDrawer(GravityCompat.START);
+
+        }
+
+    }
+
 }

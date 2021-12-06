@@ -22,20 +22,22 @@ public class Authentication extends AppCompatActivity {
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_authentication);
 
-        try {
-            Init();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Init();
+
     }
 
     private void Init() {
+
         InitViewPager();
+
     }
 
     private void InitViewPager() {
+        
         authPagerAdapter = new AuthPagerAdapter(getSupportFragmentManager(), mBinding.tabLay.getTabCount());
+
         mBinding.viewPager.setAdapter(authPagerAdapter);
+
         mBinding.tabLay.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

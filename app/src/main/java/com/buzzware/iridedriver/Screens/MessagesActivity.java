@@ -64,6 +64,10 @@ public class MessagesActivity extends AppCompatActivity {
             }
         });
 
+        binding.backIV.setOnClickListener(v->{
+            finish();
+        });
+
     }
 
     private void getDataFromExtra() {

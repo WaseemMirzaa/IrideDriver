@@ -18,6 +18,18 @@
             android:src="@drawable/dummy_two"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
+        <ImageView
+            android:id="@+id/backIV"
+            app:layout_constraintTop_toTopOf="@id/userImageIV"
+            app:layout_constraintStart_toStartOf="@id/userImageIV"
+            android:layout_margin="@dimen/_10sdp"
+            android:padding="@dimen/_2sdp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/back_icon"
+            app:tint="@color/white" />
+
 
         <ImageView
             android:id="@+id/editImageIV"
@@ -37,7 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="@dimen/_180sdp"
-            android:background="@color/purple_700"
+            android:background="@drawable/rounded_corner_gray_two_top"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent">
             <RelativeLayout
