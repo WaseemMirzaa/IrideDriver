@@ -121,8 +121,10 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v == mBinding.navView.findViewById(R.id.homeLay)) {
+            SetFragemnt();
             OpenCloseDrawer();
         } else if (v == mBinding.navView.findViewById(R.id.bookingsLay)) {
+            SetFragemnt();
             OpenCloseDrawer();
         } else if (v == mBinding.navView.findViewById(R.id.walletLay)) {
             OpenCloseDrawer();

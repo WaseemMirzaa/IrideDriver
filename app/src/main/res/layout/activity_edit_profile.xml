@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="@dimen/_180sdp"
-            android:background="@drawable/rounded_corner_gray_two_top"
+            android:background="@color/purple_700"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent">
             <RelativeLayout

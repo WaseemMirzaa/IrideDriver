@@ -451,8 +451,9 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
         double min = seconds / 60;
         km = km / 1000;
 
-        mBinding.timeTV.setText(min + " min");
-        mBinding.kmTV.setText(km + " km");
+
+        mBinding.timeTV.setText(String.format("%.2f", min) + " min");
+        mBinding.kmTV.setText(String.format("%.2f", km) + " km");
         mBinding.currentLocationTV.setText(currentAddress);
     }
 
