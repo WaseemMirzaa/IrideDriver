@@ -6,7 +6,8 @@ public class User {
     public String firstName;
     public String lastName;
     public String password;
-    public String address;
+    public String homeAddress;
+    public String workAddress;
     public String phoneNumber;
     public String state;
     public String city;

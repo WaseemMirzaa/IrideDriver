@@ -237,14 +237,14 @@
                         android:layout_height="@dimen/_45sdp">
 
                         <EditText
-                            android:id="@+id/addressET"
+                            android:id="@+id/homeAddressET"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginLeft="@dimen/_10sdp"
                             android:layout_marginRight="@dimen/_10sdp"
                             android:backgroundTint="@android:color/transparent"
                             android:fontFamily="@font/gibson_regular"
-                            android:hint="Address"
+                            android:hint="Home Address"
                             android:imeOptions="actionNext"
                             android:inputType="text"
                             android:maxLength="11"
@@ -253,6 +253,31 @@
                             android:textColor="@color/black"
                             android:textSize="@dimen/_12sdp" />
                     </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_marginTop="@dimen/_15sdp"
+                        android:background="@drawable/rounded_corner_white"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_45sdp">
+
+                        <EditText
+                            android:id="@+id/workAddressET"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/_10sdp"
+                            android:layout_marginRight="@dimen/_10sdp"
+                            android:backgroundTint="@android:color/transparent"
+                            android:fontFamily="@font/gibson_regular"
+                            android:hint="Work Address"
+                            android:imeOptions="actionNext"
+                            android:inputType="text"
+                            android:maxLength="11"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12sdp" />
+                    </RelativeLayout>
+
 
                 </LinearLayout>
 
