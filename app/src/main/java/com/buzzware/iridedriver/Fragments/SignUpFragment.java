@@ -122,6 +122,22 @@ public class SignUpFragment extends BaseFragment {
             return false;
         }
 
+
+        if (mBinding.homeAddressET.getText().toString().isEmpty()) {
+
+            showErrorAlert("Home Address Required");
+
+            return false;
+        }
+
+
+        if (mBinding.workAddressET.getText().toString().isEmpty()) {
+
+            showErrorAlert("Work Address Required");
+
+            return false;
+        }
+
         if (mBinding.passwordET.getText().toString().isEmpty()) {
 
             showErrorAlert("Password Required");
