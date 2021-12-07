@@ -115,7 +115,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             Glide.with(getContext()).load(user.image).apply(new RequestOptions().centerCrop()).into(binding.userImageIV);
         }
         binding.userNameTV.setText(user.firstName + " " + user.lastName);
-        binding.userAddressTV.setText(user.address);
+        binding.userAddressTV.setText(user.homeAddress);
         binding.userPhoneNumberTV.setText(user.phoneNumber);
 
     }

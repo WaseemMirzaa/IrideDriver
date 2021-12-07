@@ -21,6 +21,7 @@ import com.buzzware.iridedriver.Fragments.CustomerServiceFragment;
 import com.buzzware.iridedriver.Fragments.HomeFragment;
 import com.buzzware.iridedriver.Fragments.InvitationFragment;
 import com.buzzware.iridedriver.Fragments.ProfileFragment;
+import com.buzzware.iridedriver.Fragments.PromotionFragment;
 import com.buzzware.iridedriver.Fragments.WalletFragment;
 import com.buzzware.iridedriver.Models.User;
 import com.buzzware.iridedriver.R;
@@ -64,6 +65,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         mBinding.navView.findViewById(R.id.homeLay).setOnClickListener(this);
         mBinding.navView.findViewById(R.id.bookingsLay).setOnClickListener(this);
         mBinding.navView.findViewById(R.id.walletLay).setOnClickListener(this);
+        mBinding.navView.findViewById(R.id.promotionLay).setOnClickListener(this);
         mBinding.navView.findViewById(R.id.profileLay).setOnClickListener(this);
         mBinding.navView.findViewById(R.id.inviteLay).setOnClickListener(this);
         mBinding.navView.findViewById(R.id.csLay).setOnClickListener(this);
@@ -167,6 +169,9 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         } else if (v == mBinding.navView.findViewById(R.id.bookingsLay)) {
             SetFragemnt();
             OpenCloseDrawer();
+        } else if (v == mBinding.navView.findViewById(R.id.promotionLay)) {
+            OpenCloseDrawer();
+            ((AppCompatActivity) this).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new PromotionFragment()).addToBackStack("promotion").commit();
         } else if (v == mBinding.navView.findViewById(R.id.walletLay)) {
             OpenCloseDrawer();
             ((AppCompatActivity) this).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new WalletFragment()).addToBackStack("wallet").commit();

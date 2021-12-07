@@ -57,20 +57,22 @@
                     android:background="@drawable/rounded_corner_white"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_45sdp">
+
                     <EditText
+                        android:id="@+id/nameET"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/_10sdp"
                         android:layout_marginRight="@dimen/_10sdp"
                         android:backgroundTint="@android:color/transparent"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:fontFamily="@font/gibson_regular"
                         android:hint="Name"
-                        android:fontFamily="@font/gibson_regular"
-                        android:textSize="@dimen/_12sdp"
-                        android:textColor="@color/black"
-                        android:singleLine="true"
-                        android:inputType="text"
                         android:imeOptions="actionNext"
-                        android:maxLines="1"/>
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12sdp" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -81,20 +83,22 @@
                     android:background="@drawable/rounded_corner_white"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_45sdp">
+
                     <EditText
+                        android:id="@+id/emailET"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/_10sdp"
                         android:layout_marginRight="@dimen/_10sdp"
                         android:backgroundTint="@android:color/transparent"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:fontFamily="@font/gibson_regular"
                         android:hint="Email"
-                        android:fontFamily="@font/gibson_regular"
-                        android:textSize="@dimen/_12sdp"
-                        android:textColor="@color/black"
-                        android:singleLine="true"
-                        android:inputType="textEmailAddress"
                         android:imeOptions="actionNext"
-                        android:maxLines="1"/>
+                        android:inputType="textEmailAddress"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12sdp" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -105,20 +109,22 @@
                     android:background="@drawable/rounded_corner_white"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_45sdp">
+
                     <EditText
+                        android:id="@+id/subjectET"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/_10sdp"
                         android:layout_marginRight="@dimen/_10sdp"
                         android:backgroundTint="@android:color/transparent"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:hint="Subject"
                         android:fontFamily="@font/gibson_regular"
-                        android:textSize="@dimen/_12sdp"
-                        android:textColor="@color/black"
-                        android:singleLine="true"
-                        android:inputType="text"
+                        android:hint="Subject"
                         android:imeOptions="actionNext"
-                        android:maxLines="1"/>
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12sdp" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -130,47 +136,50 @@
                     android:background="@drawable/rounded_corner_white"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_200sdp">
+
                     <EditText
-                        android:layout_marginTop="5dp"
-                        android:gravity="start"
-                        android:layout_marginLeft="@dimen/_10sdp"
-                        android:layout_marginRight="@dimen/_10sdp"
-                        android:backgroundTint="@android:color/transparent"
+                        android:id="@+id/messageET"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:hint="Message"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:backgroundTint="@android:color/transparent"
                         android:fontFamily="@font/gibson_regular"
-                        android:textSize="@dimen/_12sdp"
-                        android:textColor="@color/black"
-                        android:singleLine="true"
-                        android:inputType="text"
+                        android:gravity="start"
+                        android:hint="Message"
                         android:imeOptions="actionNext"
-                        android:maxLines="1"/>
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12sdp" />
                 </RelativeLayout>
             </LinearLayout>
 
             <RelativeLayout
+                android:id="@+id/submitBtn"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_45sdp"
                 android:layout_alignParentBottom="true"
-                android:elevation="10dp"
                 android:layout_marginLeft="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_20sdp"
                 android:layout_marginRight="@dimen/_20sdp"
                 android:layout_marginBottom="@dimen/_30sdp"
-                android:layout_marginTop="@dimen/_20sdp"
-                android:id="@+id/btnContinue"
                 android:background="@drawable/rounded_corner_button_dark_blue"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_45sdp">
+                android:elevation="10dp">
+
                 <TextView
-                    android:layout_centerInParent="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:textStyle="normal"
-                    android:textAllCaps="true"
+                    android:layout_centerInParent="true"
                     android:fontFamily="@font/gibson_regular"
-                    android:textSize="@dimen/_11sdp"
+                    android:text="Submit Now"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
                     android:textColor="@color/white"
-                    android:text="Submit Now"/>
+                    android:textSize="@dimen/_11sdp"
+                    android:textStyle="normal" />
             </RelativeLayout>
         </RelativeLayout>
     </RelativeLayout>

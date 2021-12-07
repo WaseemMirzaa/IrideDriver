@@ -18,17 +18,20 @@
         <entry key="..\:/Buzzware/IrideDriver/app/src/main/res/layout/chat_item_lay.xml" value="0.27291666666666664" />
         <entry key="..\:/Buzzware/IrideDriver/app/src/main/res/layout/content_home.xml" value="0.21614583333333334" />
         <entry key="..\:/Buzzware/IrideDriver/app/src/main/res/layout/fragment_chat.xml" value="0.27291666666666664" />
-        <entry key="..\:/Buzzware/IrideDriver/app/src/main/res/layout/fragment_customer_service.xml" value="0.14270833333333333" />
+        <entry key="..\:/Buzzware/IrideDriver/app/src/main/res/layout/fragment_customer_service.xml" value="0.25" />
         <entry key="..\:/Buzzware/IrideDriver/app/src/main/res/layout/fragment_home.xml" value="0.21614583333333334" />
         <entry key="..\:/Buzzware/IrideDriver/app/src/main/res/layout/fragment_invitation.xml" value="0.25" />
         <entry key="..\:/Buzzware/IrideDriver/app/src/main/res/layout/fragment_profile.xml" value="0.27291666666666664" />
+        <entry key="..\:/Buzzware/IrideDriver/app/src/main/res/layout/fragment_promotion.xml" value="0.27291666666666664" />
         <entry key="..\:/Buzzware/IrideDriver/app/src/main/res/layout/fragment_sign_in.xml" value="0.21614583333333334" />
         <entry key="..\:/Buzzware/IrideDriver/app/src/main/res/layout/fragment_sign_up.xml" value="0.21614583333333334" />
         <entry key="..\:/Buzzware/IrideDriver/app/src/main/res/layout/fragment_wallet.xml" value="0.14270833333333333" />
         <entry key="..\:/Buzzware/IrideDriver/app/src/main/res/layout/item_vehicle_image.xml" value="0.21614583333333334" />
         <entry key="..\:/Buzzware/IrideDriver/app/src/main/res/layout/messages_item_lay.xml" value="0.27291666666666664" />
         <entry key="..\:/Buzzware/IrideDriver/app/src/main/res/layout/nav_header_home.xml" value="0.21614583333333334" />
+        <entry key="..\:/Buzzware/IrideDriver/app/src/main/res/layout/notification_read_item.xml" value="0.27291666666666664" />
         <entry key="..\:/Buzzware/IrideDriver/app/src/main/res/layout/notification_unread_item_top.xml" value="0.14270833333333333" />
+        <entry key="..\:/Buzzware/IrideDriver/app/src/main/res/layout/promotion_item_desgin.xml" value="0.28489583333333335" />
       </map>
     </option>
   </component>
