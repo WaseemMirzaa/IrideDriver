@@ -11,15 +11,24 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.buzzware.iridedriver.Fragments.CompletedFragment;
 import com.buzzware.iridedriver.Fragments.CustomerServiceFragment;
 import com.buzzware.iridedriver.Fragments.HomeFragment;
 import com.buzzware.iridedriver.Fragments.InvitationFragment;
 import com.buzzware.iridedriver.Fragments.ProfileFragment;
+import com.buzzware.iridedriver.Fragments.PromotionFragment;
 import com.buzzware.iridedriver.Fragments.WalletFragment;
+import com.buzzware.iridedriver.Models.User;
 import com.buzzware.iridedriver.R;
 import com.buzzware.iridedriver.databinding.ActivityHomeBinding;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class Home extends AppCompatActivity implements View.OnClickListener {
 
@@ -56,6 +65,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         mBinding.navView.findViewById(R.id.homeLay).setOnClickListener(this);
         mBinding.navView.findViewById(R.id.bookingsLay).setOnClickListener(this);
         mBinding.navView.findViewById(R.id.walletLay).setOnClickListener(this);
+        mBinding.navView.findViewById(R.id.promotionLay).setOnClickListener(this);
         mBinding.navView.findViewById(R.id.profileLay).setOnClickListener(this);
         mBinding.navView.findViewById(R.id.inviteLay).setOnClickListener(this);
         mBinding.navView.findViewById(R.id.csLay).setOnClickListener(this);
@@ -64,6 +74,39 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         mBinding.documentsLay.setOnClickListener(v -> moveToVehicleDocumentsInfo());
         mBinding.rideHistoryLay.setOnClickListener(v -> moveToRideHistory());
 
+
+        getCurrentUserData();
+
+    }
+    private void getCurrentUserData() {
+
+        DocumentReference users = FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        users.addSnapshotListener((value, error) -> {
+
+            if (value != null) {
+
+                User user = value.toObject(User.class);
+
+                View headerLayout =
+                        mBinding.navView.getHeaderView(0);
+
+                if (user == null)
+
+                    return;
+
+                ImageView picIV = headerLayout.findViewById(R.id.picIV);
+
+                TextView nameTV = headerLayout.findViewById(R.id.nameTV);
+
+                nameTV.setText(user.firstName + " " + user.lastName);
+
+                Glide.with(this).load(user.image).apply(new RequestOptions().centerCrop().placeholder(R.drawable.dummy_girl)).into(picIV);
+
+            }
+
+
+        });
 
     }
 
@@ -126,6 +169,9 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         } else if (v == mBinding.navView.findViewById(R.id.bookingsLay)) {
             SetFragemnt();
             OpenCloseDrawer();
+        } else if (v == mBinding.navView.findViewById(R.id.promotionLay)) {
+            OpenCloseDrawer();
+            ((AppCompatActivity) this).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new PromotionFragment()).addToBackStack("promotion").commit();
         } else if (v == mBinding.navView.findViewById(R.id.walletLay)) {
             OpenCloseDrawer();
             ((AppCompatActivity) this).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new WalletFragment()).addToBackStack("wallet").commit();

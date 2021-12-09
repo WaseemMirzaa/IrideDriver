@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -8,26 +9,29 @@
         tools:context=".fragments.SignUpFragment">
 
         <ScrollView
-            android:scrollbars="vertical"
-            android:fillViewport="true"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:scrollbars="vertical">
+
             <RelativeLayout
-                android:layout_weight="1"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
                 <LinearLayout
                     android:id="@+id/lksl"
-                    android:layout_marginLeft="@dimen/_20sdp"
-                    android:layout_marginRight="@dimen/_20sdp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_20sdp"
+                    android:layout_marginRight="@dimen/_20sdp"
                     android:orientation="vertical">
+
                     <RelativeLayout
-                        android:layout_marginTop="@dimen/_15sdp"
-                        android:background="@drawable/rounded_corner_white"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_45sdp">
+                        android:layout_height="@dimen/_45sdp"
+                        android:layout_marginTop="@dimen/_15sdp"
+                        android:background="@drawable/rounded_corner_white">
 
                         <EditText
                             android:id="@+id/fNameET"
@@ -47,10 +51,10 @@
                     </RelativeLayout>
 
                     <RelativeLayout
-                        android:layout_marginTop="@dimen/_15sdp"
-                        android:background="@drawable/rounded_corner_white"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_45sdp">
+                        android:layout_height="@dimen/_45sdp"
+                        android:layout_marginTop="@dimen/_15sdp"
+                        android:background="@drawable/rounded_corner_white">
 
                         <EditText
                             android:id="@+id/lNameET"
@@ -70,10 +74,10 @@
                     </RelativeLayout>
 
                     <RelativeLayout
-                        android:layout_marginTop="@dimen/_15sdp"
-                        android:background="@drawable/rounded_corner_white"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_45sdp">
+                        android:layout_height="@dimen/_45sdp"
+                        android:layout_marginTop="@dimen/_15sdp"
+                        android:background="@drawable/rounded_corner_white">
 
                         <EditText
                             android:id="@+id/emailET"
@@ -93,10 +97,10 @@
                     </RelativeLayout>
 
                     <RelativeLayout
-                        android:layout_marginTop="@dimen/_15sdp"
-                        android:background="@drawable/rounded_corner_white"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_45sdp">
+                        android:layout_height="@dimen/_45sdp"
+                        android:layout_marginTop="@dimen/_15sdp"
+                        android:background="@drawable/rounded_corner_white">
 
                         <EditText
                             android:id="@+id/phoneET"
@@ -117,141 +121,173 @@
                     </RelativeLayout>
 
                     <RelativeLayout
-                        android:layout_marginTop="@dimen/_15sdp"
-                        android:background="@drawable/rounded_corner_white"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_45sdp">
+                        android:layout_height="@dimen/_45sdp"
+                        android:layout_marginTop="@dimen/_15sdp"
+                        android:background="@drawable/rounded_corner_white">
+
                         <EditText
                             android:id="@+id/cityET"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
                             android:layout_marginLeft="@dimen/_10sdp"
                             android:layout_marginRight="@dimen/_10sdp"
                             android:backgroundTint="@android:color/transparent"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:hint="City"
                             android:fontFamily="@font/gibson_regular"
-                            android:textSize="@dimen/_12sdp"
-                            android:textColor="@color/black"
-                            android:singleLine="true"
-                            android:maxLength="11"
-                            android:inputType="text"
+                            android:hint="City"
                             android:imeOptions="actionNext"
-                            android:maxLines="1"/>
+                            android:inputType="text"
+                            android:maxLength="11"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12sdp" />
                     </RelativeLayout>
 
                     <RelativeLayout
-                        android:layout_marginTop="@dimen/_15sdp"
-                        android:background="@drawable/rounded_corner_white"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_45sdp">
+                        android:layout_height="@dimen/_45sdp"
+                        android:layout_marginTop="@dimen/_15sdp"
+                        android:background="@drawable/rounded_corner_white">
+
                         <EditText
                             android:id="@+id/stateET"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
                             android:layout_marginLeft="@dimen/_10sdp"
                             android:layout_marginRight="@dimen/_10sdp"
                             android:backgroundTint="@android:color/transparent"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:fontFamily="@font/gibson_regular"
                             android:hint="State"
-                            android:fontFamily="@font/gibson_regular"
-                            android:textSize="@dimen/_12sdp"
-                            android:textColor="@color/black"
-                            android:singleLine="true"
-                            android:maxLength="11"
-                            android:inputType="text"
                             android:imeOptions="actionNext"
-                            android:maxLines="1"/>
+                            android:inputType="text"
+                            android:maxLength="11"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12sdp" />
                     </RelativeLayout>
 
                     <RelativeLayout
-                        android:layout_marginTop="@dimen/_15sdp"
-                        android:background="@drawable/rounded_corner_white"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_45sdp">
+                        android:layout_height="@dimen/_45sdp"
+                        android:layout_marginTop="@dimen/_15sdp"
+                        android:background="@drawable/rounded_corner_white">
+
                         <EditText
-                            android:layout_marginLeft="@dimen/_10sdp"
-                            android:layout_marginRight="@dimen/_10sdp"
-                            android:backgroundTint="@android:color/transparent"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:hint="Zip Code"
                             android:id="@+id/zipET"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/_10sdp"
+                            android:layout_marginRight="@dimen/_10sdp"
+                            android:backgroundTint="@android:color/transparent"
                             android:fontFamily="@font/gibson_regular"
-                            android:textSize="@dimen/_12sdp"
-                            android:textColor="@color/black"
-                            android:singleLine="true"
-                            android:maxLength="11"
+                            android:hint="Zip Code"
+                            android:imeOptions="actionNext"
                             android:inputType="number"
-                            android:imeOptions="actionNext"
-                            android:maxLines="1"/>
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_marginTop="@dimen/_15sdp"
-                        android:background="@drawable/rounded_corner_white"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_45sdp">
-                        <EditText
-                            android:layout_marginLeft="@dimen/_10sdp"
-                            android:layout_marginRight="@dimen/_10sdp"
-                            android:backgroundTint="@android:color/transparent"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:hint="Address"
-                            android:fontFamily="@font/gibson_regular"
-                            android:textSize="@dimen/_12sdp"
-                            android:textColor="@color/black"
-                            android:singleLine="true"
                             android:maxLength="11"
-                            android:inputType="text"
-                            android:imeOptions="actionNext"
-                            android:maxLines="1"/>
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12sdp" />
                     </RelativeLayout>
 
                     <RelativeLayout
-                        android:layout_marginTop="@dimen/_15sdp"
-                        android:background="@drawable/rounded_corner_white"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_45sdp">
+                        android:layout_height="@dimen/_45sdp"
+                        android:layout_marginTop="@dimen/_15sdp"
+                        android:background="@drawable/rounded_corner_white">
+
                         <EditText
+                            android:id="@+id/homeAddressET"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
                             android:layout_marginLeft="@dimen/_10sdp"
                             android:layout_marginRight="@dimen/_10sdp"
                             android:backgroundTint="@android:color/transparent"
+                            android:fontFamily="@font/gibson_regular"
+                            android:hint="Home Address"
+                            android:imeOptions="actionNext"
+                            android:inputType="text"
+                            android:maxLength="11"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12sdp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_45sdp"
+                        android:layout_marginTop="@dimen/_15sdp"
+                        android:background="@drawable/rounded_corner_white">
+
+                        <EditText
+                            android:id="@+id/workAddressET"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:hint="Password"
-                            android:id="@+id/passwordET"
+                            android:layout_marginLeft="@dimen/_10sdp"
+                            android:layout_marginRight="@dimen/_10sdp"
+                            android:backgroundTint="@android:color/transparent"
                             android:fontFamily="@font/gibson_regular"
-                            android:textSize="@dimen/_12sdp"
-                            android:textColor="@color/black"
+                            android:hint="Work Address"
+                            android:imeOptions="actionNext"
+                            android:inputType="text"
+                            android:maxLength="11"
+                            android:maxLines="1"
                             android:singleLine="true"
-                            android:inputType="textPassword"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12sdp" />
+                    </RelativeLayout>
+
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_45sdp"
+                        android:layout_marginTop="@dimen/_15sdp"
+                        android:background="@drawable/rounded_corner_white">
+
+                        <EditText
+                            android:id="@+id/passwordET"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/_10sdp"
+                            android:layout_marginRight="@dimen/_10sdp"
+                            android:backgroundTint="@android:color/transparent"
+                            android:fontFamily="@font/gibson_regular"
+                            android:hint="Password"
                             android:imeOptions="actionDone"
-                            android:maxLines="1"/>
+                            android:inputType="textPassword"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12sdp" />
                     </RelativeLayout>
                 </LinearLayout>
 
                 <RelativeLayout
+                    android:id="@+id/btnContinue"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_45sdp"
                     android:layout_below="@+id/lksl"
-                    android:elevation="10dp"
                     android:layout_marginLeft="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
                     android:layout_marginRight="@dimen/_20sdp"
                     android:layout_marginBottom="@dimen/_30sdp"
-                    android:layout_marginTop="@dimen/_20sdp"
-                    android:id="@+id/btnContinue"
                     android:background="@drawable/rounded_corner_button_yellow"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_45sdp">
+                    android:elevation="10dp">
+
                     <TextView
-                        android:layout_centerInParent="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAlignment="center"
-                        android:textStyle="normal"
-                        android:textAllCaps="true"
+                        android:layout_centerInParent="true"
                         android:fontFamily="@font/gibson_regular"
-                        android:textSize="@dimen/_11sdp"
+                        android:text="Continue"
+                        android:textAlignment="center"
+                        android:textAllCaps="true"
                         android:textColor="@color/white"
-                        android:text="Continue"/>
+                        android:textSize="@dimen/_11sdp"
+                        android:textStyle="normal" />
                 </RelativeLayout>
             </RelativeLayout>
         </ScrollView>

@@ -12,33 +12,36 @@
             android:id="@+id/headerLay"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_45sdp">
+
             <RelativeLayout
+                android:layout_marginTop="@dimen/_10sdp"
                 android:id="@+id/drawerIcon"
-                android:layout_marginLeft="@dimen/_12sdp"
-                android:layout_centerVertical="true"
                 android:layout_width="40dp"
-                android:layout_height="40dp">
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/_12sdp">
+
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/back_icon"
-                    android:layout_centerVertical="true" />
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/back_icon" />
             </RelativeLayout>
         </RelativeLayout>
 
         <TextView
-            android:layout_below="@+id/headerLay"
             android:id="@+id/tvTitle"
-            android:layout_marginLeft="@dimen/_12sdp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Invite new user"
+            android:layout_below="@+id/headerLay"
+            android:layout_marginLeft="@dimen/_12sdp"
+            android:fontFamily="@font/gibson_regular"
             android:paddingBottom="@dimen/_15sdp"
+            android:text="Refer a driver"
             android:textAllCaps="false"
             android:textColor="@color/black"
-            android:textStyle="bold"
-            android:fontFamily="@font/gibson_regular"
-            android:textSize="18dp"/>
+            android:textSize="18dp"
+            android:textStyle="bold" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_below="@+id/tvTitle"

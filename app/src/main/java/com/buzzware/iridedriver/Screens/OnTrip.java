@@ -143,6 +143,8 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
         mBinding.navigateCV.setOnClickListener(v -> performNavigation());
 
         mBinding.actionTV.setOnClickListener(v -> updateRideStatus());
+
+        mBinding.backIV.setOnClickListener(v->finish());
     }
 
     private void updateRideStatus() {
@@ -600,10 +602,15 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
     private void drawSecondPolyline(RideModel rideModel) {
 
-        SearchedPlaceModel pickUp = rideModel.tripDetail.destinations.get(0);
-        SearchedPlaceModel destination = rideModel.tripDetail.destinations.get(1);
+        if(rideModel.tripDetail.destinations.size()>1){
 
-        getDirections2(pickUp.lat, pickUp.lng, destination.lat, destination.lng, false);
+            SearchedPlaceModel pickUp = rideModel.tripDetail.destinations.get(0);
+
+            SearchedPlaceModel destination = rideModel.tripDetail.destinations.get(1);
+
+            getDirections2(pickUp.lat, pickUp.lng, destination.lat, destination.lng, false);
+        }
+
     }
 
     private void getDirections2(double lat, double lng, double lat1, double lng1, boolean b) {

@@ -18,6 +18,18 @@
             android:src="@drawable/dummy_two"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
+        <ImageView
+            android:id="@+id/backIV"
+            app:layout_constraintTop_toTopOf="@id/userImageIV"
+            app:layout_constraintStart_toStartOf="@id/userImageIV"
+            android:layout_margin="@dimen/_10sdp"
+            android:padding="@dimen/_2sdp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/back_icon"
+            app:tint="@color/white" />
+
 
         <ImageView
             android:id="@+id/editImageIV"
@@ -37,7 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="@dimen/_180sdp"
-            android:background="@color/purple_700"
+            android:background="@drawable/rounded_corner_gray_two_top"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent">
             <RelativeLayout
@@ -225,14 +237,14 @@
                         android:layout_height="@dimen/_45sdp">
 
                         <EditText
-                            android:id="@+id/addressET"
+                            android:id="@+id/homeAddressET"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginLeft="@dimen/_10sdp"
                             android:layout_marginRight="@dimen/_10sdp"
                             android:backgroundTint="@android:color/transparent"
                             android:fontFamily="@font/gibson_regular"
-                            android:hint="Address"
+                            android:hint="Home Address"
                             android:imeOptions="actionNext"
                             android:inputType="text"
                             android:maxLength="11"
@@ -241,6 +253,31 @@
                             android:textColor="@color/black"
                             android:textSize="@dimen/_12sdp" />
                     </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_marginTop="@dimen/_15sdp"
+                        android:background="@drawable/rounded_corner_white"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_45sdp">
+
+                        <EditText
+                            android:id="@+id/workAddressET"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/_10sdp"
+                            android:layout_marginRight="@dimen/_10sdp"
+                            android:backgroundTint="@android:color/transparent"
+                            android:fontFamily="@font/gibson_regular"
+                            android:hint="Work Address"
+                            android:imeOptions="actionNext"
+                            android:inputType="text"
+                            android:maxLength="11"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12sdp" />
+                    </RelativeLayout>
+
 
                 </LinearLayout>
 

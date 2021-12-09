@@ -20,6 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IrideDriver">
         <activity
+            android:name=".Screens.Notifications"
+            android:exported="true" />
+        <activity
             android:name=".Screens.EditProfileActivity"
             android:exported="true" />
         <activity

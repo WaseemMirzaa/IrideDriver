@@ -39,7 +39,7 @@ public class LocationTracker extends Service {
     /**
      * The desired interval for location updates. Inexact. Updates may be more or less frequent.
      */
-    private static final long UPDATE_INTERVAL_IN_MILLISECONDS =  10 * 1000; // Every 5 Seconds
+    private static final long UPDATE_INTERVAL_IN_MILLISECONDS =  3 * 1000; // Every 5 Seconds
 
     /**
      * The fastest rate for active location updates. Updates will never be more frequent

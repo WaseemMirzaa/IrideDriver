@@ -99,31 +99,9 @@
                                 android:fontFamily="@font/gibson_regular"/>
                         </LinearLayout>
 
-                        <LinearLayout
-                            android:id="@+id/scheduledRides"
-                            android:orientation="horizontal"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/_35sdp">
-                            <ImageView
-                                android:layout_gravity="center"
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:src="@drawable/booking"/>
-
-                            <TextView
-                                android:layout_marginLeft="@dimen/_15sdp"
-                                android:layout_gravity="center"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Scheduled Rides"
-                                android:textColor="@color/white"
-                                android:textSize="@dimen/_12sdp"
-                                android:textStyle="normal"
-                                android:fontFamily="@font/gibson_regular"/>
-                        </LinearLayout>
 
                         <LinearLayout
-                            android:id="@+id/promotionsLay"
+                            android:id="@+id/promotionLay"
                             android:orientation="horizontal"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_35sdp">

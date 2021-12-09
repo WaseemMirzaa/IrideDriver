@@ -78,6 +78,10 @@ public class EditProfileActivity extends BaseActivity {
             uploadDataToFirestore();
         });
 
+        binding.backIV.setOnClickListener(v->{
+            finish();
+        });
+
     }
 
 
@@ -116,7 +120,8 @@ public class EditProfileActivity extends BaseActivity {
         binding.cityET.setText(user.city);
         binding.stateET.setText(user.state);
         binding.zipET.setText(user.zipcode);
-        binding.addressET.setText(user.address);
+        binding.homeAddressET.setText(user.homeAddress);
+        binding.workAddressET.setText(user.workAddress);
 
     }
 
@@ -276,7 +281,8 @@ public class EditProfileActivity extends BaseActivity {
         Map<String, Object> userData = new HashMap<>();
         userData.put("firstName", binding.fNameET.getText().toString());
         userData.put("lastName", binding.lNameET.getText().toString());
-        userData.put("address", binding.addressET.getText().toString());
+        userData.put("homeAddress", binding.homeAddressET.getText().toString());
+        userData.put("workAddress", binding.workAddressET.getText().toString());
         userData.put("phoneNumber", binding.phoneET.getText().toString());
         userData.put("state", binding.stateET.getText().toString());
         userData.put("city", binding.cityET.getText().toString());

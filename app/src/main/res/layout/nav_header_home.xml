@@ -20,67 +20,73 @@
         android:layout_height="match_parent"/>
 
     <LinearLayout
-        android:padding="@dimen/_16sdp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="@dimen/_16sdp">
 
         <ImageView
-            android:layout_gravity="end"
-            android:layout_alignParentRight="true"
             android:layout_width="@dimen/_20sdp"
             android:layout_height="@dimen/_20sdp"
-            android:src="@drawable/drawer_white"
-            android:layout_centerInParent="true"/>
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:layout_gravity="end"
+            android:src="@drawable/drawer_white" />
 
         <RelativeLayout
-            android:layout_gravity="start"
             android:layout_width="60dp"
-            android:layout_height="60dp">
+            android:layout_height="60dp"
+            android:layout_gravity="start">
+
             <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/picIV"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/dummy_girl"
-                app:riv_corner_radius="@dimen/_10sdp"/>
+                app:riv_corner_radius="@dimen/_10sdp" />
 
             <RelativeLayout
-                android:background="@drawable/rounded_corner_button_yellow_curve"
+                android:visibility="invisible"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
-                android:layout_width="25dp"
-                android:layout_height="25dp">
+                android:background="@drawable/rounded_corner_button_yellow_curve">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="4.9"
-                    android:textSize="@dimen/_8sdp"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
                     android:layout_centerInParent="true"
-                    android:fontFamily="@font/gibson_semibd"/>
+                    android:fontFamily="@font/gibson_semibd"
+                    android:text="4.9"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_8sdp"
+                    android:textStyle="bold" />
             </RelativeLayout>
         </RelativeLayout>
 
         <TextView
-            android:layout_marginTop="20dp"
-            android:layout_gravity="start"
+            android:id="@+id/nameTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:fontFamily="@font/gibson_regular"
+            android:maxLines="1"
             android:text="Maria Snow"
             android:textColor="@color/white"
             android:textSize="@dimen/_16sdp"
-            android:textStyle="normal"
-            android:fontFamily="@font/gibson_regular"/>
+            android:textStyle="normal" />
 
         <TextView
-            android:layout_marginTop="5dp"
-            android:layout_gravity="start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="San Francisco, CA"
+            android:layout_gravity="start"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/gibson_regular"
             android:textColor="@color/white"
             android:textSize="@dimen/_10sdp"
-            android:textStyle="normal"
-            android:fontFamily="@font/gibson_regular"/>
+            android:textStyle="normal" />
     </LinearLayout>
 </RelativeLayout>
