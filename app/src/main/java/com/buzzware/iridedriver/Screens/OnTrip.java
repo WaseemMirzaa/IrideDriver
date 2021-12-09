@@ -15,7 +15,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
+import com.buzzware.iridedriver.Firebase.FirebaseInstances;
 import com.buzzware.iridedriver.LocationServices.LocationTracker;
+import com.buzzware.iridedriver.Models.Payouts.PayoutObj;
 import com.buzzware.iridedriver.Models.RideModel;
 import com.buzzware.iridedriver.Models.SearchedPlaceModel;
 import com.buzzware.iridedriver.Models.response.directions.DirectionsApiResponse;
@@ -38,13 +40,18 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 import com.google.maps.android.PolyUtil;
 import com.nabinbhandari.android.permissions.PermissionHandler;
 import com.nabinbhandari.android.permissions.Permissions;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import im.delight.android.location.SimpleLocation;
@@ -187,13 +194,58 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
         }
 
+        showLoader();
+
+       updateRideModel();
+    }
+
+    private void updateRideModel() {
+
         FirebaseFirestore.getInstance().collection("Bookings")
                 .document(rideModel.id).
-                set(rideModel);
+                set(rideModel)
+                .addOnCompleteListener(task -> {
 
-        setRideButton();
+                    hideLoader();
 
-        initPlace();
+                    if(rideModel.status.equalsIgnoreCase( "rideCompleted")) {
+
+                        createPayout();
+
+                        return;
+                    }
+
+                    setRideButton();
+
+                    initPlace();
+
+                });
+    }
+
+    private void createPayout() {
+
+        PayoutObj payoutObj = new PayoutObj();
+
+        payoutObj.amount = rideModel.price;
+        payoutObj.orderId = rideModel.id;
+        payoutObj.driverId = getUserId();
+        payoutObj.type = "order";
+        payoutObj.status = "unpaid";
+        payoutObj.completionDateTime = new Date().toString();
+        payoutObj.completionTimeStamp = new Date().getTime();
+
+        FirebaseInstances.payoutsCollection.document()
+                .set(payoutObj)
+                .addOnCompleteListener(task -> {
+
+                    hideLoader();
+
+                    setRideButton();
+
+                    initPlace();
+
+                });
+
 
     }
 

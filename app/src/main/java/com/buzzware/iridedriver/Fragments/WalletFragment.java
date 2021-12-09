@@ -1,21 +1,34 @@
 package com.buzzware.iridedriver.Fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-
-import androidx.core.view.GravityCompat;
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 
+import androidx.core.view.GravityCompat;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
+import com.buzzware.iridedriver.Adapters.PaymentsAdapter;
+import com.buzzware.iridedriver.Firebase.FirebaseInstances;
+import com.buzzware.iridedriver.Models.Payouts.PayoutObj;
+import com.buzzware.iridedriver.Models.Payouts.RideWithPayoutModel;
 import com.buzzware.iridedriver.R;
 import com.buzzware.iridedriver.Screens.Home;
 import com.buzzware.iridedriver.databinding.FragmentWalletBinding;
+import com.buzzware.iridedriver.utils.AppConstants;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
-public class WalletFragment extends Fragment {
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class WalletFragment extends BaseFragment {
 
     FragmentWalletBinding mBinding;
 
@@ -24,23 +37,160 @@ public class WalletFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_wallet, container, false);
 
-        Init();
+        init();
+
+        getRides();
 
         return mBinding.getRoot();
     }
 
-    private void Init() {
+    private void getRides() {
 
-        mBinding.drawerIcon.setOnClickListener(v->{
-            OpenCloseDrawer();
-        });
+        showLoader();
+
+        FirebaseInstances.bookingsCollection
+                .whereEqualTo("driverId", getUserId())
+                .whereIn("status", Arrays.asList(AppConstants.RideStatus.RIDE_COMPLETED, AppConstants.RideStatus.RATED))
+                .get()
+                .addOnCompleteListener(this::onGetRidesTaskCompleted);
 
     }
-    public static void OpenCloseDrawer() {
+
+    List<RideWithPayoutModel> completedRides = new ArrayList<>();
+    List<PayoutObj> payouts = new ArrayList<>();
+
+    private void onGetRidesTaskCompleted(Task<QuerySnapshot> task) {
+
+        completedRides = new ArrayList<>();
+
+        if (task.isSuccessful()) {
+
+            if (task.getResult() != null) {
+
+                for (DocumentSnapshot snapshot : task.getResult().getDocuments()) {
+
+                    RideWithPayoutModel rideModel = snapshot.toObject(RideWithPayoutModel.class);
+
+                    if (rideModel != null) {
+
+                        rideModel.id = snapshot.getId();
+
+                        completedRides.add(rideModel);
+                    }
+
+                }
+            }
+
+        }
+
+        getPayouts();
+
+    }
+
+    private void getPayouts() {
+
+        FirebaseInstances.payoutsCollection
+
+                .whereEqualTo("driverId", getUserId())
+
+                .get()
+
+                .addOnCompleteListener(this::onPayoutsInfoReceived);
+
+    }
+
+    private void onPayoutsInfoReceived(Task<QuerySnapshot> task) {
+
+        payouts = new ArrayList<>();
+
+        if (task.isSuccessful()) {
+
+            if (task.getResult() != null) {
+
+                for (DocumentSnapshot snapshot : task.getResult().getDocuments()) {
+
+                    PayoutObj payoutObj = snapshot.toObject(PayoutObj.class);
+
+                    if (payoutObj != null) {
+
+                        payoutObj.id = snapshot.getId();
+
+                        updateRides(payoutObj);
+
+                        payouts.add(payoutObj);
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        hideLoader();
+
+        setAdapter();
+
+    }
+
+    Float amount = 0.0f;
+
+    private void setAdapter() {
+
+        mBinding.paymentsRV.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        mBinding.paymentsRV.setAdapter(new PaymentsAdapter(getActivity(), completedRides));
+
+        calculateAmount();
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void calculateAmount() {
+
+        for (PayoutObj payoutObj : payouts) {
+
+            if (!payoutObj.status.equalsIgnoreCase("paid")) {
+
+                amount = Float.parseFloat(payoutObj.amount) + amount;
+
+            }
+        }
+
+        mBinding.amountTV.setText("$" + amount);
+
+    }
+
+    private void updateRides(PayoutObj payoutObj) {
+
+        if (payoutObj.orderId == null)
+
+            return;
+
+        for (int i = 0; i < completedRides.size(); i++) {
+
+            if (payoutObj.orderId.equalsIgnoreCase(completedRides.get(i).id)) {
+
+                completedRides.get(i).payout = payoutObj;
+
+                return;
+
+            }
+
+        }
+
+    }
+
+    private void init() {
+
+        mBinding.drawerIcon.setOnClickListener(v -> openCloseDrawer());
+
+    }
+
+    public static void openCloseDrawer() {
 
         if (Home.mBinding.drawerLayout.isDrawerVisible(GravityCompat.START)) {
 
@@ -51,25 +201,5 @@ public class WalletFragment extends Fragment {
             Home.mBinding.drawerLayout.openDrawer(GravityCompat.START);
 
         }
-
-    }
-
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
     }
 }

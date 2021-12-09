@@ -26,6 +26,7 @@
                     android:textSize="@dimen/_25sdp"
                     android:textColor="@color/white"
                     android:textStyle="bold"
+                    android:id="@+id/amountTV"
                     android:text="$150"
                     android:fontFamily="@font/gibson_semibd"/>
 
@@ -79,10 +80,11 @@
                 android:layout_marginLeft="@dimen/_20sdp"
                 android:layout_marginRight="@dimen/_20sdp"
                 android:elevation="@dimen/_8sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
                 android:background="@drawable/rounded_corner_white"
                 android:layout_marginTop="@dimen/_20sdp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:padding="@dimen/_10sdp">
 
                 <TextView
@@ -97,26 +99,10 @@
                     android:singleLine="true"
                     android:fontFamily="@font/gibson_regular"/>
 
-                <include
-                    layout="@layout/payment_list_item"/>
-
-                <View
-                    android:layout_marginTop="10dp"
+                <androidx.recyclerview.widget.RecyclerView
                     android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="@color/gray_light" />
-
-                <include
-                    layout="@layout/payment_list_item"/>
-
-                <View
-                    android:layout_marginTop="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="@color/gray_light" />
-
-                <include
-                    layout="@layout/payment_list_item"/>
+                    android:id="@+id/paymentsRV"
+                    android:layout_height="match_parent"/>
             </LinearLayout>
         </LinearLayout>
 

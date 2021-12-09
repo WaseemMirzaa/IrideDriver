@@ -3,17 +3,14 @@ package com.buzzware.iridedriver.Fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GravityCompat;
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+
+import androidx.core.view.GravityCompat;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -26,10 +23,7 @@ import com.buzzware.iridedriver.databinding.FragmentProfileBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 
 public class ProfileFragment extends Fragment implements View.OnClickListener {
 
@@ -71,15 +65,21 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         });
 
         binding.btnChat.setOnClickListener(v -> {
+
             startActivity(new Intent(getContext(), Chat.class));
+
         });
 
         binding.btnSettings.setOnClickListener(v -> {
+
             startActivity(new Intent(getContext(), EditProfileActivity.class));
+
         });
 
         binding.btnNotifications.setOnClickListener(v->{
+
             startActivity(new Intent(getContext(), Notifications.class));
+
         });
 
         binding.drawerIcon.setOnClickListener(v -> OpenCloseDrawer());
@@ -92,16 +92,14 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         if (user != null && user.getUid() != null) {
 
-            DocumentReference documentReferenceBuisnessUser = firebaseFirestore.collection("Users").document(user.getUid());
-            documentReferenceBuisnessUser.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                @Override
-                public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+            DocumentReference reference = firebaseFirestore.collection("Users").document(user.getUid());
 
-                    User user = value.toObject(User.class);
+            reference.addSnapshotListener((value, error) -> {
 
-                    setUserData(user);
+                User user1 = value.toObject(User.class);
 
-                }
+                setUserData(user1);
+
             });
 
         }
@@ -138,7 +136,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
     }
 
     @Override
@@ -150,17 +148,17 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onStop() {
         super.onStop();
-        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
     }
 
     @Override
     public void onClick(View v) {
         if (v == binding.btnNotifications) {
-            //startActivity(new Intent(this, Notifications.class));
+            startActivity(new Intent(getActivity(), Notifications.class));
         } else if (v == binding.btnSettings) {
-            //startActivity(new Intent(this, Settings.class));
+//            startActivity(new Intent(this, Pgo.class));
         } else if (v == binding.btnChat) {
-            startActivity(new Intent(getContext(), Chat.class));
+            startActivity(new Intent(getActivity(), Chat.class));
         }
     }
 
