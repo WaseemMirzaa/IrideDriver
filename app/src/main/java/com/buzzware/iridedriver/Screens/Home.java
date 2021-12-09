@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.buzzware.iridedriver.Fragments.CompletedFragment;
+import com.buzzware.iridedriver.Fragments.CustomerRequestsFragment;
 import com.buzzware.iridedriver.Fragments.CustomerServiceFragment;
 import com.buzzware.iridedriver.Fragments.HomeFragment;
 import com.buzzware.iridedriver.Fragments.InvitationFragment;
@@ -183,7 +184,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
             ((AppCompatActivity) this).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new InvitationFragment()).addToBackStack("invite").commit();
         } else if (v == mBinding.navView.findViewById(R.id.csLay)) {
             OpenCloseDrawer();
-            ((AppCompatActivity) this).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CustomerServiceFragment()).addToBackStack("cService").commit();
+            ((AppCompatActivity) this).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CustomerRequestsFragment()).addToBackStack("cService").commit();
         }
     }
 
