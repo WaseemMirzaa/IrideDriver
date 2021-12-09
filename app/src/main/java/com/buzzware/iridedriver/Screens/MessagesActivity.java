@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -31,6 +32,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class MessagesActivity extends AppCompatActivity {
+
 
     ActivityMessagesBinding binding;
 
@@ -128,11 +130,10 @@ public class MessagesActivity extends AppCompatActivity {
             }
         });
 
-        binding.backIV.setOnClickListener(v->{
-            finish();
-        });
+        binding.backIV.setOnClickListener(v -> finish());
 
     }
+
 
     private void getDataFromExtra() {
 

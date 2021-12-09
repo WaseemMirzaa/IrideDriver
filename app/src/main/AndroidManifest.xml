@@ -20,6 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IrideDriver">
         <activity
+            android:name=".Screens.CreateNewRequestActivity"
+            android:exported="true" />
+        <activity
             android:name=".Screens.Notifications"
             android:exported="true" />
         <activity
@@ -42,6 +45,9 @@
             android:theme="@style/Theme.white" />
         <activity
             android:name=".Fragments.Chat"
+            android:theme="@style/Theme.white" />
+        <activity
+            android:name=".Screens.MessagesActivity"
             android:theme="@style/Theme.white" />
         <activity
             android:name=".Screens.Authentication"

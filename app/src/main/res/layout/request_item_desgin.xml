@@ -14,46 +14,56 @@
             android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/mainLL"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintEnd_toStartOf="@id/sendIV"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
+                    android:id="@+id/nameTV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:fontFamily="@font/gibson_semibd"
                     android:maxLines="1"
-                    android:text="Complete 20 trips to get 65$ extra"
+                    android:text="Name"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_14sdp"
                     android:textStyle="normal" />
 
                 <TextView
+                    android:id="@+id/subjectTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:layout_marginTop="5dp"
                     android:ellipsize="end"
                     android:fontFamily="@font/gibson_regular"
-                    android:maxLines="2"
-                    android:text="Prefer a different Quest? Tap to change your offer"
+                    android:maxLines="1"
+                    android:text="Subject"
+                    android:textColor="@color/gray_light"
+                    android:textSize="@dimen/_10sdp"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:id="@+id/messageTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginTop="5dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/gibson_regular"
+                    android:maxLines="1"
+                    android:text="Message"
                     android:textColor="@color/gray_light"
                     android:textSize="@dimen/_10sdp"
                     android:textStyle="normal" />
 
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/sendIV"
-                android:layout_width="@dimen/_50sdp"
-                android:layout_height="@dimen/_50sdp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
