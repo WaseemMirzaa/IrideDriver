@@ -30,11 +30,9 @@ public class FirebaseRequests {
     StorageReference storageReference;
     FirebaseFirestore firebaseFirestore;
 
-    public static FirebaseRequests GetFirebaseRequests(Context context)
-    {
-        if(firebaseRequests == null)
-        {
-            firebaseRequests= new FirebaseRequests(context);
+    public static FirebaseRequests GetFirebaseRequests(Context context) {
+        if (firebaseRequests == null) {
+            firebaseRequests = new FirebaseRequests(context);
         }
         return firebaseRequests;
     }
@@ -42,54 +40,51 @@ public class FirebaseRequests {
     public FirebaseRequests(Context context) {
         this.context = context;
         ///init firebase
-        mAuth= FirebaseAuth.getInstance();
-        firebaseFirestore= FirebaseFirestore.getInstance();
-        storageReference= FirebaseStorage.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference();
     }
 
 
-    public void GetConversationList(ConversationResponseCallback callback, String uID, Context context)
-    {
+    public void GetConversationList(ConversationResponseCallback callback, String uID, Context context) {
 
         final List<ConversationModel>[] list = new List[]{new ArrayList<>()};
-        firebaseFirestore.collection("Chat").whereEqualTo("participants."+uID, true)
+        firebaseFirestore.collection("Chat").whereEqualTo("participants." + uID, true)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                if(value != null){
-                    list[0].clear();
-                    for(DocumentSnapshot documentSnapshot : value.getDocuments()){
-                        LastMessageModel lastMessageModel= documentSnapshot.get("lastMessage", LastMessageModel.class);
-                        GetUserData(documentSnapshot.getId(), lastMessageModel, context, uID, list[0], callback);
-                    }
-                }else{
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if (value != null) {
+                            list[0].clear();
+                            for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
+                                LastMessageModel lastMessageModel = documentSnapshot.get("lastMessage", LastMessageModel.class);
+                                GetUserData(documentSnapshot.getId(), lastMessageModel, context, uID, list[0], callback);
+                            }
+                        } else {
 
-                    callback.onResponse(list[0], true, error.getMessage());
-                }
-            }
-        });
+                            callback.onResponse(list[0], true, error.getMessage());
+                        }
+                    }
+                });
     }
 
     private void GetUserData(String conversationID, LastMessageModel lastMessageModel, Context context, String myID, List<ConversationModel> list, ConversationResponseCallback callback) {
-        String userID="";
-        if(lastMessageModel.getFromID().equals(myID))
-        {
-            userID= lastMessageModel.getToID();
+        String userID = "";
+        if (lastMessageModel.getFromID().equals(myID)) {
+            userID = lastMessageModel.getToID();
         }
-        if(lastMessageModel.getToID().equals(myID)){
-            userID= lastMessageModel.getFromID();
+        if (lastMessageModel.getToID().equals(myID)) {
+            userID = lastMessageModel.getFromID();
         }
 
         final DocumentReference documentReferenceUser = firebaseFirestore.collection("Users").document(userID);
-        documentReferenceUser.addSnapshotListener(((Activity) context) , new EventListener<DocumentSnapshot>() {
+        documentReferenceUser.addSnapshotListener(((Activity) context), new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
-                if(documentSnapshot != null)
-                {
+                if (documentSnapshot != null) {
                     User userModel = documentSnapshot.toObject(User.class);
-                    String id= documentSnapshot.getId();
-                    userModel.id=id;
-                    list.add(new ConversationModel(conversationID, userModel.id, userModel.firstName, userModel.image, lastMessageModel.getContent(),lastMessageModel.getToID()));
+                    String id = documentSnapshot.getId();
+                    userModel.id = id;
+                    list.add(new ConversationModel(conversationID, userModel.id, userModel.firstName, userModel.image, lastMessageModel.getContent(), lastMessageModel.getToID()));
                     callback.onResponse(list, false, "Null");
                 }
             }
@@ -97,24 +92,30 @@ public class FirebaseRequests {
     }
 
     public void LoadMessages(MessagesResponseCallback callback, Context context, String conversationID) {
-        List<MessageModel> messageModels= new ArrayList<>();
-        firebaseFirestore.collection("Chat").document(conversationID).collection("Conversations").addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                if(value != null){
-                    for(DocumentChange documentSnapshot : value.getDocumentChanges()){
-                        MessageModel messageModel= documentSnapshot.getDocument().toObject(MessageModel.class);
-                        messageModels.add(messageModel);
-                    }
 
-                    callback.onResponse(messageModels, false, "Null");
-                }else{
-                    callback.onResponse(messageModels, true, error.getMessage());
+        List<MessageModel> messageModels = new ArrayList<>();
+
+        firebaseFirestore.collection("Chat").document(conversationID).collection("Conversations").addSnapshotListener((value, error) -> {
+
+            if (value != null) {
+
+                for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
+
+                    MessageModel messageModel = documentSnapshot.toObject(MessageModel.class);
+
+                    messageModels.add(messageModel);
+
                 }
+
+                callback.onResponse(messageModels, false, "Null");
+
+            } else {
+
+                callback.onResponse(messageModels, true, error.getMessage());
+
             }
         });
     }
-
 
 
 }

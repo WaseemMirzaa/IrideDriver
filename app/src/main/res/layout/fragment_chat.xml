@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white">
@@ -23,18 +23,20 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_alignParentRight="true"
                 android:id="@+id/searchIcon"
-                android:layout_marginRight="@dimen/_12sdp"
-                android:layout_centerVertical="true"
                 android:layout_width="40dp"
-                android:layout_height="40dp">
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/_12sdp"
+                android:visibility="gone">
+
                 <ImageView
-                    android:layout_alignParentRight="true"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/search"
-                    android:layout_centerVertical="true" />
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/search" />
             </RelativeLayout>
         </RelativeLayout>
 
@@ -67,19 +69,21 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:elevation="@dimen/_8sdp"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
             android:layout_marginRight="@dimen/_16sdp"
             android:layout_marginBottom="@dimen/_16sdp"
             android:background="@drawable/rounded_corner_button_light_blue"
-            android:layout_width="@dimen/_40sdp"
-            android:layout_height="@dimen/_40sdp">
+            android:elevation="@dimen/_8sdp"
+            android:visibility="gone">
+
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_centerInParent="true"
-                android:src="@drawable/ic_baseline_add_24"/>
+                android:src="@drawable/ic_baseline_add_24" />
         </RelativeLayout>
     </RelativeLayout>
 </layout>

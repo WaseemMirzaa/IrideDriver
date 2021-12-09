@@ -49,11 +49,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false);
 
-        try {
-            Init();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Init();
 
         getCurrentUserData();
 
@@ -65,15 +61,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
     private void setListener() {
 
-        binding.editIcon.setOnClickListener(v->{
+        binding.editIcon.setOnClickListener(v -> {
 
             startActivity(new Intent(getContext(), EditProfileActivity.class));
 
         });
 
-        binding.btnChat.setOnClickListener(v->{
-
-        });
 
     }
 
@@ -116,13 +109,23 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         ///init click
         binding.btnNotifications.setOnClickListener(this);
         binding.btnSettings.setOnClickListener(this);
-        binding.btnChat.setOnClickListener(this);
+
+        binding.btnChat.setOnClickListener(v -> moveToChat());
+    }
+
+    private void moveToChat() {
+
+        startActivity(new Intent(getContext(), Chat.class));
+
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+
+        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+
+
     }
 
     @Override
@@ -143,8 +146,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             //startActivity(new Intent(this, Notifications.class));
         } else if (v == binding.btnSettings) {
             //startActivity(new Intent(this, Settings.class));
-        } else if (v == binding.btnChat) {
-            startActivity(new Intent(getContext(), Chat.class));
         }
     }
 }

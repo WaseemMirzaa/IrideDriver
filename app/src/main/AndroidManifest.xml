@@ -23,6 +23,9 @@
             android:name=".Screens.EditProfileActivity"
             android:exported="true" />
         <activity
+            android:name=".Screens.MessagesActivity"
+            android:exported="true" />
+        <activity
             android:name=".Screens.CollectVehicleDataScreen"
             android:theme="@style/Theme.white" />
         <activity

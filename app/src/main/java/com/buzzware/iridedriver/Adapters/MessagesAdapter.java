@@ -1,7 +1,6 @@
 package com.buzzware.iridedriver.Adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,25 +8,35 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.buzzware.iridedriver.Models.MessageModel;
+import com.buzzware.iridedriver.R;
 import com.buzzware.iridedriver.databinding.MessagesItemLayBinding;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 
-public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHolder>  {
+public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHolder> {
 
-    private List<MessageModel> list;
-    private Context mContext;
-    String  userId;
+    List<MessageModel> list;
+    Context mContext;
 
-    public MessagesAdapter(Context mContext, List<MessageModel> list, String currentUserId) {
+    String userId;
+    String myImageUrl;
+    String otherUserImageUrl;
+
+    public MessagesAdapter(Context mContext, List<MessageModel> list, String userId, String myImageUrl, String otherUserImageUrl) {
+
         this.list = list;
+
         this.mContext = mContext;
-        userId= currentUserId;
+
+        this.userId = userId;
+        this.myImageUrl = myImageUrl;
+        this.otherUserImageUrl = otherUserImageUrl;
     }
 
     @NonNull
@@ -41,24 +50,44 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int i) {
-        final MessageModel messageModel= list.get(i);
-        if(messageModel.getFromID().equals(userId))
-        {
-            /////my mesage layout
+        final MessageModel messageModel = list.get(i);
+
+        if (messageModel.getFromID().equals(userId)) {
+            //my message layout
+
+            Glide.with(mContext).load(myImageUrl)
+                    .apply(new RequestOptions().centerCrop().placeholder(R.drawable.dummy_girl))
+                    .into(viewHolder.binding.myMessageLay.userImageIV);
+
             viewHolder.binding.othersMessageLay.getRoot().setVisibility(View.GONE);
+
             viewHolder.binding.myMessageLay.getRoot().setVisibility(View.VISIBLE);
-            if(messageModel.getType().equals("text"))
-            {
+
+            if (messageModel.getType().equals("text")) {
+
                 viewHolder.binding.myMessageLay.messageTV.setText(messageModel.getContent());
+
                 viewHolder.binding.myMessageLay.timeTV.setText(convertFormat(String.valueOf(messageModel.getTimestamp())));
+
             }
-        }else{
-            ///othe rmessage layout
+
+
+
+        } else {
+            ///other message layout
+
+            Glide.with(mContext).load(otherUserImageUrl)
+                    .apply(new RequestOptions().centerCrop().placeholder(R.drawable.dummy_girl))
+                    .into(viewHolder.binding.othersMessageLay.userImageIV);
+
             viewHolder.binding.myMessageLay.getRoot().setVisibility(View.GONE);
+
             viewHolder.binding.othersMessageLay.getRoot().setVisibility(View.VISIBLE);
-            if(messageModel.getType().equals("text"))
-            {
+
+            if (messageModel.getType().equals("text")) {
+
                 viewHolder.binding.othersMessageLay.messageTV.setText(messageModel.getContent());
+
                 viewHolder.binding.othersMessageLay.timeTV.setText(convertFormat(String.valueOf(messageModel.getTimestamp())));
             }
         }
@@ -69,37 +98,26 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         return list.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         MessagesItemLayBinding binding;
 
         public ViewHolder(@NonNull MessagesItemLayBinding binding) {
+
             super(binding.getRoot());
+
             this.binding = binding;
         }
     }
 
-    public int RandomColors()
-    {
-        Random rnd = new Random();
-        int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
-        return color;
-    }
-
     public static String convertFormat(String inputDate) {
         Date date = null;
+
         date = new Date(Long.parseLong(inputDate));
 
-        if (date == null) {
-            return "";
-        }
+        SimpleDateFormat dF = new SimpleDateFormat("hh:mm a");
 
-        SimpleDateFormat convetDateFormat = new SimpleDateFormat("hh:mm a");
-
-        return convetDateFormat.format(date);
+        return dF.format(date);
     }
 
-    public interface OnItemClick{
-        void OnClick(String url, String time);
-    }
 }
