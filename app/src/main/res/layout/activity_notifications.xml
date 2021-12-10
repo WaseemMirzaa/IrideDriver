@@ -65,31 +65,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/rv_notifcations"/>
-
-                <!--                these are dummy items you have to use recyclerview-->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                    <include
-                        layout="@layout/notification_unread_item_top"/>
-
-                    <include
-                        layout="@layout/notification_unread_item_mid"/>
-
-                    <include
-                        layout="@layout/notification_unread_item_bottom"/>
-
-                    <include
-                        layout="@layout/notification_read_item"/>
-
-                    <include
-                        layout="@layout/notification_read_item"/>
-
-                    <include
-                        layout="@layout/notification_read_item"/>
-                </LinearLayout>
+                    android:id="@+id/notificationRV"/>
             </RelativeLayout>
         </RelativeLayout>
     </RelativeLayout>
