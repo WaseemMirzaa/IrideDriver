@@ -11,11 +11,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.buzzware.iridedriver.Firebase.FirebaseInstances;
 import com.buzzware.iridedriver.Fragments.CompletedFragment;
 import com.buzzware.iridedriver.Fragments.CustomerRequestsFragment;
 import com.buzzware.iridedriver.Fragments.CustomerServiceFragment;
@@ -53,6 +56,8 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         }
     }
 
+    Switch onlineSwitch;
+
     private void Init() {
 
         selectedFragment = new HomeFragment();
@@ -70,6 +75,9 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         mBinding.navView.findViewById(R.id.profileLay).setOnClickListener(this);
         mBinding.navView.findViewById(R.id.inviteLay).setOnClickListener(this);
         mBinding.navView.findViewById(R.id.csLay).setOnClickListener(this);
+        onlineSwitch = mBinding.navView.findViewById(R.id.OnlineSwitch);
+
+        onlineSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> setOnline(isChecked));
 
         mBinding.vehicleInfoLay.setOnClickListener(v -> moveToVehicleInfo());
         mBinding.documentsLay.setOnClickListener(v -> moveToVehicleDocumentsInfo());
@@ -79,6 +87,14 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         getCurrentUserData();
 
     }
+
+    private void setOnline(boolean isChecked) {
+
+        FirebaseInstances.usersCollection.document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .update("isOnline", isChecked);
+
+    }
+
     private void getCurrentUserData() {
 
         DocumentReference users = FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
@@ -95,6 +111,16 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                 if (user == null)
 
                     return;
+
+                if(user.isOnline != null) {
+
+                    onlineSwitch.setChecked(user.isOnline);
+
+                } else {
+
+                    setOnline(false);
+
+                }
 
                 ImageView picIV = headerLayout.findViewById(R.id.picIV);
 

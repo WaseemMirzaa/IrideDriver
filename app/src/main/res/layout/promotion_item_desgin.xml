@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/_15sdp">
@@ -25,9 +25,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
+                    android:id="@+id/titleTV"
                     android:fontFamily="@font/gibson_semibd"
-                    android:maxLines="1"
-                    android:text="Complete 20 trips to get 65$ extra"
+                    android:text="Compleasdasdsdasdasdasdasdasdasdte 20 trips to get 65$ extra"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_14sdp"
                     android:textStyle="normal" />
@@ -38,12 +38,18 @@
                     android:layout_gravity="start"
                     android:layout_marginTop="5dp"
                     android:ellipsize="end"
+                    android:id="@+id/descTV"
                     android:fontFamily="@font/gibson_regular"
-                    android:maxLines="2"
-                    android:text="Prefer a different Quest? Tap to change your offer"
+                    android:text="asdasdasdasdasdasdasd asd a different Quest? Tap to change your offer"
                     android:textColor="@color/gray_light"
                     android:textSize="@dimen/_10sdp"
                     android:textStyle="normal" />
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 

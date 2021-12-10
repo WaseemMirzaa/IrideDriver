@@ -18,6 +18,7 @@ import androidx.databinding.DataBindingUtil;
 import com.buzzware.iridedriver.Firebase.FirebaseInstances;
 import com.buzzware.iridedriver.LocationServices.LocationTracker;
 import com.buzzware.iridedriver.Models.Payouts.PayoutObj;
+import com.buzzware.iridedriver.Models.Promotion.PromotionObj;
 import com.buzzware.iridedriver.Models.RideModel;
 import com.buzzware.iridedriver.Models.SearchedPlaceModel;
 import com.buzzware.iridedriver.Models.response.directions.DirectionsApiResponse;
@@ -42,7 +43,10 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.google.maps.android.PolyUtil;
 import com.nabinbhandari.android.permissions.PermissionHandler;
@@ -101,7 +105,7 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
                         RideModel r = value.toObject(RideModel.class);
 
-                        if(r.status.equalsIgnoreCase(AppConstants.RideStatus.CANCELLED)) {
+                        if (r.status.equalsIgnoreCase(AppConstants.RideStatus.CANCELLED)) {
 
                             Toast.makeText(this, "Ride Cancelled", Toast.LENGTH_SHORT).show();
 
@@ -119,7 +123,7 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
                             finish();
                         }
 
-                    }catch (Exception e) {
+                    } catch (Exception e) {
 
                     }
 
@@ -151,7 +155,7 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
         mBinding.actionTV.setOnClickListener(v -> updateRideStatus());
 
-        mBinding.backIV.setOnClickListener(v->finish());
+        mBinding.backIV.setOnClickListener(v -> finish());
     }
 
     private void updateRideStatus() {
@@ -196,7 +200,9 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
         showLoader();
 
-       updateRideModel();
+        updateRideModel();
+
+        updateRideModel();
     }
 
     private void updateRideModel() {
@@ -208,7 +214,7 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
                     hideLoader();
 
-                    if(rideModel.status.equalsIgnoreCase( "rideCompleted")) {
+                    if (rideModel.status.equalsIgnoreCase("rideCompleted")) {
 
                         createPayout();
 
@@ -240,13 +246,97 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
                     hideLoader();
 
+                    checkPromotions();
+
+                });
+
+
+    }
+
+    private void checkPromotions() {
+
+        long time = new Date().getTime() /1000L;
+
+        FirebaseInstances.promotionsCollection
+                .get()
+                .addOnCompleteListener(task -> {
+
+                    if (task.isSuccessful()) {
+
+                        for (DocumentSnapshot documentSnapshot : task.getResult().getDocuments()) {
+
+                            PromotionObj promotionObj = documentSnapshot.toObject(PromotionObj.class);
+
+                            promotionObj.id = documentSnapshot.getId();
+
+                            if(promotionObj.startTime < time && time < promotionObj.endTime) {
+
+                                if (promotionObj.rideModels == null)
+
+                                    promotionObj.rideModels = new ArrayList<>();
+
+                                promotionObj.rideModels.add(rideModel);
+
+                                checkAndCreatePayout(promotionObj);
+
+                                FirebaseInstances.promotionsCollection.document(promotionObj.id)
+                                        .set(promotionObj);
+
+                            }
+
+                        }
+
+                    }
+
+
                     setRideButton();
 
                     initPlace();
 
                 });
 
+    }
 
+    private void checkAndCreatePayout(PromotionObj promotionObj) {
+
+        String userId = FirebaseAuth.getInstance().getUid();
+
+        List<RideModel> rideModels = promotionObj.rideModels;
+
+        int count = 0;
+
+        for(RideModel rideModel: rideModels) {
+
+            if(rideModel.driverId != null && rideModel.driverId.equalsIgnoreCase(userId)) {
+
+                count ++;
+
+            }
+
+        }
+
+        if(count >= promotionObj.noOfTrips) {
+
+            createPayout(promotionObj);
+
+        }
+
+    }
+
+    private void createPayout(PromotionObj promotionObj) {
+
+        PayoutObj payoutObj = new PayoutObj();
+
+        payoutObj.amount = promotionObj.amount+"";
+        payoutObj.orderId = null;
+        payoutObj.driverId = getUserId();
+        payoutObj.type = "promotion";
+        payoutObj.status = "unpaid";
+        payoutObj.completionDateTime = new Date().toString();
+        payoutObj.completionTimeStamp = new Date().getTime();
+
+        FirebaseInstances.payoutsCollection.document()
+                .set(payoutObj);
     }
 
     private void showCurrentLocation() {
@@ -283,7 +373,6 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
                 } else {
 
-
                     destLat = rideModel.tripDetail.destinations.get(0).lat;
                     destLng = rideModel.tripDetail.destinations.get(0).lng;
 
@@ -291,6 +380,7 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
             }
         }
+
         Uri gmmIntentUri = Uri.parse("google.navigation:q=" + destLat + "," + destLng);
 
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
@@ -654,7 +744,7 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
     private void drawSecondPolyline(RideModel rideModel) {
 
-        if(rideModel.tripDetail.destinations.size()>1){
+        if (rideModel.tripDetail.destinations.size() > 1) {
 
             SearchedPlaceModel pickUp = rideModel.tripDetail.destinations.get(0);
 
@@ -773,7 +863,6 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
     void setRideButton() {
 
         mBinding.cancelCV.setVisibility(View.GONE);
-
 
 
         mBinding.actionTV.setText("Complete First Drop Off");
@@ -968,6 +1057,7 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
                     .title("Destination")
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)))
             );
+
         } else {
 
             markers.add(mMap.addMarker(new MarkerOptions()
@@ -975,9 +1065,10 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
                     .title("Destination")
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)))
             );
+
             if (destinations.size() > 1) {
 
-               markers.add( mMap.addMarker(new MarkerOptions()
+                markers.add(mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(destinations.get(1).lat, destinations.get(1).lng))
                         .title("Destination")
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))));
@@ -1003,4 +1094,5 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
         }
 
     }
+
 }
