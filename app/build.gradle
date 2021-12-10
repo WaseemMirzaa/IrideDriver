@@ -3,19 +3,20 @@ plugins {
 }
 
 android {
+
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
     defaultConfig {
+
         applicationId "com.buzzware.iridedriver"
         minSdkVersion 23
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
-
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        
     }
 
     buildTypes {
