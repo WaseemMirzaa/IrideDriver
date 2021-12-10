@@ -1,5 +1,6 @@
 package com.buzzware.iridedriver.Screens;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
@@ -12,15 +13,18 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.buzzware.iridedriver.Firebase.FirebaseInstances;
 import com.buzzware.iridedriver.Fragments.CompletedFragment;
 import com.buzzware.iridedriver.Fragments.CustomerRequestsFragment;
 import com.buzzware.iridedriver.Fragments.CustomerServiceFragment;
 import com.buzzware.iridedriver.Fragments.HomeFragment;
 import com.buzzware.iridedriver.Fragments.InvitationFragment;
+import com.buzzware.iridedriver.Fragments.NotificationFragment;
 import com.buzzware.iridedriver.Fragments.ProfileFragment;
 import com.buzzware.iridedriver.Fragments.PromotionFragment;
 import com.buzzware.iridedriver.Fragments.WalletFragment;
@@ -71,7 +75,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
 
                         if (!task.isSuccessful()) {
 
-                            Log.w("FireBase Token", "Fetching FCM registration token failed", task.getException());
+//                            Log.w("FireBase Token", "Fetching FCM registration token failed", task.getException());
                             return;
 
                         }
