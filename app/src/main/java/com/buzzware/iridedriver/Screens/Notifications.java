@@ -3,6 +3,7 @@ package com.buzzware.iridedriver.Screens;
 import static com.buzzware.iridedriver.Fragments.WalletFragment.openCloseDrawer;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -10,12 +11,18 @@ import android.os.Bundle;
 
 import com.buzzware.iridedriver.Models.NotificationAdapter;
 import com.buzzware.iridedriver.Models.NotificationModel;
+import com.buzzware.iridedriver.Models.User;
 import com.buzzware.iridedriver.R;
 import com.buzzware.iridedriver.databinding.ActivityNotificationsBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -30,6 +37,9 @@ public class Notifications extends AppCompatActivity {
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
 
     List<NotificationModel> notificationList=new ArrayList<>();
+
+    String image="";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +77,8 @@ public class Notifications extends AppCompatActivity {
 
                         notification.setId(document.getId());
 
+                        notification.setImage(getImage(notification.getFromId()));
+
                         if(notification.getToId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
 
                             notificationList.add(notification);
@@ -91,5 +103,30 @@ public class Notifications extends AppCompatActivity {
         binding.notificationRV.setAdapter(normalBottleAdapter);
 
     }
+
+    public String getImage(String id) {
+        image="";
+            DocumentReference documentReferenceBuisnessUser = firebaseFirestore.collection("Users").document(id);
+
+            documentReferenceBuisnessUser.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                @Override
+                public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+
+                    if (value != null) {
+
+                        User user = value.toObject(User.class);
+                        image=user.image;
+
+                    }
+
+
+                }
+            });
+
+            return image;
+
+
+    }
+
 
 }

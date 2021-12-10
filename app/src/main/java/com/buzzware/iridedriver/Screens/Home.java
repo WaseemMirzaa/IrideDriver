@@ -97,6 +97,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                 .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .update(userData);
     }
+
     private void Init() {
 
         selectedFragment = new HomeFragment();
@@ -115,13 +116,16 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         mBinding.navView.findViewById(R.id.profileLay).setOnClickListener(this);
         mBinding.navView.findViewById(R.id.inviteLay).setOnClickListener(this);
         mBinding.navView.findViewById(R.id.csLay).setOnClickListener(this);
+        mBinding.navView.findViewById(R.id.rideHistoryLay).setOnClickListener(this);
+        mBinding.navView.findViewById(R.id.vehicleInfoLay).setOnClickListener(this);
+        mBinding.navView.findViewById(R.id.documentsLay).setOnClickListener(this);
         onlineSwitch = mBinding.navView.findViewById(R.id.OnlineSwitch);
 
         onlineSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> setOnline(isChecked));
 
-        mBinding.vehicleInfoLay.setOnClickListener(v -> moveToVehicleInfo());
-        mBinding.documentsLay.setOnClickListener(v -> moveToVehicleDocumentsInfo());
-        mBinding.rideHistoryLay.setOnClickListener(v -> moveToRideHistory());
+        //   mBinding.vehicleInfoLay.setOnClickListener(v -> moveToVehicleInfo());
+        //   mBinding.documentsLay.setOnClickListener(v -> moveToVehicleDocumentsInfo());
+        //  mBinding.rideHistoryLay.setOnClickListener(v -> moveToRideHistory());
 
 
         getCurrentUserData();
@@ -152,7 +156,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
 
                     return;
 
-                if(user.isOnline != null) {
+                if (user.isOnline != null) {
 
                     onlineSwitch.setChecked(user.isOnline);
 
@@ -254,6 +258,13 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         } else if (v == mBinding.navView.findViewById(R.id.csLay)) {
             OpenCloseDrawer();
             ((AppCompatActivity) this).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CustomerRequestsFragment()).addToBackStack("cService").commit();
+        } else if (v == mBinding.navView.findViewById(R.id.rideHistoryLay)) {
+            OpenCloseDrawer();
+            ((AppCompatActivity) this).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CompletedFragment()).addToBackStack("history").commit();
+        } else if (v == mBinding.navView.findViewById(R.id.vehicleInfoLay)) {
+            moveToVehicleInfo();
+        } else if (v == mBinding.navView.findViewById(R.id.documentsLay)) {
+           moveToVehicleDocumentsInfo();
         }
     }
 

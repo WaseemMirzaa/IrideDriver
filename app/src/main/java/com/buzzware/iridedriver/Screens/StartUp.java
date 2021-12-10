@@ -31,8 +31,6 @@ public class StartUp extends BaseActivity {
 
         super.onCreate(savedInstanceState);
 
-        getWindow().setFlags(FLAG_LAYOUT_NO_LIMITS, FLAG_LAYOUT_NO_LIMITS);
-
         FirebaseApp.initializeApp(this);
 
         mBinding = ActivityStartupBinding.inflate(getLayoutInflater());
