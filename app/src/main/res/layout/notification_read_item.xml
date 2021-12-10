@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -26,18 +27,20 @@
                 android:layout_gravity="start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Maria Snow"
+                android:text="title"
+                android:id="@+id/titleTV"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14sdp"
                 android:textStyle="normal"
                 android:fontFamily="@font/gibson_semibd" />
 
             <TextView
+                android:id="@+id/messageTV"
                 android:layout_marginTop="5dp"
                 android:layout_gravity="start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Shared an ETA"
+                android:text="Message"
                 android:textColor="@color/gray_light"
                 android:textSize="@dimen/_10sdp"
                 android:textStyle="normal"
@@ -45,3 +48,4 @@
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>
+</layout>

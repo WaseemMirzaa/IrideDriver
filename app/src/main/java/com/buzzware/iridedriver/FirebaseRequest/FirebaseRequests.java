@@ -116,6 +116,31 @@ public class FirebaseRequests {
             }
         });
     }
+    public void LoadAdminMessages(MessagesResponseCallback callback, Context context, String conversationID) {
+
+        List<MessageModel> messageModels = new ArrayList<>();
+
+        firebaseFirestore.collection("AdminChat").document(conversationID).collection("Conversations").addSnapshotListener((value, error) -> {
+
+            if (value != null) {
+
+                for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
+
+                    MessageModel messageModel = documentSnapshot.toObject(MessageModel.class);
+
+                    messageModels.add(messageModel);
+
+                }
+
+                callback.onResponse(messageModels, false, "Null");
+
+            } else {
+
+                callback.onResponse(messageModels, true, error.getMessage());
+
+            }
+        });
+    }
 
 
 }

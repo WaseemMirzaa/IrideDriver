@@ -122,7 +122,7 @@ public class CustomerRequestsFragment extends BaseFragment implements RequestCal
         intent.putExtra("conversationID",ConversationId);
         intent.putExtra("selectedUserID",adminId );
         intent.putExtra("selectedUserName", adminName);
-        intent.putExtra("checkFrom", "false");
+        intent.putExtra("checkFrom", "admin");
 
         startActivity(intent);
     }

@@ -1,5 +1,6 @@
 package com.buzzware.iridedriver.Screens;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
@@ -8,6 +9,7 @@ import androidx.fragment.app.Fragment;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -21,15 +23,22 @@ import com.buzzware.iridedriver.Fragments.CustomerRequestsFragment;
 import com.buzzware.iridedriver.Fragments.CustomerServiceFragment;
 import com.buzzware.iridedriver.Fragments.HomeFragment;
 import com.buzzware.iridedriver.Fragments.InvitationFragment;
+import com.buzzware.iridedriver.Fragments.NotificationFragment;
 import com.buzzware.iridedriver.Fragments.ProfileFragment;
 import com.buzzware.iridedriver.Fragments.PromotionFragment;
 import com.buzzware.iridedriver.Fragments.WalletFragment;
 import com.buzzware.iridedriver.Models.User;
 import com.buzzware.iridedriver.R;
 import com.buzzware.iridedriver.databinding.ActivityHomeBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Home extends AppCompatActivity implements View.OnClickListener {
 
@@ -42,6 +51,8 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_home);
 
+        setFireBaseToken();
+
         try {
 
             Init();
@@ -53,6 +64,36 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         }
     }
 
+    private void setFireBaseToken() {
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+
+                        if (!task.isSuccessful()) {
+
+                            Log.w("FireBase Token", "Fetching FCM registration token failed", task.getException());
+                            return;
+
+                        }
+
+                        String token = task.getResult();
+
+                        addTokenToDB(token);
+
+                    }
+                });
+    }
+
+    private void addTokenToDB(String token) {
+
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("token", token);
+
+        FirebaseFirestore.getInstance().collection("Users")
+                .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .update(userData);
+    }
     private void Init() {
 
         selectedFragment = new HomeFragment();
@@ -67,6 +108,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         mBinding.navView.findViewById(R.id.bookingsLay).setOnClickListener(this);
         mBinding.navView.findViewById(R.id.walletLay).setOnClickListener(this);
         mBinding.navView.findViewById(R.id.promotionLay).setOnClickListener(this);
+        mBinding.navView.findViewById(R.id.notificationLay).setOnClickListener(this);
         mBinding.navView.findViewById(R.id.profileLay).setOnClickListener(this);
         mBinding.navView.findViewById(R.id.inviteLay).setOnClickListener(this);
         mBinding.navView.findViewById(R.id.csLay).setOnClickListener(this);
@@ -173,6 +215,9 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         } else if (v == mBinding.navView.findViewById(R.id.promotionLay)) {
             OpenCloseDrawer();
             ((AppCompatActivity) this).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new PromotionFragment()).addToBackStack("promotion").commit();
+        } else if (v == mBinding.navView.findViewById(R.id.notificationLay)) {
+            OpenCloseDrawer();
+            ((AppCompatActivity) this).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new NotificationFragment()).addToBackStack("notification").commit();
         } else if (v == mBinding.navView.findViewById(R.id.walletLay)) {
             OpenCloseDrawer();
             ((AppCompatActivity) this).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new WalletFragment()).addToBackStack("wallet").commit();

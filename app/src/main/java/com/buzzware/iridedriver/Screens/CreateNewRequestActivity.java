@@ -46,6 +46,8 @@ public class CreateNewRequestActivity extends BaseActivity {
 
         binding.btnContinue.setOnClickListener(v -> validateAndSendMessage());
 
+        binding.drawerIcon.setOnClickListener(v-> finish());
+
     }
 
     private void createRequest(String cId) {
@@ -78,7 +80,7 @@ public class CreateNewRequestActivity extends BaseActivity {
                     intent.putExtra("conversationID",cId);
                     intent.putExtra("selectedUserID",adminId );
                     intent.putExtra("selectedUserName", adminName);
-                    intent.putExtra("checkFrom", "false");
+                    intent.putExtra("checkFrom", "admin");
 
                     startActivity(intent);
 
@@ -116,8 +118,8 @@ public class CreateNewRequestActivity extends BaseActivity {
 
             conversationID = UUID.randomUUID().toString();
 
-            firebaseFirestore.collection("Chat").document(conversationID).collection("Conversations").document(String.valueOf(currentTimeStamp)).set(sendConversationModel);
-            firebaseFirestore.collection("Chat").document(conversationID).set(lasthashMap);
+            firebaseFirestore.collection("AdminChat").document(conversationID).collection("Conversations").document(String.valueOf(currentTimeStamp)).set(sendConversationModel);
+            firebaseFirestore.collection("AdminChat").document(conversationID).set(lasthashMap);
 
             createRequest(conversationID);
 
