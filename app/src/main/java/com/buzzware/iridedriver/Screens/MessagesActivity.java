@@ -151,7 +151,7 @@ public class MessagesActivity extends AppCompatActivity {
 
             currentUserId = mAuth.getCurrentUser().getUid();
 
-            if (isFromNew.equals("false")) {
+            if (isFromNew.equals("false") || isFromNew.equals("admin")) {
 
                 conversationID = getIntent().getStringExtra("conversationID");
 
@@ -213,7 +213,13 @@ public class MessagesActivity extends AppCompatActivity {
 
     private void loadMessages() {
 
-        FirebaseRequests.GetFirebaseRequests(MessagesActivity.this).LoadMessages(callback, MessagesActivity.this, conversationID);
+        if(isFromNew.equals("admin")){
+            FirebaseRequests.GetFirebaseRequests(MessagesActivity.this).LoadAdminMessages(callback, MessagesActivity.this, conversationID);
+
+        }else{
+            FirebaseRequests.GetFirebaseRequests(MessagesActivity.this).LoadMessages(callback, MessagesActivity.this, conversationID);
+
+        }
 
     }
 
@@ -292,13 +298,22 @@ public class MessagesActivity extends AppCompatActivity {
     public void SendAlreadyExist() {
 
         long currentTimeStamp = System.currentTimeMillis();
-
         SendConversationModel sendConversationModel = new SendConversationModel(binding.messageET.getText().toString(),
                 currentUserId, String.valueOf(currentTimeStamp), "text", false, currentTimeStamp);
         SendLastMessageModel sendLastMessageModel = new SendLastMessageModel(binding.messageET.getText().toString(),
                 currentUserId, String.valueOf(currentTimeStamp), selectedUserId, "text", false, currentTimeStamp);
-        firebaseFirestore.collection("Chat").document(conversationID).collection("Conversations").document(String.valueOf(currentTimeStamp)).set(sendConversationModel);
-        firebaseFirestore.collection("Chat").document(conversationID).update("lastMessage", sendLastMessageModel);
+
+        if (isFromNew.equals("admin")) {
+
+            firebaseFirestore.collection("AdminChat").document(conversationID).collection("Conversations").document(String.valueOf(currentTimeStamp)).set(sendConversationModel);
+            firebaseFirestore.collection("AdminChat").document(conversationID).update("lastMessage", sendLastMessageModel);
+
+        } else {
+
+            firebaseFirestore.collection("Chat").document(conversationID).collection("Conversations").document(String.valueOf(currentTimeStamp)).set(sendConversationModel);
+            firebaseFirestore.collection("Chat").document(conversationID).update("lastMessage", sendLastMessageModel);
+
+        }
 
         loadMessages();
 
