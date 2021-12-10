@@ -1,11 +1,5 @@
 package com.buzzware.iridedriver.Screens;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
@@ -15,6 +9,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -48,8 +47,6 @@ public class EditProfileActivity extends BaseActivity {
 
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
 
-    StorageReference storageReference = FirebaseStorage.getInstance().getReference();
-
 
     Uri imageUri = null;
 
@@ -60,6 +57,7 @@ public class EditProfileActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         binding = ActivityEditProfileBinding.inflate(getLayoutInflater());
+
         setContentView(binding.getRoot());
 
         getCurrentUserData();
@@ -70,17 +68,11 @@ public class EditProfileActivity extends BaseActivity {
 
     private void setListener() {
 
-        binding.editImageIV.setOnClickListener(v -> {
-            checkPermissions();
-        });
+        binding.editImageIV.setOnClickListener(v -> checkPermissions());
 
-        binding.updateBtn.setOnClickListener(v->{
-            uploadDataToFirestore();
-        });
+        binding.updateBtn.setOnClickListener(v-> uploadDataToFirestore());
 
-        binding.backIV.setOnClickListener(v->{
-            finish();
-        });
+        binding.backIV.setOnClickListener(v-> finish());
 
     }
 
@@ -89,16 +81,26 @@ public class EditProfileActivity extends BaseActivity {
 
         FirebaseUser user = mAuth.getCurrentUser();
 
-        if (user != null && user.getUid() != null) {
+        if (user != null) {
 
             DocumentReference documentReferenceBuisnessUser = firebaseFirestore.collection("Users").document(user.getUid());
+
             documentReferenceBuisnessUser.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                 @Override
                 public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
 
-                    User user = value.toObject(User.class);
+                    if (value != null) {
 
-                    setUserData(user);
+                        User user = value.toObject(User.class);
+
+                        if (user != null) {
+
+                            setUserData(user);
+
+                        }
+
+                    }
+
 
                 }
             });
@@ -245,7 +247,6 @@ public class EditProfileActivity extends BaseActivity {
 
     private void UploadImage() {
 
-
         showLoader();
 
         String randomKey = UUID.randomUUID().toString();
@@ -279,6 +280,7 @@ public class EditProfileActivity extends BaseActivity {
     private void uploadDataToFirestore() {
 
         Map<String, Object> userData = new HashMap<>();
+        
         userData.put("firstName", binding.fNameET.getText().toString());
         userData.put("lastName", binding.lNameET.getText().toString());
         userData.put("homeAddress", binding.homeAddressET.getText().toString());
@@ -290,10 +292,13 @@ public class EditProfileActivity extends BaseActivity {
 
         FirebaseFirestore.getInstance().collection("Users")
                 .document(mAuth.getCurrentUser().getUid())
-                .update(userData);
+                .update(userData)
+                .addOnCompleteListener(task -> {
 
-        Toast.makeText(EditProfileActivity.this, "Profile Updated Successfully", Toast.LENGTH_SHORT).show();
-        finish();
+                    Toast.makeText(EditProfileActivity.this, "Profile Updated Successfully", Toast.LENGTH_SHORT).show();
+                    finish();
+                });
+
 
     }
 }
