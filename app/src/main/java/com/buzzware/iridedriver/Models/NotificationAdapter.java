@@ -7,8 +7,12 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.buzzware.iridedriver.databinding.NotificationReadItemBinding;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 
@@ -41,9 +45,15 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         NotificationModel notificationModel=list.get(i);
 
+        if (notificationModel.getImage() != null && !notificationModel.getImage().isEmpty()) {
+            Glide.with(mContext).load(notificationModel.getImage()).apply(new RequestOptions().centerCrop()).into(viewHolder.binding.userImageIV);
+        }
+
         viewHolder.binding.titleTV.setText(notificationModel.getTitle());
 
         viewHolder.binding.messageTV.setText(notificationModel.getMessage());
+
+        viewHolder.binding.timeTV.setText(convertFormat(String.valueOf(notificationModel.getTime())));
 
     }
 
@@ -68,5 +78,16 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         }
 
     }
+
+    public  String convertFormat(String inputDate) {
+        Date date = null;
+
+        date = new Date(Long.parseLong(inputDate));
+
+        SimpleDateFormat dF = new SimpleDateFormat("hh:mm a");
+
+        return dF.format(date);
+    }
+
 
 }

@@ -76,19 +76,25 @@ public class FirebaseRequests {
             userID = lastMessageModel.getFromID();
         }
 
-        final DocumentReference documentReferenceUser = firebaseFirestore.collection("Users").document(userID);
-        documentReferenceUser.addSnapshotListener(((Activity) context), new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
-                if (documentSnapshot != null) {
-                    User userModel = documentSnapshot.toObject(User.class);
-                    String id = documentSnapshot.getId();
-                    userModel.id = id;
-                    list.add(new ConversationModel(conversationID, userModel.id, userModel.firstName, userModel.image, lastMessageModel.getContent(), lastMessageModel.getToID()));
-                    callback.onResponse(list, false, "Null");
+        try {
+            final DocumentReference documentReferenceUser = firebaseFirestore.collection("Users").document(userID);
+            documentReferenceUser.addSnapshotListener(((Activity) context), new EventListener<DocumentSnapshot>() {
+                @Override
+                public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
+                    if (documentSnapshot != null) {
+                        User userModel = documentSnapshot.toObject(User.class);
+                        String id = documentSnapshot.getId();
+                        userModel.id = id;
+                        list.add(new ConversationModel(conversationID, userModel.id, userModel.firstName, userModel.image, lastMessageModel.getContent(), lastMessageModel.getToID()));
+                        callback.onResponse(list, false, "Null");
+                    }
                 }
-            }
-        });
+            });
+        }catch(Exception e){
+
+        }
+
+
     }
 
     public void LoadMessages(MessagesResponseCallback callback, Context context, String conversationID) {

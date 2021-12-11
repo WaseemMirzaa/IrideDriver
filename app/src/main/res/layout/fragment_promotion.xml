@@ -64,6 +64,7 @@
             app:layout_constraintTop_toBottomOf="@id/headerLay"/>
 
         <ImageView
+            android:visibility="invisible"
             android:id="@+id/calendarIV"
             android:visibility="invisible"
             android:layout_width="25dp"
@@ -77,6 +78,7 @@
             app:tint="@color/purple_200" />
 
         <TextView
+            android:visibility="invisible"
             android:id="@+id/dateTV"
             android:visibility="invisible"
             android:layout_width="wrap_content"

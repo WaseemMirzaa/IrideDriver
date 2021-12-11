@@ -1,7 +1,16 @@
 package com.buzzware.iridedriver.Models;
 
 public class NotificationModel {
-    String id, message, title, toId, fromId;
+    String id, message, title, toId, fromId, image;
+    long time;
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
+    }
 
     public String getId() {
         return id;
@@ -41,5 +50,13 @@ public class NotificationModel {
 
     public void setFromId(String fromId) {
         this.fromId = fromId;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

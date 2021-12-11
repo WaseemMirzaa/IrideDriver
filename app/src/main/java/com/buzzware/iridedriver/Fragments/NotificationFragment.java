@@ -3,6 +3,7 @@ package com.buzzware.iridedriver.Fragments;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -14,13 +15,19 @@ import android.view.ViewGroup;
 
 import com.buzzware.iridedriver.Models.NotificationAdapter;
 import com.buzzware.iridedriver.Models.NotificationModel;
+import com.buzzware.iridedriver.Models.User;
 import com.buzzware.iridedriver.R;
 import com.buzzware.iridedriver.Screens.Home;
+import com.buzzware.iridedriver.Screens.Notifications;
 import com.buzzware.iridedriver.databinding.FragmentNotificationBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -34,7 +41,9 @@ public class NotificationFragment extends Fragment {
 
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
 
-    List<NotificationModel> notificationList=new ArrayList<>();
+    List<NotificationModel> notificationList = new ArrayList<>();
+
+    String image = "";
 
     public NotificationFragment() {
         // Required empty public constructor
@@ -59,7 +68,7 @@ public class NotificationFragment extends Fragment {
 
     private void setListener() {
 
-        binding.drawerIcon.setOnClickListener(v-> OpenCloseDrawer());
+        binding.drawerIcon.setOnClickListener(v -> OpenCloseDrawer());
 
     }
 
@@ -77,7 +86,6 @@ public class NotificationFragment extends Fragment {
 
     }
 
-
     private void showRequest() {
 
         firebaseFirestore.collection("Notification").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -93,7 +101,9 @@ public class NotificationFragment extends Fragment {
 
                         notification.setId(document.getId());
 
-                        if(notification.getToId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
+                        notification.setImage(getImage(notification.getFromId()));
+
+                        if (notification.getToId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
 
                             notificationList.add(notification);
 
@@ -118,4 +128,26 @@ public class NotificationFragment extends Fragment {
 
     }
 
+    public String getImage(String id) {
+        image = "";
+        DocumentReference documentReferenceBuisnessUser = firebaseFirestore.collection("Users").document(id);
+
+        documentReferenceBuisnessUser.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+
+                if (value != null) {
+
+                    User user = value.toObject(User.class);
+                    image = user.image;
+
+                }
+
+
+            }
+        });
+
+        return image;
+
+    }
 }
