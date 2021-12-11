@@ -128,7 +128,7 @@ public class SignInFragment extends BaseFragment {
 
                     FirebaseAuth.getInstance().signOut();
 
-                    showErrorAlert("Invalid Email. You have used this email as a driver. Can't use same email in customer app.");
+                    showErrorAlert("Invalid Email. You have used this email as a customer. Can't use same email in driver app.");
 
                 }
             }
