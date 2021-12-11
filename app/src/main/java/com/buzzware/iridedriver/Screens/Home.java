@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -111,6 +112,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         mBinding.navView.findViewById(R.id.rideHistoryLay).setOnClickListener(this);
         mBinding.navView.findViewById(R.id.vehicleInfoLay).setOnClickListener(this);
         mBinding.navView.findViewById(R.id.documentsLay).setOnClickListener(this);
+        mBinding.navView.findViewById(R.id.logoutLay).setOnClickListener(this);
 
         onlineSwitch = mBinding.navView.findViewById(R.id.OnlineSwitch);
 
@@ -119,6 +121,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         //   mBinding.vehicleInfoLay.setOnClickListener(v -> moveToVehicleInfo());
         //   mBinding.documentsLay.setOnClickListener(v -> moveToVehicleDocumentsInfo());
         //  mBinding.rideHistoryLay.setOnClickListener(v -> moveToRideHistory());
+
 
         getCurrentUserData();
 
@@ -268,10 +271,22 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         } else if (v == mBinding.navView.findViewById(R.id.vehicleInfoLay)) {
             moveToVehicleInfo();
         } else if (v == mBinding.navView.findViewById(R.id.documentsLay)) {
-            moveToVehicleDocumentsInfo();
+           moveToVehicleDocumentsInfo();
+        }else if (v == mBinding.navView.findViewById(R.id.logoutLay)) {
+           logout();
         }
     }
 
+    private void logout() {
+
+        FirebaseAuth.getInstance().signOut();
+
+        startActivity(new Intent(Home.this, Authentication.class)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
+
+        finish();
+
+    }
     public static void OpenCloseDrawer() {
         if (Home.mBinding.drawerLayout.isDrawerVisible(GravityCompat.START)) {
             Home.mBinding.drawerLayout.closeDrawer(GravityCompat.START);
