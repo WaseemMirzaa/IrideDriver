@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
@@ -28,6 +29,7 @@ import com.buzzware.iridedriver.Models.response.directions.Step;
 import com.buzzware.iridedriver.Models.response.distanceMatrix.DistanceMatrixResponse;
 import com.buzzware.iridedriver.Models.response.distanceMatrix.Element;
 import com.buzzware.iridedriver.Models.response.distanceMatrix.Row;
+import com.buzzware.iridedriver.Models.settings.Settings;
 import com.buzzware.iridedriver.R;
 import com.buzzware.iridedriver.databinding.ActivityOnTripBinding;
 import com.buzzware.iridedriver.retrofit.Controller;
@@ -45,7 +47,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.google.maps.android.PolyUtil;
@@ -230,32 +235,47 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
     private void createPayout() {
 
-        PayoutObj payoutObj = new PayoutObj();
-
-        payoutObj.amount = rideModel.price;
-        payoutObj.orderId = rideModel.id;
-        payoutObj.driverId = getUserId();
-        payoutObj.type = "order";
-        payoutObj.status = "unpaid";
-        payoutObj.completionDateTime = new Date().toString();
-        payoutObj.completionTimeStamp = new Date().getTime();
-
-        FirebaseInstances.payoutsCollection.document()
-                .set(payoutObj)
+        FirebaseInstances.settingsCollection
+                .document()
+                .get()
                 .addOnCompleteListener(task -> {
 
-                    hideLoader();
+                    if (task.isSuccessful()) {
 
-                    checkPromotions();
+                        Settings settings = task.getResult().toObject(Settings.class);
 
+                        double percent = settings != null ? settings.driverShare.percent : 0;
+
+                        double amount = Double.parseDouble(rideModel.price) * (percent / 100);
+
+                        PayoutObj payoutObj = new PayoutObj();
+
+                        payoutObj.amount = String.valueOf(amount);
+                        payoutObj.orderId = rideModel.id;
+                        payoutObj.driverId = getUserId();
+                        payoutObj.type = "order";
+                        payoutObj.status = "unpaid";
+                        payoutObj.completionDateTime = new Date().toString();
+                        payoutObj.completionTimeStamp = new Date().getTime();
+
+                        FirebaseInstances.payoutsCollection.document()
+                                .set(payoutObj)
+                                .addOnCompleteListener(task1 -> {
+
+                                    hideLoader();
+
+                                    checkPromotions();
+
+                                });
+
+                    }
                 });
-
 
     }
 
     private void checkPromotions() {
 
-        long time = new Date().getTime() /1000L;
+        long time = new Date().getTime() / 1000L;
 
         FirebaseInstances.promotionsCollection
                 .get()
@@ -269,7 +289,7 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
                             promotionObj.id = documentSnapshot.getId();
 
-                            if(promotionObj.startTime < time && time < promotionObj.endTime) {
+                            if (promotionObj.startTime < time && time < promotionObj.endTime) {
 
                                 if (promotionObj.rideModels == null)
 
@@ -305,17 +325,17 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
         int count = 0;
 
-        for(RideModel rideModel: rideModels) {
+        for (RideModel rideModel : rideModels) {
 
-            if(rideModel.driverId != null && rideModel.driverId.equalsIgnoreCase(userId)) {
+            if (rideModel.driverId != null && rideModel.driverId.equalsIgnoreCase(userId)) {
 
-                count ++;
+                count++;
 
             }
 
         }
 
-        if(count >= promotionObj.noOfTrips) {
+        if (count >= promotionObj.noOfTrips) {
 
             createPayout(promotionObj);
 
@@ -327,7 +347,7 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
         PayoutObj payoutObj = new PayoutObj();
 
-        payoutObj.amount = promotionObj.amount+"";
+        payoutObj.amount = promotionObj.amount + "";
         payoutObj.orderId = null;
         payoutObj.driverId = getUserId();
         payoutObj.type = "promotion";

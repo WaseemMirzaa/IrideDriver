@@ -76,18 +76,20 @@ public class EditProfileActivity extends BaseActivity {
 
     }
 
-
+    DocumentReference documentReferenceBuisnessUser;
     private void getCurrentUserData() {
 
         FirebaseUser user = mAuth.getCurrentUser();
 
         if (user != null) {
 
-            DocumentReference documentReferenceBuisnessUser = firebaseFirestore.collection("Users").document(user.getUid());
+            documentReferenceBuisnessUser = firebaseFirestore.collection("Users").document(user.getUid());
 
             documentReferenceBuisnessUser.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                 @Override
                 public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+
+                    documentReferenceBuisnessUser = null;
 
                     if (value != null) {
 

@@ -44,6 +44,7 @@ import java.util.Map;
 public class Home extends AppCompatActivity implements View.OnClickListener {
 
     public static ActivityHomeBinding mBinding;
+
     Fragment selectedFragment;
 
     @Override
@@ -54,15 +55,9 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
 
         setFireBaseToken();
 
-        try {
 
-            Init();
+        Init();
 
-        } catch (Exception e) {
-
-            e.printStackTrace();
-
-        }
     }
 
     Switch onlineSwitch;
@@ -97,6 +92,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                 .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .update(userData);
     }
+
     private void Init() {
 
         selectedFragment = new HomeFragment();
@@ -152,7 +148,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
 
                     return;
 
-                if(user.isOnline != null) {
+                if (user.isOnline != null) {
 
                     onlineSwitch.setChecked(user.isOnline);
 
