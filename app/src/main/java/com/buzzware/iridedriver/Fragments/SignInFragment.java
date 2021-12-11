@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.buzzware.iridedriver.Models.User;
 import com.buzzware.iridedriver.Models.VehicleModel;
 import com.buzzware.iridedriver.R;
 import com.buzzware.iridedriver.Screens.CollectVehicleDataScreen;
@@ -22,6 +23,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -93,7 +95,7 @@ public class SignInFragment extends BaseFragment {
 
         if (task.isSuccessful()) {
 
-            checkVehicleDetails();
+            getCurrentUserData();
 
         } else {
 
@@ -105,6 +107,36 @@ public class SignInFragment extends BaseFragment {
         }
     }
 
+    private void getCurrentUserData() {
+
+        DocumentReference users = FirebaseFirestore.getInstance().collection("Users").document(getUserId());
+
+        users.addSnapshotListener((value, error) -> {
+
+            if (value != null) {
+
+                User user = value.toObject(User.class);
+
+                if (user == null || user.userRole == null)
+                    return;
+
+                if (user.userRole.equalsIgnoreCase("driver")) {
+
+                    checkVehicleDetails();
+
+                } else {
+
+                    FirebaseAuth.getInstance().signOut();
+
+                    showErrorAlert("Invalid Email. You have used this email as a driver. Can't use same email in customer app.");
+
+                }
+            }
+
+
+        });
+
+    }
 
     private void checkVehicleDetails() {
 
@@ -117,8 +149,7 @@ public class SignInFragment extends BaseFragment {
                 )
                 .get()
                 .addOnCompleteListener(
-                        (OnCompleteListener<QuerySnapshot>)
-                                this::parseSnapshot
+                        this::parseSnapshot
                 );
 
 

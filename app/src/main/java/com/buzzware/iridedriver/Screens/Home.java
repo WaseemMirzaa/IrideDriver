@@ -2,6 +2,7 @@ package com.buzzware.iridedriver.Screens;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -55,31 +56,27 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
 
         setFireBaseToken();
 
-
         Init();
 
     }
 
-    Switch onlineSwitch;
+    SwitchCompat onlineSwitch;
 
     private void setFireBaseToken() {
         FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(new OnCompleteListener<String>() {
-                    @Override
-                    public void onComplete(@NonNull Task<String> task) {
+                .addOnCompleteListener(task -> {
 
-                        if (!task.isSuccessful()) {
+                    if (!task.isSuccessful()) {
 
 //                            Log.w("FireBase Token", "Fetching FCM registration token failed", task.getException());
-                            return;
-
-                        }
-
-                        String token = task.getResult();
-
-                        addTokenToDB(token);
+                        return;
 
                     }
+
+                    String token = task.getResult();
+
+                    addTokenToDB(token);
+
                 });
     }
 
@@ -114,6 +111,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         mBinding.navView.findViewById(R.id.rideHistoryLay).setOnClickListener(this);
         mBinding.navView.findViewById(R.id.vehicleInfoLay).setOnClickListener(this);
         mBinding.navView.findViewById(R.id.documentsLay).setOnClickListener(this);
+
         onlineSwitch = mBinding.navView.findViewById(R.id.OnlineSwitch);
 
         onlineSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> setOnline(isChecked));
@@ -122,17 +120,28 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         //   mBinding.documentsLay.setOnClickListener(v -> moveToVehicleDocumentsInfo());
         //  mBinding.rideHistoryLay.setOnClickListener(v -> moveToRideHistory());
 
-
         getCurrentUserData();
 
     }
 
     private void setOnline(boolean isChecked) {
 
-        FirebaseInstances.usersCollection.document(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .update("isOnline", isChecked);
+        if (user != null)
+
+            return;
+
+        if (user.isOnline == null)
+
+            user.isOnline = false;
+
+        if (user.isOnline != isChecked)
+
+            FirebaseInstances.usersCollection.document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                    .update("isOnline", isChecked);
 
     }
+
+    User user;
 
     private void getCurrentUserData() {
 
@@ -142,7 +151,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
 
             if (value != null) {
 
-                User user = value.toObject(User.class);
+                user = value.toObject(User.class);
 
                 View headerLayout =
                         mBinding.navView.getHeaderView(0);
@@ -259,7 +268,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         } else if (v == mBinding.navView.findViewById(R.id.vehicleInfoLay)) {
             moveToVehicleInfo();
         } else if (v == mBinding.navView.findViewById(R.id.documentsLay)) {
-           moveToVehicleDocumentsInfo();
+            moveToVehicleDocumentsInfo();
         }
     }
 

@@ -66,7 +66,6 @@
         <ImageView
             android:visibility="invisible"
             android:id="@+id/calendarIV"
-            android:visibility="invisible"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginRight="@dimen/_15sdp"
@@ -78,7 +77,6 @@
             app:tint="@color/purple_200" />
 
         <TextView
-            android:visibility="invisible"
             android:id="@+id/dateTV"
             android:visibility="invisible"
             android:layout_width="wrap_content"

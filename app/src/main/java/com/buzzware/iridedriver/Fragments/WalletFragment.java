@@ -131,6 +131,15 @@ public class WalletFragment extends BaseFragment {
 
         }
 
+        for (RideWithPayoutModel ride : completedRides) {
+
+            if(ride.payout == null) {
+
+                completedRides.remove(ride);
+
+            }
+        }
+
         hideLoader();
 
         setAdapter();

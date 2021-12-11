@@ -29,6 +29,7 @@ import com.buzzware.iridedriver.Models.response.directions.Step;
 import com.buzzware.iridedriver.Models.response.distanceMatrix.DistanceMatrixResponse;
 import com.buzzware.iridedriver.Models.response.distanceMatrix.Element;
 import com.buzzware.iridedriver.Models.response.distanceMatrix.Row;
+import com.buzzware.iridedriver.Models.settings.DriverShare;
 import com.buzzware.iridedriver.Models.settings.Settings;
 import com.buzzware.iridedriver.R;
 import com.buzzware.iridedriver.databinding.ActivityOnTripBinding;
@@ -59,6 +60,7 @@ import com.nabinbhandari.android.permissions.Permissions;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.sql.Driver;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -236,15 +238,15 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
     private void createPayout() {
 
         FirebaseInstances.settingsCollection
-                .document()
+                .document("driverShare")
                 .get()
                 .addOnCompleteListener(task -> {
 
                     if (task.isSuccessful()) {
 
-                        Settings settings = task.getResult().toObject(Settings.class);
+                        DriverShare settings = task.getResult().toObject(DriverShare.class);
 
-                        double percent = settings != null ? settings.driverShare.percent : 0;
+                        double percent = settings.percent;
 
                         double amount = Double.parseDouble(rideModel.price) * (percent / 100);
 
@@ -258,7 +260,7 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
                         payoutObj.completionDateTime = new Date().toString();
                         payoutObj.completionTimeStamp = new Date().getTime();
 
-                        FirebaseInstances.payoutsCollection.document()
+                        FirebaseInstances.payoutsCollection.document(rideModel.id)
                                 .set(payoutObj)
                                 .addOnCompleteListener(task1 -> {
 
@@ -350,12 +352,13 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
         payoutObj.amount = promotionObj.amount + "";
         payoutObj.orderId = null;
         payoutObj.driverId = getUserId();
+        payoutObj.promotionId = promotionObj.id;
         payoutObj.type = "promotion";
         payoutObj.status = "unpaid";
         payoutObj.completionDateTime = new Date().toString();
         payoutObj.completionTimeStamp = new Date().getTime();
 
-        FirebaseInstances.payoutsCollection.document()
+        FirebaseInstances.payoutsCollection.document(promotionObj.id)
                 .set(payoutObj);
     }
 
