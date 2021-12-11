@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FirebaseRequests {
+
     public static FirebaseRequests firebaseRequests;
 
     Context context;
