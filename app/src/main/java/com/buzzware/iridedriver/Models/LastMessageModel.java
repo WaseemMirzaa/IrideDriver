@@ -1,7 +1,9 @@
 package com.buzzware.iridedriver.Models;
 
 public class LastMessageModel {
-    String content, fromID, toID, type;
+
+    public String content, fromID, toID, type;
+    public String conversationId;
 
     public LastMessageModel() {
     }

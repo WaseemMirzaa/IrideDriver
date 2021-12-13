@@ -3,12 +3,15 @@ package com.buzzware.iridedriver.FirebaseRequest;
 import android.app.Activity;
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.buzzware.iridedriver.Models.ConversationModel;
 import com.buzzware.iridedriver.Models.LastMessageModel;
 import com.buzzware.iridedriver.Models.MessageModel;
 import com.buzzware.iridedriver.Models.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
@@ -20,6 +23,8 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,20 +41,7 @@ public class FirebaseRequests {
 
     FirebaseFirestore firebaseFirestore;
 
-    public static FirebaseRequests GetFirebaseRequests(Context context) {
-
-        if (firebaseRequests == null) {
-
-            firebaseRequests = new FirebaseRequests(context);
-
-        }
-
-        return firebaseRequests;
-    }
-
-    public FirebaseRequests(Context context) {
-
-        this.context = context;
+    public FirebaseRequests() {
         ///init firebase
         mAuth = FirebaseAuth.getInstance();
 
@@ -59,79 +51,86 @@ public class FirebaseRequests {
 
     }
 
-    ListenerRegistration conversationListener;
-
     public void GetConversationList(ConversationResponseCallback callback, String uID, Context context) {
 
-        final List<ConversationModel>[] list = new List[]{new ArrayList<>()};
+        final ArrayList<LastMessageModel> list = new ArrayList<>();
 
-        conversationListener = firebaseFirestore.collection("Chat").whereEqualTo("participants." + uID, true)
+        firebaseFirestore
+                .collection("Chat")
+                .whereEqualTo("participants." + uID, true)
+                .get()
+                .addOnCompleteListener(task -> {
 
-                .addSnapshotListener((value, error) -> {
+                    if (task.isSuccessful()) {
 
-                    conversationListener.remove();
+                        for (DocumentSnapshot snapshot : task.getResult().getDocuments()) {
 
-                    conversationListener = null;
+                            LastMessageModel lastMessageModel = snapshot.get("lastMessage",LastMessageModel.class);
 
-                    if (value != null) {
+                            lastMessageModel.conversationId = snapshot.getId();
 
-                        list[0].clear();
-
-                        for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
-
-                            LastMessageModel lastMessageModel = documentSnapshot.get("lastMessage", LastMessageModel.class);
-
-                            GetUserData(documentSnapshot.getId(), lastMessageModel, context, uID, list[0], callback);
-
+                            list.add(lastMessageModel);
                         }
+
+                        callback.onResponse(list, false, null);
+
                     } else {
 
-                        callback.onResponse(list[0], true, error.getMessage());
+                        if (task.getException() == null)
+                            return;
+
+                        if ((task.getException().getLocalizedMessage() != null))
+
+                            callback.onResponse(null, true, task.getException().getLocalizedMessage());
 
                     }
+
                 });
     }
 
-    ListenerRegistration userDataListener;
 
-    private void GetUserData(String conversationID, LastMessageModel lastMessageModel, Context context, String myID, List<ConversationModel> list, ConversationResponseCallback callback) {
+//    void getUsersList()
 
-        String userID = "";
+//    ListenerRegistration userDataListener;
 
-        if (lastMessageModel.getFromID().equals(myID)) {
-
-            userID = lastMessageModel.getToID();
-
-        }
-
-        if (lastMessageModel.getToID().equals(myID)) {
-
-            userID = lastMessageModel.getFromID();
-
-        }
-
-        final DocumentReference documentReferenceUser = firebaseFirestore.collection("Users").document(userID);
-
-        userDataListener =  documentReferenceUser.addSnapshotListener(((Activity) context), (documentSnapshot, error) -> {
-
-            userDataListener.remove();
-
-            userDataListener = null;
-
-            if (documentSnapshot != null) {
-
-                User userModel = documentSnapshot.toObject(User.class);
-
-                String id = documentSnapshot.getId();
-
-                userModel.id = id;
-
-                list.add(new ConversationModel(conversationID, userModel.id, userModel.firstName, userModel.image, lastMessageModel.getContent(), lastMessageModel.getToID()));
-
-                callback.onResponse(list, false, "Null");
-            }
-        });
-    }
+//    private void GetUserData(String conversationID, LastMessageModel lastMessageModel, Context context, String myID, List<ConversationModel> list, ConversationResponseCallback callback) {
+//
+//        String userID = "";
+//
+//        if (lastMessageModel.getFromID().equals(myID)) {
+//
+//            userID = lastMessageModel.getToID();
+//
+//        }
+//
+//        if (lastMessageModel.getToID().equals(myID)) {
+//
+//            userID = lastMessageModel.getFromID();
+//
+//        }
+//
+//        final DocumentReference documentReferenceUser = firebaseFirestore.collection("Users").document(userID);
+//
+//        userDataListener = documentReferenceUser.addSnapshotListener(((Activity) context), (documentSnapshot, error) -> {
+//
+//            userDataListener.remove();
+//
+//            userDataListener = null;
+//
+//            if (documentSnapshot != null) {
+//
+//                User userModel = documentSnapshot.toObject(User.class);
+//
+//                String id = documentSnapshot.getId();
+//
+//                userModel.id = id;
+//
+//                list.add(new ConversationModel(conversationID, userModel.id, userModel.firstName, userModel.image, lastMessageModel.getContent(), lastMessageModel.getToID()));
+//
+////                callback.onResponse(list, false, "Null");
+//            }
+//        });
+//    }
 
     ListenerRegistration loadMessagesListener;
 
@@ -140,10 +139,6 @@ public class FirebaseRequests {
         List<MessageModel> messageModels = new ArrayList<>();
 
         loadMessagesListener = firebaseFirestore.collection("Chat").document(conversationID).collection("Conversations").addSnapshotListener((value, error) -> {
-
-//            loadMessagesListener.remove();
-
-            loadMessagesListener = null;
 
             if (value != null) {
 
@@ -173,8 +168,6 @@ public class FirebaseRequests {
 
         adminListener = firebaseFirestore.collection("AdminChat").document(conversationID).collection("Conversations").addSnapshotListener((value, error) -> {
 
-            adminListener = null;
-
             if (value != null) {
 
                 for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
@@ -196,5 +189,11 @@ public class FirebaseRequests {
         });
     }
 
+    public void deInit() {
+
+        adminListener = null;
+        loadMessagesListener = null;
+
+    }
 
 }

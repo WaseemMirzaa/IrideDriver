@@ -3,17 +3,20 @@ package com.buzzware.iridedriver.Fragments;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.buzzware.iridedriver.Adapters.UpcomingRidesAdapter;
 import com.buzzware.iridedriver.Models.RideModel;
+import com.buzzware.iridedriver.Models.SearchedPlaceModel;
 import com.buzzware.iridedriver.Models.VehicleModel;
 import com.buzzware.iridedriver.R;
 import com.buzzware.iridedriver.Screens.Home;
@@ -32,6 +35,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import im.delight.android.location.SimpleLocation;
+
 public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
     RideType rideType;
@@ -41,6 +46,10 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     RideModel selectedRide;
 
     FragmentHomeBinding mBinding;
+
+    private SimpleLocation location;
+
+    Boolean hasLocationPermissions;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -53,17 +62,111 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
         rideType = RideType.completed;
 
-
         setListeners();
 
+        checkPermissionsAndInit();
+
         return mBinding.getRoot();
+    }
+
+    private void checkIfPermissionsGranted() {
+
+        if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            return;
+        }
+
+        hasLocationPermissions = true;
+
+        location = new SimpleLocation(getActivity());
+
+        if (!location.hasLocationEnabled()) {
+            // ask the user to enable location access
+            showEnableLocationDialog("Please enable location from setting in order to proceed to the app");
+
+            return;
+        }
+
+        try {
+
+            location.endUpdates();
+
+        } catch (Exception e) {
+
+
+        }
+
+        location.beginUpdates();
+
+        getRides();
+    }
+
+    void checkPermissionsAndGetRide() {
+
+        if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            showErrorAlert("Please enable location permissions first.");
+            return;
+        }
+
+        getRides();
+    }
+
+    private void checkPermissionsAndInit() {
+
+//        setRideButton();
+
+        String[] permissions = {Manifest.permission.ACCESS_BACKGROUND_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
+
+        Permissions.check(getActivity()/*context*/, permissions, null, null, new PermissionHandler() {
+            @Override
+            public void onGranted() {
+
+                hasLocationPermissions = true;
+
+                location = new SimpleLocation(getActivity());
+
+                if (!location.hasLocationEnabled()) {
+                    // ask the user to enable location access
+                    showEnableLocationDialog("Please enable location from setting in order to proceed to the app");
+
+                    return;
+                }
+                try {
+
+                    location.endUpdates();
+
+                } catch (Exception e) {
+
+
+                }
+
+                location.beginUpdates();
+
+                getRides();
+
+            }
+
+            @Override
+            public void onDenied(Context context, ArrayList<String> deniedPermissions) {
+
+                hasLocationPermissions = false;
+
+                showPermissionsDeniedError("Please enable location permissions from setting in order to proceed to the app.");
+
+            }
+        });
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        getRides();
+        checkIfPermissionsGranted();
 
     }
 
@@ -78,7 +181,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
         mBinding.drawerIcon.setOnClickListener(this);
     }
-
 
 
     private void getRides() {
@@ -135,7 +237,46 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
         }
 
+        for (RideModel rideModel : rides) {
+
+            if (rideModel.driverId == null) {
+
+                SearchedPlaceModel pickUp = rideModel.tripDetail.pickUp;
+
+                double distanceInMiles = distance(pickUp.lat, pickUp.lng, location.getLatitude(), location.getLongitude());
+
+                if (distanceInMiles > 10) {
+
+                    rides.remove(rideModel);
+
+                }
+
+            }
+
+        }
+
         setAdapter(rides);
+    }
+
+    private double distance(double lat1, double lon1, double lat2, double lon2) {
+        double theta = lon1 - lon2;
+        double dist = Math.sin(deg2rad(lat1))
+                * Math.sin(deg2rad(lat2))
+                + Math.cos(deg2rad(lat1))
+                * Math.cos(deg2rad(lat2))
+                * Math.cos(deg2rad(theta));
+        dist = Math.acos(dist);
+        dist = rad2deg(dist);
+        dist = dist * 60 * 1.1515;
+        return (dist);
+    }
+
+    private double deg2rad(double deg) {
+        return (deg * Math.PI / 180.0);
+    }
+
+    private double rad2deg(double rad) {
+        return (rad * 180.0 / Math.PI);
     }
 
     private void setAdapter(ArrayList<RideModel> rides) {
@@ -357,6 +498,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
         }
 
-        getRides();
+        checkPermissionsAndGetRide();
     }
 }

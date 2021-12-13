@@ -1,9 +1,9 @@
 package com.buzzware.iridedriver.Models;
 
 public class SendLastMessageModel {
-    String content, fromID, messageId, toID, type;
-    boolean isRead;
-    long timestamp;
+    public String content, fromID, messageId, toID, type;
+    public boolean isRead;
+    public long timestamp;
 
     public SendLastMessageModel() {
 

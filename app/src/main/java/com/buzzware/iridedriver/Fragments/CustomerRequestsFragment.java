@@ -39,9 +39,9 @@ public class CustomerRequestsFragment extends BaseFragment implements RequestCal
 
     List<MyRequests> myRequests = new ArrayList<>();
 
-    String adminId="5p4owdD4RkQsRdlZZ8nuQR6u78F2";
+    String adminId = "5p4owdD4RkQsRdlZZ8nuQR6u78F2";
 
-    String adminName="AdminUser";
+    String adminName = "AdminUser";
 
     public CustomerRequestsFragment() {
         // Required empty public constructor
@@ -79,7 +79,7 @@ public class CustomerRequestsFragment extends BaseFragment implements RequestCal
 
                         requests.id = document.getId();
 
-                        if(requests.userId.equals(getUserId())){
+                        if (requests.userId.equals(getUserId())) {
 
                             myRequests.add(requests);
 
@@ -100,7 +100,7 @@ public class CustomerRequestsFragment extends BaseFragment implements RequestCal
 
         binding.requestRV.setLayoutManager(layoutManager);
 
-        RequestAdapter requestAdapter = new RequestAdapter(getContext(), myRequests,this);
+        RequestAdapter requestAdapter = new RequestAdapter(getContext(), myRequests, this);
 
         binding.requestRV.setAdapter(requestAdapter);
 
@@ -119,15 +119,15 @@ public class CustomerRequestsFragment extends BaseFragment implements RequestCal
     public void onItemClick(String requestId, String ConversationId) {
         Intent intent = new Intent(getContext(), MessagesActivity.class);
 
-        intent.putExtra("conversationID",ConversationId);
-        intent.putExtra("selectedUserID",adminId );
+        intent.putExtra("conversationID", ConversationId);
+        intent.putExtra("selectedUserID", adminId);
         intent.putExtra("selectedUserName", adminName);
         intent.putExtra("checkFrom", "admin");
 
         startActivity(intent);
     }
 
-    public  void OpenCloseDrawer() {
+    public void OpenCloseDrawer() {
 
         if (Home.mBinding.drawerLayout.isDrawerVisible(GravityCompat.START)) {
 

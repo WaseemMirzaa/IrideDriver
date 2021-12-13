@@ -129,13 +129,18 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
 
     private void setOnline(boolean isChecked) {
 
-        if (user != null)
+        if (user == null)
 
             return;
 
-        if (user.isOnline == null)
+
+        if (user.isOnline != null) {
+
+
+        } else {
 
             user.isOnline = false;
+        }
 
         if (user.isOnline != isChecked)
 

@@ -113,6 +113,10 @@ public class EditProfileActivity extends BaseActivity {
 
     private void setUserData(User user) {
 
+        if(user == null)
+
+            return;
+
         if (user.image != null && !user.image.isEmpty()) {
             Glide.with(EditProfileActivity.this).load(user.image).apply(new RequestOptions().centerCrop()).into(binding.userImageIV);
         }
