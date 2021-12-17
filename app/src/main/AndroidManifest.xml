@@ -13,10 +13,10 @@
 
     <application
         android:allowBackup="true"
+        android:name=".app.MyApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.IrideDriver">
         <activity
@@ -62,6 +62,15 @@
             android:enabled="true"
             android:exported="true"
             android:foregroundServiceType="location" />
+
+        <service
+            android:name=".push.MyFirebaseMessagingService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

@@ -287,7 +287,7 @@ public class MessagesActivity extends AppCompatActivity {
             participents.put(selectedUserId, true);
 
             SendConversationModel sendConversationModel = new SendConversationModel(binding.messageET.getText().toString(),
-                    currentUserId, String.valueOf(currentTimeStamp), "text", false, currentTimeStamp);
+                    currentUserId, String.valueOf(currentTimeStamp), "text", false, currentTimeStamp, selectedUserId);
 
             HashMap<String, Object> lasthashMap = new HashMap<>();
 
@@ -314,7 +314,7 @@ public class MessagesActivity extends AppCompatActivity {
 
         long currentTimeStamp = System.currentTimeMillis();
         SendConversationModel sendConversationModel = new SendConversationModel(binding.messageET.getText().toString(),
-                currentUserId, String.valueOf(currentTimeStamp), "text", false, currentTimeStamp);
+                currentUserId, String.valueOf(currentTimeStamp), "text", false, currentTimeStamp, selectedUserId);
         SendLastMessageModel sendLastMessageModel = new SendLastMessageModel(binding.messageET.getText().toString(),
                 currentUserId, String.valueOf(currentTimeStamp), selectedUserId, "text", false, currentTimeStamp);
 

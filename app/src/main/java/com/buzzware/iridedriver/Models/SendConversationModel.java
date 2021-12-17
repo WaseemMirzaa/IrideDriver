@@ -1,16 +1,21 @@
 package com.buzzware.iridedriver.Models;
 
 public class SendConversationModel {
-    String content, fromID, messageID, type;
+    String content, fromID, messageID, type, toID;
     boolean isRead;
     long timestamp;
+
+    public String getToID() {
+        return toID;
+    }
 
     public SendConversationModel() {
     }
 
-    public SendConversationModel(String content, String fromID, String messageID, String type, boolean isRead, long timestamp) {
+    public SendConversationModel(String content, String fromID, String messageID, String type, boolean isRead, long timestamp, String toID) {
         this.content = content;
         this.fromID = fromID;
+        this.toID = toID;
         this.messageID = messageID;
         this.type = type;
         this.isRead = isRead;

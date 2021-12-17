@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.buzzware.iridedriver.Firebase.FirebaseInstances;
 import com.buzzware.iridedriver.Models.VehicleModel;
 import com.buzzware.iridedriver.databinding.ActivityVehicleDetailsBinding;
+import com.buzzware.iridedriver.utils.RandomString;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -40,7 +42,7 @@ public class CollectVehicleDataScreen extends BaseActivity {
 
         c.startActivity(new Intent(c, CollectVehicleDataScreen.class)
 
-        .putExtra("isFromSideMenu", true));
+                .putExtra("isFromSideMenu", true));
 
     }
 
@@ -92,8 +94,7 @@ public class CollectVehicleDataScreen extends BaseActivity {
                 initializeVehicleModel();
 
                 uploadDataToFirestore();
-            }
-            else {
+            } else {
 
                 initializeVehicleModel();
 
@@ -106,13 +107,21 @@ public class CollectVehicleDataScreen extends BaseActivity {
 
         showLoader();
 
+        if (vehicle.id == null || vehicle.id.isEmpty())
+
+            vehicle.id = RandomString.getAlphaNumericString(25);
+
         FirebaseFirestore.getInstance().collection("Vehicle")
-                .document()
+                .document(vehicle.id)
                 .set(vehicle);
+
+        FirebaseInstances.usersCollection
+                .document(getUserId())
+                .update("vehicleId", vehicle.id);
 
         hideLoader();
 
-        if (isFromSideMenu){
+        if (isFromSideMenu) {
 
             finish();
 
@@ -129,14 +138,18 @@ public class CollectVehicleDataScreen extends BaseActivity {
 
     private void initializeVehicleModel() {
 
-        vehicle = new VehicleModel();
+        if (vehicle == null)
+
+            vehicle = new VehicleModel();
 
         vehicle.make = binding.makeET.getText().toString();
         vehicle.tagNumber = binding.tagNumberET.getText().toString();
         vehicle.noOfDoors = binding.doorsET.getText().toString();
         vehicle.year = binding.yearET.getText().toString();
+        vehicle.model = binding.modelET.getText().toString();
         vehicle.noOfSeatBelts = binding.seatBeltsET.getText().toString();
         vehicle.name = binding.vehicleNameET.getText().toString();
+
         vehicle.userId = getUserId();
 
     }
@@ -146,6 +159,13 @@ public class CollectVehicleDataScreen extends BaseActivity {
         if (binding.vehicleNameET.getText().toString().isEmpty()) {
 
             showErrorAlert("Vehicle Name Required");
+
+            return false;
+        }
+
+        if (binding.modelET.getText().toString().isEmpty()) {
+
+            showErrorAlert("Vehicle Model Required");
 
             return false;
         }
@@ -205,8 +225,7 @@ public class CollectVehicleDataScreen extends BaseActivity {
                 )
                 .get()
                 .addOnCompleteListener(
-                        (OnCompleteListener<QuerySnapshot>)
-                                this::parseSnapshot
+                        this::parseSnapshot
                 );
 
     }
@@ -219,6 +238,7 @@ public class CollectVehicleDataScreen extends BaseActivity {
 
                 vehicle = document.toObject(VehicleModel.class);
 
+                vehicle.id = document.getId();
             }
 
         }
@@ -241,6 +261,8 @@ public class CollectVehicleDataScreen extends BaseActivity {
         binding.seatBeltsET.setText(vehicle.getNoOfSeatBelts());
 
         binding.tagNumberET.setText(vehicle.getTagNumber());
+
+        binding.modelET.setText(vehicle.getModel());
     }
 
 }

@@ -108,7 +108,7 @@ public class CreateNewRequestActivity extends BaseActivity {
             participents.put(adminId, true);
 
             SendConversationModel sendConversationModel = new SendConversationModel(message,
-                    getUserId(), String.valueOf(currentTimeStamp), "text", false, currentTimeStamp);
+                    getUserId(), String.valueOf(currentTimeStamp), "text", false, currentTimeStamp, adminId);
 
             HashMap<String, Object> lasthashMap = new HashMap<>();
 

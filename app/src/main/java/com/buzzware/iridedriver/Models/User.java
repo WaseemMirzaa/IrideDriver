@@ -13,6 +13,7 @@ public class User {
     public String city;
     public String token;
     public Boolean isOnline;
+    public Boolean isActive;
     public String zipcode;
     public String email;
     public String image;

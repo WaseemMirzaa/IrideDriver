@@ -11,6 +11,7 @@ public class AppConstants {
         public static final String DRIVER_REACHED = "driverReached";
         public static final String RIDE_STARTED = "rideStarted";
         public static final String RIDE_COMPLETED = "rideCompleted";
+        public static final String RE_BOOKED = "reBooked";
         public static final String RATED = "rated";
         public static final String CANCELLED = "cancelled";
 

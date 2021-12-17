@@ -112,5 +112,4 @@ public class VehicleImagesAdapter extends RecyclerView.Adapter<VehicleImagesAdap
 
     }
 
-
 }

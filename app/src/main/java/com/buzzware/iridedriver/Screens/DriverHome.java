@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
@@ -30,7 +29,6 @@ import com.buzzware.iridedriver.Models.response.distanceMatrix.DistanceMatrixRes
 import com.buzzware.iridedriver.Models.response.distanceMatrix.Element;
 import com.buzzware.iridedriver.Models.response.distanceMatrix.Row;
 import com.buzzware.iridedriver.Models.settings.DriverShare;
-import com.buzzware.iridedriver.Models.settings.Settings;
 import com.buzzware.iridedriver.R;
 import com.buzzware.iridedriver.databinding.ActivityOnTripBinding;
 import com.buzzware.iridedriver.retrofit.Controller;
@@ -44,23 +42,14 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.google.maps.android.PolyUtil;
 import com.nabinbhandari.android.permissions.PermissionHandler;
 import com.nabinbhandari.android.permissions.Permissions;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.sql.Driver;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -70,7 +59,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class OnTrip extends BaseActivity implements OnMapReadyCallback {
+public class DriverHome extends BaseActivity implements OnMapReadyCallback {
 
     RideModel rideModel;
 
@@ -119,8 +108,6 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
                             Toast.makeText(this, "Ride Cancelled", Toast.LENGTH_SHORT).show();
 
-                            startActivity(new Intent(OnTrip.this, Home.class)
-                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
                             finish();
                         } else if (r.status.equalsIgnoreCase(AppConstants.RideStatus.RIDE_COMPLETED)) {
 
@@ -129,8 +116,6 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
                             Toast.makeText(this, "Ride Completed", Toast.LENGTH_SHORT).show();
 
-                            startActivity(new Intent(OnTrip.this, Home.class)
-                                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
                             finish();
 
                         } else if (r.status.equalsIgnoreCase(AppConstants.RideStatus.RATED)) {
@@ -140,8 +125,6 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
                             Toast.makeText(this, "Order Rated", Toast.LENGTH_SHORT).show();
 
-                            startActivity(new Intent(OnTrip.this, Home.class)
-                                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
                             finish();
                         }
 
@@ -959,8 +942,6 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
                 .document(rideModel.id).
                 set(rideModel);
 
-        startActivity(new Intent(OnTrip.this, Home.class)
-                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
         finish();
     }
 
@@ -970,13 +951,13 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
         String[] permissions = {Manifest.permission.ACCESS_BACKGROUND_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
 
-        Permissions.check(OnTrip.this/*context*/, permissions, null, null, new PermissionHandler() {
+        Permissions.check(DriverHome.this/*context*/, permissions, null, null, new PermissionHandler() {
             @Override
             public void onGranted() {
 
                 hasLocationPermissions = true;
 
-                location = new SimpleLocation(OnTrip.this);
+                location = new SimpleLocation(DriverHome.this);
 
                 if (!location.hasLocationEnabled()) {
                     // ask the user to enable location access
@@ -1015,9 +996,9 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
     private void checkIfPermissionsGranted() {
 
-        if (ContextCompat.checkSelfPermission(OnTrip.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(OnTrip.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(OnTrip.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(DriverHome.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(DriverHome.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(DriverHome.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             stopLocationService();
 
@@ -1026,7 +1007,7 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
         hasLocationPermissions = true;
 
-        location = new SimpleLocation(OnTrip.this);
+        location = new SimpleLocation(DriverHome.this);
 
         if (!location.hasLocationEnabled()) {
             // ask the user to enable location access

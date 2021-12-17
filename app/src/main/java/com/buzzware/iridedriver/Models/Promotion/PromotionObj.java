@@ -6,7 +6,7 @@ import java.util.List;
 
 public class PromotionObj {
 
-    public double amount;
+    public String  amount;
 
     public String id;
 
@@ -22,8 +22,8 @@ public class PromotionObj {
 
     public List<RideModel> rideModels;
 
-    public double getAmount() {
-        return amount;
+    public double getAmountInDouble() {
+        return Double.parseDouble(amount);
     }
 
     public String getId() {

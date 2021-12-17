@@ -15,13 +15,16 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.buzzware.iridedriver.Adapters.UpcomingRidesAdapter;
+import com.buzzware.iridedriver.Firebase.FirebaseInstances;
 import com.buzzware.iridedriver.Models.RideModel;
 import com.buzzware.iridedriver.Models.SearchedPlaceModel;
+import com.buzzware.iridedriver.Models.User;
 import com.buzzware.iridedriver.Models.VehicleModel;
 import com.buzzware.iridedriver.R;
 import com.buzzware.iridedriver.Screens.Home;
 import com.buzzware.iridedriver.Screens.OnTrip;
 import com.buzzware.iridedriver.databinding.FragmentHomeBinding;
+import com.buzzware.iridedriver.events.OnlineStatusChanged;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -30,6 +33,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.nabinbhandari.android.permissions.PermissionHandler;
 import com.nabinbhandari.android.permissions.Permissions;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -69,6 +75,15 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         return mBinding.getRoot();
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        EventBus.getDefault().unregister(this);
+
+    }
+
+
     private void checkIfPermissionsGranted() {
 
         if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -101,6 +116,13 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         location.beginUpdates();
 
         getRides();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onlineStatusChanged(OnlineStatusChanged statusChanged) {
+
+        getRides();
+
     }
 
     void checkPermissionsAndGetRide() {
@@ -166,6 +188,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     public void onResume() {
         super.onResume();
 
+        EventBus.getDefault().register(this);
         checkIfPermissionsGranted();
 
     }
@@ -190,10 +213,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         if (rideType == RideType.upcoming) {
 
             query = FirebaseFirestore.getInstance().collection("Bookings")
-                    .whereEqualTo(
-                            "status",
-                            "booked"
-                    );
+                    .whereIn("status", Arrays.asList("booked", "reBooked"));
+
 
         } else if (rideType == RideType.running) {
 
@@ -210,30 +231,30 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         }
 
         showLoader();
-        query.get()
-                .addOnCompleteListener(
-                        this::parseSnapshot
-                );
+        query.addSnapshotListener((value, error) -> {
+
+            if (value != null) {
+
+                parseSnapshot(value);
+            }
+        });
 
     }
 
-    void parseSnapshot(Task<QuerySnapshot> task) {
+    void parseSnapshot(QuerySnapshot task) {
 
         hideLoader();
 
         rides = new ArrayList<>();
 
-        if (task.getResult() != null) {
 
-            for (QueryDocumentSnapshot document : task.getResult()) {
+        for (QueryDocumentSnapshot document : task) {
 
-                RideModel rideModel = document.toObject(RideModel.class);
+            RideModel rideModel = document.toObject(RideModel.class);
 
-                rideModel.id = document.getId();
+            rideModel.id = document.getId();
 
-                rides.add(rideModel);
-
-            }
+            rides.add(rideModel);
 
         }
 
@@ -283,6 +304,35 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
         mBinding.ridesRV.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        if (rideType == RideType.upcoming) {
+
+            FirebaseInstances.usersCollection.document(getUserId())
+                    .get()
+                    .addOnCompleteListener(task -> {
+
+                        hideLoader();
+
+                        if (task.isSuccessful()) {
+
+                            User user = task.getResult().toObject(User.class);
+
+                            if (user != null) {
+
+                                if ((user.isActive != null && !user.isActive) || (user.isOnline != null && !user.isOnline)) {
+
+                                    rides.clear();
+
+                                }
+                                setRidesAdapterForUpcoming(rides);
+
+                            }
+                        }
+
+                    });
+
+            return;
+        }
+
         mBinding.ridesRV.setAdapter(new UpcomingRidesAdapter(getActivity(),
                 rides,
                 new UpcomingRidesAdapter.UpcomingRideActionListener() {
@@ -302,6 +352,27 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 },
                 rideType));
 
+    }
+
+    private void setRidesAdapterForUpcoming(ArrayList<RideModel> rides) {
+        mBinding.ridesRV.setAdapter(new UpcomingRidesAdapter(getActivity(),
+                this.rides,
+                new UpcomingRidesAdapter.UpcomingRideActionListener() {
+                    @Override
+                    public void acceptRide(RideModel rideModel) {
+
+                        accept(rideModel);
+
+                    }
+
+                    @Override
+                    public void moveToCompleteScreen(RideModel rideModel) {
+
+                        moveToOnTrip(rideModel);
+
+                    }
+                },
+                rideType));
     }
 
     private void moveToOnTrip(RideModel rideModel) {
@@ -381,6 +452,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             hideLoader();
     }
 
+
     private void acceptRide(VehicleModel vehicle) {
 
         if (selectedRide == null) {
@@ -394,10 +466,14 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         selectedRide.vehicleId = vehicle.getId();
         selectedRide.status = "driverAccepted";
 
+        FirebaseInstances.usersCollection.document(getUserId())
+                .update("isActive", false);
+
         FirebaseFirestore.getInstance().collection("Bookings").document(selectedRide.id)
                 .set(selectedRide);
 
         getRides();
+
     }
 
 

@@ -24,6 +24,7 @@ import com.buzzware.iridedriver.Firebase.FirebaseInstances;
 import com.buzzware.iridedriver.Fragments.CompletedFragment;
 import com.buzzware.iridedriver.Fragments.CustomerRequestsFragment;
 import com.buzzware.iridedriver.Fragments.CustomerServiceFragment;
+import com.buzzware.iridedriver.Fragments.DriverHome;
 import com.buzzware.iridedriver.Fragments.HomeFragment;
 import com.buzzware.iridedriver.Fragments.InvitationFragment;
 import com.buzzware.iridedriver.Fragments.NotificationFragment;
@@ -33,12 +34,16 @@ import com.buzzware.iridedriver.Fragments.WalletFragment;
 import com.buzzware.iridedriver.Models.User;
 import com.buzzware.iridedriver.R;
 import com.buzzware.iridedriver.databinding.ActivityHomeBinding;
+import com.buzzware.iridedriver.events.OnlineStatusChanged;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
+
+import org.greenrobot.eventbus.EventBus;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -93,7 +98,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
 
     private void Init() {
 
-        selectedFragment = new HomeFragment();
+        selectedFragment = new DriverHome();
 
         drawerListener();
 
@@ -145,7 +150,10 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         if (user.isOnline != isChecked)
 
             FirebaseInstances.usersCollection.document(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                    .update("isOnline", isChecked);
+                    .update("isOnline", isChecked)
+                    .addOnCompleteListener(task -> {
+                        EventBus.getDefault().post(new OnlineStatusChanged());
+                    });
 
     }
 
@@ -241,7 +249,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
     }
 
     public void SetFragemnt() {
-        ((AppCompatActivity) this).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).addToBackStack("home").commit();
+        ((AppCompatActivity) this).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new DriverHome()).addToBackStack("home").commit();
     }
 
     @Override
@@ -250,8 +258,9 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
             SetFragemnt();
             OpenCloseDrawer();
         } else if (v == mBinding.navView.findViewById(R.id.bookingsLay)) {
-            SetFragemnt();
             OpenCloseDrawer();
+            ((AppCompatActivity) this).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).addToBackStack("promotion").commit();
+
         } else if (v == mBinding.navView.findViewById(R.id.promotionLay)) {
             OpenCloseDrawer();
             ((AppCompatActivity) this).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new PromotionFragment()).addToBackStack("promotion").commit();

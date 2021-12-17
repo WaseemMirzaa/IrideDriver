@@ -14,6 +14,7 @@ import com.buzzware.iridedriver.Adapters.PaymentsAdapter;
 import com.buzzware.iridedriver.Firebase.FirebaseInstances;
 import com.buzzware.iridedriver.Models.Payouts.PayoutObj;
 import com.buzzware.iridedriver.Models.Payouts.RideWithPayoutModel;
+import com.buzzware.iridedriver.Models.RideModel;
 import com.buzzware.iridedriver.R;
 import com.buzzware.iridedriver.Screens.Home;
 import com.buzzware.iridedriver.databinding.FragmentWalletBinding;
@@ -131,15 +132,17 @@ public class WalletFragment extends BaseFragment {
 
         }
 
+        List<RideWithPayoutModel> list = new ArrayList<>();
+
         for (RideWithPayoutModel ride : completedRides) {
 
-            if(ride.payout == null) {
-
-                completedRides.remove(ride);
-
+            if(ride.payout != null) {
+                list.add(ride);
             }
         }
 
+        completedRides.clear();
+        completedRides.addAll(list);
         hideLoader();
 
         setAdapter();
