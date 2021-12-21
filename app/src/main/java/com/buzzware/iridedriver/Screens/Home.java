@@ -192,8 +192,14 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
 
                 nameTV.setText(user.firstName + " " + user.lastName);
 
-                Glide.with(this).load(user.image).apply(new RequestOptions().centerCrop().placeholder(R.drawable.dummy_girl)).into(picIV);
+                try {
 
+                    Glide.with(this).load(user.image).apply(new RequestOptions().centerCrop().placeholder(R.drawable.dummy_girl)).into(picIV);
+
+                }catch (Exception e) {
+
+
+                }
             }
 
 

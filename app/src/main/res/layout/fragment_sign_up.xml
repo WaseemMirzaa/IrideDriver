@@ -2,15 +2,17 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:background="@color/gray_white"
         tools:context=".fragments.SignUpFragment">
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:fillViewport="true"
             android:scrollbars="vertical">
 
@@ -127,122 +129,6 @@
                         android:background="@drawable/rounded_corner_white">
 
                         <EditText
-                            android:id="@+id/cityET"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginLeft="@dimen/_10sdp"
-                            android:layout_marginRight="@dimen/_10sdp"
-                            android:backgroundTint="@android:color/transparent"
-                            android:fontFamily="@font/gibson_regular"
-                            android:hint="City"
-                            android:imeOptions="actionNext"
-                            android:inputType="text"
-                            android:maxLines="1"
-                            android:singleLine="true"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_12sdp" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_45sdp"
-                        android:layout_marginTop="@dimen/_15sdp"
-                        android:background="@drawable/rounded_corner_white">
-
-                        <EditText
-                            android:id="@+id/stateET"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginLeft="@dimen/_10sdp"
-                            android:layout_marginRight="@dimen/_10sdp"
-                            android:backgroundTint="@android:color/transparent"
-                            android:fontFamily="@font/gibson_regular"
-                            android:hint="State"
-                            android:imeOptions="actionNext"
-                            android:inputType="text"
-                            android:maxLines="1"
-                            android:singleLine="true"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_12sdp" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_45sdp"
-                        android:layout_marginTop="@dimen/_15sdp"
-                        android:background="@drawable/rounded_corner_white">
-
-                        <EditText
-                            android:id="@+id/zipET"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginLeft="@dimen/_10sdp"
-                            android:layout_marginRight="@dimen/_10sdp"
-                            android:backgroundTint="@android:color/transparent"
-                            android:fontFamily="@font/gibson_regular"
-                            android:hint="Zip Code"
-                            android:imeOptions="actionNext"
-                            android:inputType="number"
-                            android:maxLines="1"
-                            android:singleLine="true"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_12sdp" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_45sdp"
-                        android:layout_marginTop="@dimen/_15sdp"
-                        android:background="@drawable/rounded_corner_white">
-
-                        <EditText
-                            android:id="@+id/homeAddressET"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginLeft="@dimen/_10sdp"
-                            android:layout_marginRight="@dimen/_10sdp"
-                            android:backgroundTint="@android:color/transparent"
-                            android:fontFamily="@font/gibson_regular"
-                            android:hint="Home Address"
-                            android:imeOptions="actionNext"
-                            android:inputType="text"
-                            android:maxLines="1"
-                            android:singleLine="true"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_12sdp" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_45sdp"
-                        android:layout_marginTop="@dimen/_15sdp"
-                        android:background="@drawable/rounded_corner_white">
-
-                        <EditText
-                            android:id="@+id/workAddressET"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginLeft="@dimen/_10sdp"
-                            android:layout_marginRight="@dimen/_10sdp"
-                            android:backgroundTint="@android:color/transparent"
-                            android:fontFamily="@font/gibson_regular"
-                            android:hint="Work Address"
-                            android:imeOptions="actionNext"
-                            android:inputType="text"
-                            android:maxLines="1"
-                            android:singleLine="true"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_12sdp" />
-                    </RelativeLayout>
-
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_45sdp"
-                        android:layout_marginTop="@dimen/_15sdp"
-                        android:background="@drawable/rounded_corner_white">
-
-                        <EditText
                             android:id="@+id/passwordET"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -260,31 +146,32 @@
                     </RelativeLayout>
                 </LinearLayout>
 
-                <RelativeLayout
-                    android:id="@+id/btnContinue"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_45sdp"
-                    android:layout_below="@+id/lksl"
-                    android:layout_marginLeft="@dimen/_20sdp"
-                    android:layout_marginTop="@dimen/_20sdp"
-                    android:layout_marginRight="@dimen/_20sdp"
-                    android:layout_marginBottom="@dimen/_30sdp"
-                    android:background="@drawable/rounded_corner_button_yellow"
-                    android:elevation="10dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:fontFamily="@font/gibson_regular"
-                        android:text="Continue"
-                        android:textAlignment="center"
-                        android:textAllCaps="true"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/_11sdp"
-                        android:textStyle="normal" />
-                </RelativeLayout>
             </RelativeLayout>
         </ScrollView>
-    </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/btnContinue"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_45sdp"
+            android:layout_below="@+id/lksl"
+            android:layout_marginLeft="@dimen/_20sdp"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_marginRight="@dimen/_20sdp"
+            android:layout_marginBottom="@dimen/_30sdp"
+            android:background="@drawable/rounded_corner_button_yellow"
+            android:elevation="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:fontFamily="@font/gibson_regular"
+                android:text="Continue"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_11sdp"
+                android:textStyle="normal" />
+        </RelativeLayout>
+    </LinearLayout>
 </layout>

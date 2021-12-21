@@ -272,7 +272,6 @@ public class EditProfileActivity extends BaseActivity {
 
                 imageUri = null;
 
-
             });
         }).addOnFailureListener(e -> {
 

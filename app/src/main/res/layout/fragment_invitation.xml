@@ -78,6 +78,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_45sdp"
+                    android:visibility="invisible"
                     android:layout_marginLeft="@dimen/_20sdp"
                     android:layout_marginTop="@dimen/_15sdp"
                     android:layout_marginRight="@dimen/_20sdp"
@@ -91,6 +92,7 @@
                         android:layout_marginLeft="@dimen/_10sdp"
                         android:layout_marginRight="@dimen/_10sdp"
                         android:backgroundTint="@android:color/transparent"
+                        android:visibility="invisible"
                         android:fontFamily="@font/gibson_regular"
                         android:text="15G120"
                         android:gravity="center"
@@ -112,6 +114,7 @@
                     android:layout_marginLeft="@dimen/_12sdp"
                     android:layout_marginRight="@dimen/_12sdp"
                     android:fontFamily="@font/gibson_semibd"
+                    android:visibility="invisible"
                     android:lineSpacingExtra="1.5dp"
                     android:text="Share Your Code"
                     android:textAlignment="center"

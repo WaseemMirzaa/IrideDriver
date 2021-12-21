@@ -19,4 +19,5 @@ public class User {
     public String image;
     public String userType;
     public String userRole = "driver";
+    public Boolean isApproved ;
 }

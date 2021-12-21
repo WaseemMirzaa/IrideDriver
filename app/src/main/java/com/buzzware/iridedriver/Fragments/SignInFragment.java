@@ -41,12 +41,13 @@ public class SignInFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        mBinding= DataBindingUtil.inflate(inflater, R.layout.fragment_sign_in, container, false);
+        mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_sign_in, container, false);
 
 
         FirebaseApp.initializeApp(getActivity());
 
-        init();;
+        init();
+        ;
 
         return mBinding.getRoot();
     }
@@ -122,8 +123,14 @@ public class SignInFragment extends BaseFragment {
 
                 if (user.userRole.equalsIgnoreCase("driver")) {
 
-                    checkVehicleDetails();
+                    if (user.isApproved == null || user.isApproved)
 
+                        checkVehicleDetails();
+
+                    else {
+
+                        showErrorAlert("This user has been disabled by admin.");
+                    }
                 } else {
 
                     FirebaseAuth.getInstance().signOut();
@@ -154,7 +161,6 @@ public class SignInFragment extends BaseFragment {
 
 
     }
-
 
 
     private void parseSnapshot(Task<QuerySnapshot> task) {
@@ -192,55 +198,55 @@ public class SignInFragment extends BaseFragment {
 
     Boolean validate() {
 
-        if(!hasImage(vehicle.backInCarUrl)) {
+        if (!hasImage(vehicle.backInCarUrl)) {
 
             return false;
 
         }
 
-        if(!hasImage(vehicle.frontCarUrl)) {
+        if (!hasImage(vehicle.frontCarUrl)) {
 
             return false;
 
         }
 
-        if(!hasImage(vehicle.rearCarUrl)) {
+        if (!hasImage(vehicle.rearCarUrl)) {
 
             return false;
 
         }
 
-        if(!hasImage(vehicle.frontInCarUrl)) {
+        if (!hasImage(vehicle.frontInCarUrl)) {
 
             return false;
 
         }
 
-        if(!hasImage(vehicle.leftCarUrl)) {
+        if (!hasImage(vehicle.leftCarUrl)) {
 
             return false;
 
         }
 
-        if(!hasImage(vehicle.rightCarUrl)) {
+        if (!hasImage(vehicle.rightCarUrl)) {
 
             return false;
 
         }
 
-        if(!hasImage(vehicle.registrationUrl)) {
+        if (!hasImage(vehicle.registrationUrl)) {
 
             return false;
 
         }
 
-        if(!hasImage(vehicle.insuranceUrl)) {
+        if (!hasImage(vehicle.insuranceUrl)) {
 
             return false;
 
         }
 
-        if(!hasImage(vehicle.backInCarUrl)) {
+        if (!hasImage(vehicle.backInCarUrl)) {
 
             return false;
 

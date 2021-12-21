@@ -1,5 +1,6 @@
 package com.buzzware.iridedriver.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.databinding.DataBindingUtil;
@@ -29,9 +30,20 @@ public class InvitationFragment extends Fragment {
 
         setListener();
 
+        binding.btnContinue.setOnClickListener(v ->shareIRide() );
         return binding.getRoot();
 
 
+    }
+
+
+    void shareIRide() {
+
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("text/plain");
+        i.putExtra(Intent.EXTRA_SUBJECT, "Sharing URL");
+        i.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=com.buzzware.iridedriver");
+        startActivity(Intent.createChooser(i, "Share URL"));
     }
 
     private void setListener() {

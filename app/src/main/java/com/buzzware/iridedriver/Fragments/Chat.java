@@ -100,29 +100,28 @@ public class Chat extends BaseActivity {
         conversations.clear();
 
         FirebaseInstances.usersCollection
-                . get()
+                .get()
                 .addOnCompleteListener(task -> {
 
-                    if(task.isSuccessful()) {
+                    if (task.isSuccessful()) {
 
-                        for(DocumentSnapshot documentSnapshot: task.getResult().getDocuments()) {
+                        for (DocumentSnapshot documentSnapshot : task.getResult().getDocuments()) {
 
                             User user = documentSnapshot.toObject(User.class);
 
                             user.id = documentSnapshot.getId();
 
-                            for(int i = 0; i< lastMessages.size(); i++) {
+                            for (int i = 0; i < lastMessages.size(); i++) {
 
                                 String otherUserId = lastMessages.get(i).fromID;
 
-                                if(!getUserId().equalsIgnoreCase(lastMessages.get(i).fromID))
+                                if (getUserId().equalsIgnoreCase(lastMessages.get(i).fromID))
 
                                     otherUserId = lastMessages.get(i).toID;
 
+                                if (user.id.equalsIgnoreCase(otherUserId)) {
 
-                                if(user.id.equalsIgnoreCase(otherUserId)) {
-
-                                    ConversationModel conversation = getConversationModel(lastMessages.get(i),user);
+                                    ConversationModel conversation = getConversationModel(lastMessages.get(i), user);
 
                                     conversations.add(conversation);
                                 }
@@ -144,11 +143,22 @@ public class Chat extends BaseActivity {
         ConversationModel model = new ConversationModel();
 
         model.conversationID = lastMessageModel.conversationId;
-        model.name = user.firstName+" "+user.lastName;
+
+        model.name = user.firstName + " " + user.lastName;
+
         model.image = user.image;
+
         model.lastMessage = lastMessageModel.content;
+
         model.id = lastMessageModel.conversationId;
-        model.toID = lastMessageModel.toID;
+
+        if (!lastMessageModel.toID.equalsIgnoreCase(getUserId()))
+
+            model.toID = lastMessageModel.toID;
+
+        else
+
+            model.toID = lastMessageModel.fromID;
 
         return model;
 

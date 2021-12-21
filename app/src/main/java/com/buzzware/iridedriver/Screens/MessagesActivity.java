@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-public class MessagesActivity extends AppCompatActivity {
+public class MessagesActivity extends BaseActivity {
 
 
     ActivityMessagesBinding binding;
@@ -97,7 +97,6 @@ public class MessagesActivity extends AppCompatActivity {
 
                     getOtherUserImage();
 
-
                 });
     }
 
@@ -126,7 +125,6 @@ public class MessagesActivity extends AppCompatActivity {
                     }
 
                     loadMessages();
-
 
                 });
 
@@ -278,16 +276,16 @@ public class MessagesActivity extends AppCompatActivity {
 
             SendLastMessageModel sendLastMessageModel = new SendLastMessageModel(binding.messageET.getText().toString(),
 
-                    currentUserId, String.valueOf(currentTimeStamp), selectedUserId, "text", false, (int) currentTimeStamp);
+                    getUserId(), String.valueOf(currentTimeStamp), selectedUserId, "text", false, (int) currentTimeStamp);
 
             HashMap<String, Boolean> participents = new HashMap<>();
 
-            participents.put(currentUserId, true);
+            participents.put(getUserId(), true);
 
-            participents.put(selectedUserId, true);
+            participents.put(getUserId(), true);
 
             SendConversationModel sendConversationModel = new SendConversationModel(binding.messageET.getText().toString(),
-                    currentUserId, String.valueOf(currentTimeStamp), "text", false, currentTimeStamp, selectedUserId);
+                    getUserId(), String.valueOf(currentTimeStamp), "text", false, currentTimeStamp, selectedUserId);
 
             HashMap<String, Object> lasthashMap = new HashMap<>();
 
@@ -313,19 +311,23 @@ public class MessagesActivity extends AppCompatActivity {
     public void SendAlreadyExist() {
 
         long currentTimeStamp = System.currentTimeMillis();
+
         SendConversationModel sendConversationModel = new SendConversationModel(binding.messageET.getText().toString(),
-                currentUserId, String.valueOf(currentTimeStamp), "text", false, currentTimeStamp, selectedUserId);
-        SendLastMessageModel sendLastMessageModel = new SendLastMessageModel(binding.messageET.getText().toString(),
-                currentUserId, String.valueOf(currentTimeStamp), selectedUserId, "text", false, currentTimeStamp);
+                getUserId(), String.valueOf(currentTimeStamp), "text", false, currentTimeStamp, selectedUserId);
+
+        SendLastMessageModel sendLastMessageModel = new SendLastMessageModel(binding.messageET.getText().toString(), getUserId()
+                , String.valueOf(currentTimeStamp), selectedUserId, "text", false, currentTimeStamp);
 
         if (isFromNew.equals("admin")) {
 
             firebaseFirestore.collection("AdminChat").document(conversationID).collection("Conversations").document(String.valueOf(currentTimeStamp)).set(sendConversationModel);
+
             firebaseFirestore.collection("AdminChat").document(conversationID).update("lastMessage", sendLastMessageModel);
 
         } else {
 
             firebaseFirestore.collection("Chat").document(conversationID).collection("Conversations").document(String.valueOf(currentTimeStamp)).set(sendConversationModel);
+
             firebaseFirestore.collection("Chat").document(conversationID).update("lastMessage", sendLastMessageModel);
 
         }
