@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".Fragments.WalletFragment">
@@ -66,6 +66,19 @@
                         android:text="Withdraw Now"/>
                 </RelativeLayout>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/addAccountBt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:textColor="@color/white"
+                android:layout_marginTop="29dp"
+                android:layout_marginEnd="8dp"
+                android:textSize="@dimen/_11ssp"
+                android:layout_marginBottom="-1dp"
+                android:text="Add Account" />
         </RelativeLayout>
 
         <LinearLayout

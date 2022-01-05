@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.databinding.DataBindingUtil;
 
 import com.buzzware.iridedriver.Models.VehicleModel;
@@ -33,6 +34,8 @@ public class StartUp extends BaseActivity {
 
         FirebaseApp.initializeApp(this);
 
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
         mBinding = ActivityStartupBinding.inflate(getLayoutInflater());
 
         setContentView(mBinding.getRoot());
@@ -54,7 +57,7 @@ public class StartUp extends BaseActivity {
 
         } else {
 
-            checkVehicleDetails();
+            startActivity(new Intent(this, Home.class));
 
         }
     }

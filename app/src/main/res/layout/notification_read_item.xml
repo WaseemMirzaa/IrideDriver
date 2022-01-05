@@ -16,7 +16,7 @@
             android:id="@+id/userImageIV"
             android:layout_width="@dimen/_40sdp"
             android:layout_height="@dimen/_40sdp"
-            android:src="@drawable/dummy_girl"/>
+            android:src="@drawable/logo"/>
 
         <LinearLayout
             android:layout_marginLeft="@dimen/_10sdp"
@@ -54,7 +54,7 @@
                 android:layout_gravity="start"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Message"
+                android:text=""
                 android:gravity="end"
                 android:textColor="@color/gray_light"
                 android:textSize="@dimen/_10sdp"

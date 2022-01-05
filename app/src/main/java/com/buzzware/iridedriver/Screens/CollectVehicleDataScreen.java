@@ -6,8 +6,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.buzzware.iridedriver.Adapters.CustomSpinnerAdapter;
 import com.buzzware.iridedriver.Firebase.FirebaseInstances;
 import com.buzzware.iridedriver.Models.VehicleModel;
+import com.buzzware.iridedriver.Models.prices.Prices;
+import com.buzzware.iridedriver.Models.settings.Price;
 import com.buzzware.iridedriver.databinding.ActivityVehicleDetailsBinding;
 import com.buzzware.iridedriver.utils.RandomString;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -15,6 +18,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CollectVehicleDataScreen extends BaseActivity {
 
@@ -65,6 +72,53 @@ public class CollectVehicleDataScreen extends BaseActivity {
         setListeners();
     }
 
+    ArrayList<Price> names = new ArrayList<>();
+
+    private void getPrices() {
+
+        FirebaseFirestore.getInstance().collection("Settings")
+                .document("Prices")
+                .get()
+                .addOnCompleteListener(task -> {
+                    hideLoader();
+                    if (task.isSuccessful()) {
+
+                        names = new ArrayList<>();
+
+                        Prices settings = task.getResult().toObject(Prices.class);
+
+                        if(settings == null)
+
+                            return;
+
+                        if(settings.iRide != null) {
+
+                            names.add(settings.iRide);
+
+                        }
+
+                        if(settings.iRideLux != null )
+
+                            names.add(settings.iRideLux);
+
+                        if(settings.iRidePlus != null)
+
+                            names.add(settings.iRidePlus);
+
+                        binding.carTypeSp.setAdapter(new CustomSpinnerAdapter(getApplicationContext(),names));
+
+
+                    } else {
+
+                        if (task.getException() != null && task.getException().getLocalizedMessage() != null)
+
+                            showErrorAlert(task.getException().getLocalizedMessage());
+                    }
+
+                });
+
+    }
+
     private void getExtrasFromIntent() {
 
         if (getIntent().getExtras() != null) {
@@ -89,17 +143,11 @@ public class CollectVehicleDataScreen extends BaseActivity {
 
         if (validate()) {
 
-            if (vehicle == null) {
 
-                initializeVehicleModel();
+            initializeVehicleModel();
 
-                uploadDataToFirestore();
-            } else {
+            uploadDataToFirestore();
 
-                initializeVehicleModel();
-
-                uploadDataToFirestore();
-            }
         }
     }
 
@@ -115,9 +163,23 @@ public class CollectVehicleDataScreen extends BaseActivity {
                 .document(vehicle.id)
                 .set(vehicle);
 
+        String isVerified = "notApproved";
+
+        if(validateVerification()) {
+
+            isVerified = "Approved";
+
+        }
+
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("vehicleId", vehicle.id);
+
+        map.put("isVerified",isVerified);
+
         FirebaseInstances.usersCollection
                 .document(getUserId())
-                .update("vehicleId", vehicle.id);
+                .update(map);
 
         hideLoader();
 
@@ -129,11 +191,6 @@ public class CollectVehicleDataScreen extends BaseActivity {
 
         }
 
-        Intent i = new Intent(CollectVehicleDataScreen.this, UploadVehicleImagesScreen.class);
-
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-        startActivity(i);
     }
 
     private void initializeVehicleModel() {
@@ -143,15 +200,42 @@ public class CollectVehicleDataScreen extends BaseActivity {
             vehicle = new VehicleModel();
 
         vehicle.make = binding.makeET.getText().toString();
+
         vehicle.tagNumber = binding.tagNumberET.getText().toString();
+
         vehicle.noOfDoors = binding.doorsET.getText().toString();
+
         vehicle.year = binding.yearET.getText().toString();
+
         vehicle.model = binding.modelET.getText().toString();
+
         vehicle.noOfSeatBelts = binding.seatBeltsET.getText().toString();
+
         vehicle.name = binding.vehicleNameET.getText().toString();
+
+        vehicle.carType = getCarType();
 
         vehicle.userId = getUserId();
 
+    }
+
+    private String getCarType() {
+
+        int pos =  binding.carTypeSp.getSelectedItemPosition();
+
+        if (pos == 0) {
+
+            return "iRide";
+
+        } else if (pos == 1) {
+
+            return "iRidePlus";
+
+        } else {
+
+            return "iRideLux";
+
+        }
     }
 
     private boolean validate() {
@@ -246,6 +330,8 @@ public class CollectVehicleDataScreen extends BaseActivity {
         if (vehicle != null)
 
             setData();
+
+        getPrices();
     }
 
     private void setData() {
@@ -264,5 +350,112 @@ public class CollectVehicleDataScreen extends BaseActivity {
 
         binding.modelET.setText(vehicle.getModel());
     }
+
+    Boolean validateVerification() {
+
+        if (!hasImage(vehicle.backInCarUrl)) {
+
+            return false;
+
+        }
+
+        if (!hasImage(vehicle.frontCarUrl)) {
+
+            return false;
+
+        }
+
+        if (!hasImage(vehicle.rearCarUrl)) {
+
+            return false;
+
+        }
+
+        if (!hasImage(vehicle.frontInCarUrl)) {
+
+            return false;
+
+        }
+
+        if (!hasImage(vehicle.leftCarUrl)) {
+
+            return false;
+
+        }
+
+        if (!hasImage(vehicle.rightCarUrl)) {
+
+            return false;
+
+        }
+
+        if (!hasImage(vehicle.registrationUrl)) {
+
+            return false;
+
+        }
+
+        if (!hasImage(vehicle.insuranceUrl)) {
+
+            return false;
+
+        }
+
+        if (!hasImage(vehicle.backInCarUrl)) {
+
+            return false;
+
+        }
+
+        if (vehicle.getName().isEmpty()) {
+
+            return false;
+
+        }
+
+        if (vehicle.getYear().isEmpty()) {
+
+            return false;
+
+        }
+
+        if (vehicle.getNoOfDoors().isEmpty()) {
+
+            return false;
+
+        }
+
+        if (vehicle.getMake().isEmpty()) {
+
+            return false;
+
+        }
+
+        if (vehicle.getNoOfSeatBelts().isEmpty()) {
+
+            return false;
+
+        }
+
+        if (vehicle.getTagNumber().isEmpty()) {
+
+            return false;
+
+        }
+
+        if (vehicle.getModel().isEmpty()) {
+
+            return false;
+
+        }
+
+        return true;
+    }
+
+    Boolean hasImage(String image) {
+
+        return !(image == null || image.isEmpty() || image.equalsIgnoreCase("null"));
+    }
+
 
 }

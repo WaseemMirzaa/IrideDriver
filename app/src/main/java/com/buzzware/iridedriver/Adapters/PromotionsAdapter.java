@@ -2,6 +2,7 @@ package com.buzzware.iridedriver.Adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.buzzware.iridedriver.Models.Promotion.PromotionObj;
 import com.buzzware.iridedriver.Models.RideModel;
+import com.buzzware.iridedriver.Screens.PromotionDetails;
 import com.buzzware.iridedriver.databinding.PromotionItemDesginBinding;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -53,6 +55,15 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
         viewHolder.binding.descTV.setText(promotionObj.getMessage());
         viewHolder.binding.endTimeTv.setText("End " + getDateTime(promotionObj.endTime));
         viewHolder.binding.startTimeTV.setText("Start " + getDateTime(promotionObj.startTime));
+
+        viewHolder.binding.getRoot()
+                .setOnClickListener(v->{
+
+                    mContext.startActivity(new Intent(mContext, PromotionDetails.class)
+                    .putExtra("promotion",promotionObj));
+
+                });
+
     }
 
     private int getProgress(List<RideModel> rideModels, PromotionObj promotionObj) {
@@ -90,7 +101,7 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
 
     private String getDateTime(long bookingDate) {
 
-        Date date = new Date(bookingDate * 1000L);
+        Date date = new Date(bookingDate);
 
         @SuppressLint("SimpleDateFormat") SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         @SuppressLint("SimpleDateFormat") SimpleDateFormat tf = new SimpleDateFormat(" HH:mm a");

@@ -3,12 +3,15 @@ package com.buzzware.iridedriver.Fragments;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.buzzware.iridedriver.Models.User;
 import com.buzzware.iridedriver.Models.VehicleModel;
@@ -18,6 +21,7 @@ import com.buzzware.iridedriver.Screens.Home;
 import com.buzzware.iridedriver.Screens.StartUp;
 import com.buzzware.iridedriver.Screens.UploadVehicleImagesScreen;
 import com.buzzware.iridedriver.databinding.FragmentSignInBinding;
+import com.buzzware.iridedriver.utils.AlertUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
@@ -27,6 +31,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import org.jetbrains.annotations.NotNull;
 
 public class SignInFragment extends BaseFragment {
 
@@ -52,9 +58,59 @@ public class SignInFragment extends BaseFragment {
         return mBinding.getRoot();
     }
 
+    void showForgetPassword() {
+
+        AlertUtils.showSingleInputDialog(getActivity(),
+                "Reset Password",
+                "Email",
+                InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS,
+                "Send",
+                "Cancel",
+                new AlertUtils.SingleInputDialogListener() {
+                    @Override
+                    public void positiveCallback(String input) {
+
+                        if (input.toString().isEmpty()) {
+
+                            Toast.makeText(getActivity(), "Invalid Email", Toast.LENGTH_SHORT).show();
+
+                            return;
+                        }
+                        FirebaseAuth.getInstance()
+                                .sendPasswordResetEmail(input)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull @NotNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+
+                                            Toast.makeText(getActivity(), "Sent Successfully", Toast.LENGTH_SHORT).show();
+
+                                        } else {
+
+                                            if (task.getException() != null)
+                                                showErrorAlert(task.getException().getLocalizedMessage());
+
+                                        }
+                                    }
+                                });
+                    }
+
+                    @Override
+                    public void negativeCallback() {
+
+                        // ...
+
+                    }
+                });
+
+    }
+
+
     private void init() {
 
         mBinding.btnLogin.setOnClickListener(v -> signIn());
+
+        mBinding.tvForgot.setOnClickListener(v -> showForgetPassword());
     }
 
     private void signIn() {
@@ -123,10 +179,12 @@ public class SignInFragment extends BaseFragment {
 
                 if (user.userRole.equalsIgnoreCase("driver")) {
 
-                    if (user.isApproved == null || user.isApproved)
+                    if (user.isApproved == null || user.isApproved) {
 
-                        checkVehicleDetails();
+                        startActivity(new Intent(getActivity(), Home.class));
 
+                        getActivity().finish();
+                    }
                     else {
 
                         showErrorAlert("This user has been disabled by admin.");

@@ -17,6 +17,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.buzzware.iridedriver.Adapters.VehicleImagesAdapter;
+import com.buzzware.iridedriver.Firebase.FirebaseInstances;
 import com.buzzware.iridedriver.Models.UploadImageModel;
 import com.buzzware.iridedriver.Models.VehicleModel;
 import com.buzzware.iridedriver.R;
@@ -34,6 +35,8 @@ import com.nabinbhandari.android.permissions.Permissions;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class UploadVehicleImagesScreen extends BaseActivity implements VehicleImagesAdapter.OnImageClickListener {
@@ -57,7 +60,7 @@ public class UploadVehicleImagesScreen extends BaseActivity implements VehicleIm
     public static void startVehicleInformation(Context c) {
 
         c.startActivity(new Intent(c, UploadVehicleImagesScreen.class)
-        .putExtra("isNotFromSignUp", true));
+                .putExtra("isNotFromSignUp", true));
 
     }
 
@@ -81,11 +84,11 @@ public class UploadVehicleImagesScreen extends BaseActivity implements VehicleIm
 
         getExtrasFromIntent();
 
-        if (isNotFromSignUp) {
+//        if (isNotFromSignUp) {
 
-            binding.btnContinue.setVisibility(View.GONE);
+//            binding.btnContinue.setVisibility(View.GONE);
 
-        }
+//        }
 
         setTitle();
 
@@ -112,7 +115,7 @@ public class UploadVehicleImagesScreen extends BaseActivity implements VehicleIm
 
         binding.btnContinue.setOnClickListener(v -> validateAndMoveToHome());
 
-        binding.appBarTitleInclude.backIcon.setOnClickListener(v->finish());
+        binding.appBarTitleInclude.backIcon.setOnClickListener(v -> finish());
 
     }
 
@@ -120,20 +123,21 @@ public class UploadVehicleImagesScreen extends BaseActivity implements VehicleIm
 
         if (validate()) {
 
-            if(isNotFromSignUp) {
+            String isVerified = "notApproved";
 
-                finish();
+            if(validateVerification()) {
 
-                return;
+                isVerified = "Approved";
 
             }
 
-            startActivity(
+            Map<String, Object> map = new HashMap<>();
 
-                    new Intent(this, Home.class)
+            map.put("isVerified",isVerified);
 
-                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            );
+            FirebaseInstances.usersCollection
+                    .document(getUserId())
+                    .update(map);
 
             finish();
 
@@ -145,7 +149,7 @@ public class UploadVehicleImagesScreen extends BaseActivity implements VehicleIm
 
         if (vehicle == null) {
 
-            showErrorAlert("Vehicle Data Missing");
+            showErrorAlert("Please Add Vehicle Data First");
 
             return false;
 
@@ -436,7 +440,7 @@ public class UploadVehicleImagesScreen extends BaseActivity implements VehicleIm
 
     private void UploadImage() {
 
-        if(selectedImage == null) {
+        if (selectedImage == null) {
 
             hideLoader();
 
@@ -516,5 +520,111 @@ public class UploadVehicleImagesScreen extends BaseActivity implements VehicleIm
 
             }
         });
+    }
+
+    Boolean validateVerification() {
+
+        if (!hasImage(vehicle.backInCarUrl)) {
+
+            return false;
+
+        }
+
+        if (!hasImage(vehicle.frontCarUrl)) {
+
+            return false;
+
+        }
+
+        if (!hasImage(vehicle.rearCarUrl)) {
+
+            return false;
+
+        }
+
+        if (!hasImage(vehicle.frontInCarUrl)) {
+
+            return false;
+
+        }
+
+        if (!hasImage(vehicle.leftCarUrl)) {
+
+            return false;
+
+        }
+
+        if (!hasImage(vehicle.rightCarUrl)) {
+
+            return false;
+
+        }
+
+        if (!hasImage(vehicle.registrationUrl)) {
+
+            return false;
+
+        }
+
+        if (!hasImage(vehicle.insuranceUrl)) {
+
+            return false;
+
+        }
+
+        if (!hasImage(vehicle.backInCarUrl)) {
+
+            return false;
+
+        }
+
+        if (vehicle.getName().isEmpty()) {
+
+            return false;
+
+        }
+
+        if (vehicle.getYear().isEmpty()) {
+
+            return false;
+
+        }
+
+        if (vehicle.getNoOfDoors().isEmpty()) {
+
+            return false;
+
+        }
+
+        if (vehicle.getMake().isEmpty()) {
+
+            return false;
+
+        }
+
+        if (vehicle.getNoOfSeatBelts().isEmpty()) {
+
+            return false;
+
+        }
+
+        if (vehicle.getTagNumber().isEmpty()) {
+
+            return false;
+
+        }
+
+        if (vehicle.getModel().isEmpty()) {
+
+            return false;
+
+        }
+
+        return true;
+    }
+
+    Boolean hasImage(String image) {
+
+        return !(image == null || image.isEmpty() || image.equalsIgnoreCase("null"));
     }
 }

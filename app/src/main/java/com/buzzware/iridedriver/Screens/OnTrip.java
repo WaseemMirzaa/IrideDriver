@@ -16,12 +16,14 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
+import com.bumptech.glide.Glide;
 import com.buzzware.iridedriver.Firebase.FirebaseInstances;
 import com.buzzware.iridedriver.LocationServices.LocationTracker;
 import com.buzzware.iridedriver.Models.Payouts.PayoutObj;
 import com.buzzware.iridedriver.Models.Promotion.PromotionObj;
 import com.buzzware.iridedriver.Models.RideModel;
 import com.buzzware.iridedriver.Models.SearchedPlaceModel;
+import com.buzzware.iridedriver.Models.User;
 import com.buzzware.iridedriver.Models.response.directions.DirectionsApiResponse;
 import com.buzzware.iridedriver.Models.response.directions.Leg;
 import com.buzzware.iridedriver.Models.response.directions.Route;
@@ -84,6 +86,8 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
     Boolean hasLocationPermissions;
 
+    User customer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,7 +102,28 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
         setListeners();
 
-        setOrderListener();
+        FirebaseInstances.usersCollection
+                .document(rideModel.userId)
+                .get().addOnCompleteListener(task -> {
+
+            if(task.isSuccessful()) {
+
+                 customer = task.getResult().toObject(User.class);
+
+                Glide.with(OnTrip.this)
+                        .load(customer.image)
+                        .into(mBinding.userPic);
+
+                mBinding.nameTV.setText(customer.firstName+" "+customer.lastName);
+
+                mBinding.ratingTV.setText("");
+
+            }
+
+            setOrderListener();
+
+        });
+
     }
 
     private void setOrderListener() {
@@ -111,6 +136,15 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
                     try {
 
                         RideModel r = value.toObject(RideModel.class);
+
+                        if(r.status.equalsIgnoreCase(AppConstants.RideStatus.DRIVER_ACCEPTED) || r.status.equalsIgnoreCase(AppConstants.RideStatus.DRIVER_REACHED)){
+
+                            mBinding.profileDetailsCL.setVisibility(View.VISIBLE);
+
+                        } else
+
+                            mBinding.profileDetailsCL.setVisibility(View.GONE);
+
 
                         if (r.status.equalsIgnoreCase(AppConstants.RideStatus.CANCELLED)) {
 
@@ -186,11 +220,18 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
             rideModel.status = "driverReached";
 
+            mBinding.profileDetailsCL.setVisibility(View.VISIBLE);
+
         } else if (rideModel.status.equalsIgnoreCase("driverReached")) {
 
             rideModel.status = "rideStarted";
 
+            mBinding.profileDetailsCL.setVisibility(View.VISIBLE);
+
+
         } else if (rideModel.status.equalsIgnoreCase("rideStarted")) {
+
+            mBinding.profileDetailsCL.setVisibility(View.GONE);
 
             if (AppConstants.RideStatus.isRideInProgress(rideModel.status)) {
 
@@ -201,6 +242,7 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
                         rideModel.tripDetail.destinations.get(0).status = "1";
 
                     } else {
+                        mBinding.profileDetailsCL.setVisibility(View.GONE);
 
                         rideModel.status = "rideCompleted";
 
@@ -209,6 +251,8 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
                     }
 
                 } else {
+
+                    mBinding.profileDetailsCL.setVisibility(View.GONE);
 
                     rideModel.status = "rideCompleted";
 
@@ -219,6 +263,8 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
             }
 
         }
+
+
 
         showLoader();
 
@@ -267,7 +313,7 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
                         PayoutObj payoutObj = new PayoutObj();
 
-                        payoutObj.amount = String.valueOf(amount);
+                        payoutObj.amount = new Double(amount).intValue();
                         payoutObj.orderId = rideModel.id;
                         payoutObj.driverId = getUserId();
                         payoutObj.type = "order";
@@ -364,7 +410,7 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
         PayoutObj payoutObj = new PayoutObj();
 
-        payoutObj.amount = promotionObj.amount + "";
+        payoutObj.amount = Double.valueOf(Double.parseDouble(promotionObj.amount)).intValue();
         payoutObj.orderId = null;
         payoutObj.driverId = getUserId();
         payoutObj.promotionId = promotionObj.id;

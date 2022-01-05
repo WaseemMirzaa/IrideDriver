@@ -12,7 +12,7 @@
             android:layout_height="@dimen/_250sdp"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
-            android:src="@drawable/dummy_two" />
+            android:src="@drawable/photo_required" />
 
         <LinearLayout
             android:orientation="vertical"
@@ -49,7 +49,7 @@
                     android:layout_gravity="start"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="San Francisco, CA"
+                    android:text=""
                     android:textColor="@color/gray"
                     android:textSize="@dimen/_10sdp"
                     android:textStyle="normal"
@@ -61,7 +61,7 @@
                     android:layout_gravity="start"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="20 Years"
+                    android:text=""
                     android:textColor="@color/gray"
                     android:textSize="@dimen/_10sdp"
                     android:textStyle="normal"

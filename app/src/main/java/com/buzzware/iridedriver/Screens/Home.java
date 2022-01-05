@@ -30,7 +30,9 @@ import com.buzzware.iridedriver.Fragments.InvitationFragment;
 import com.buzzware.iridedriver.Fragments.NotificationFragment;
 import com.buzzware.iridedriver.Fragments.ProfileFragment;
 import com.buzzware.iridedriver.Fragments.PromotionFragment;
+import com.buzzware.iridedriver.Fragments.RemaindersFragment;
 import com.buzzware.iridedriver.Fragments.WalletFragment;
+import com.buzzware.iridedriver.Models.Reminder;
 import com.buzzware.iridedriver.Models.User;
 import com.buzzware.iridedriver.R;
 import com.buzzware.iridedriver.databinding.ActivityHomeBinding;
@@ -115,6 +117,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         mBinding.navView.findViewById(R.id.inviteLay).setOnClickListener(this);
         mBinding.navView.findViewById(R.id.csLay).setOnClickListener(this);
         mBinding.navView.findViewById(R.id.rideHistoryLay).setOnClickListener(this);
+        mBinding.navView.findViewById(R.id.reminderLL).setOnClickListener(this);
         mBinding.navView.findViewById(R.id.vehicleInfoLay).setOnClickListener(this);
         mBinding.navView.findViewById(R.id.documentsLay).setOnClickListener(this);
         mBinding.navView.findViewById(R.id.logoutLay).setOnClickListener(this);
@@ -186,20 +189,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
 
                 }
 
-                ImageView picIV = headerLayout.findViewById(R.id.picIV);
 
-                TextView nameTV = headerLayout.findViewById(R.id.nameTV);
-
-                nameTV.setText(user.firstName + " " + user.lastName);
-
-                try {
-
-                    Glide.with(this).load(user.image).apply(new RequestOptions().centerCrop().placeholder(R.drawable.dummy_girl)).into(picIV);
-
-                }catch (Exception e) {
-
-
-                }
             }
 
 
@@ -282,6 +272,9 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         } else if (v == mBinding.navView.findViewById(R.id.inviteLay)) {
             OpenCloseDrawer();
             ((AppCompatActivity) this).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new InvitationFragment()).addToBackStack("invite").commit();
+        } else if (v == mBinding.navView.findViewById(R.id.reminderLL)) {
+            OpenCloseDrawer();
+            ((AppCompatActivity) this).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new RemaindersFragment()).addToBackStack("reminder").commit();
         } else if (v == mBinding.navView.findViewById(R.id.csLay)) {
             OpenCloseDrawer();
             ((AppCompatActivity) this).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CustomerRequestsFragment()).addToBackStack("cService").commit();

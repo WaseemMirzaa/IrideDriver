@@ -11,6 +11,7 @@ import androidx.databinding.DataBindingUtil;
 import com.buzzware.iridedriver.Models.User;
 import com.buzzware.iridedriver.R;
 import com.buzzware.iridedriver.Screens.CollectVehicleDataScreen;
+import com.buzzware.iridedriver.Screens.Home;
 import com.buzzware.iridedriver.databinding.FragmentSignUpBinding;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -119,6 +120,7 @@ public class SignUpFragment extends BaseFragment {
             user.phoneNumber = mBinding.phoneET.getText().toString();
             user.state = "";
             user.zipcode = "";
+            user.isVerified = "notApproved";
 
             uploadDataToFirestore(user);
 
@@ -142,7 +144,7 @@ public class SignUpFragment extends BaseFragment {
                 .document(getUserId())
                 .set(user);
 
-        Intent i = new Intent(getActivity(), CollectVehicleDataScreen.class);
+        Intent i = new Intent(getActivity(), Home.class);
 
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 

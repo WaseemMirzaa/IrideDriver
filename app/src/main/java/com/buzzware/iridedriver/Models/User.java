@@ -16,8 +16,12 @@ public class User {
     public Boolean isActive;
     public String zipcode;
     public String email;
+    public String stripeStatus;
     public String image;
+    public String stripeaccountlinkurl;
     public String userType;
     public String userRole = "driver";
     public Boolean isApproved ;
+    public String isVerified;
+    public String stripeaccount_id;
 }

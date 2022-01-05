@@ -129,7 +129,7 @@ public class EditProfileActivity extends BaseActivity {
         binding.stateET.setText(user.state);
         binding.zipET.setText(user.zipcode);
         binding.homeAddressET.setText(user.homeAddress);
-        binding.workAddressET.setText(user.workAddress);
+//        binding.workAddressET.setText("");
 
     }
 
@@ -289,7 +289,7 @@ public class EditProfileActivity extends BaseActivity {
         userData.put("firstName", binding.fNameET.getText().toString());
         userData.put("lastName", binding.lNameET.getText().toString());
         userData.put("homeAddress", binding.homeAddressET.getText().toString());
-        userData.put("workAddress", binding.workAddressET.getText().toString());
+//        userData.put("workAddress", binding.workAddressET.getText().toString());
         userData.put("phoneNumber", binding.phoneET.getText().toString());
         userData.put("state", binding.stateET.getText().toString());
         userData.put("city", binding.cityET.getText().toString());

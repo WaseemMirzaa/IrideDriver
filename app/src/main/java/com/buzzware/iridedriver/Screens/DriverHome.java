@@ -21,6 +21,7 @@ import com.buzzware.iridedriver.Models.Payouts.PayoutObj;
 import com.buzzware.iridedriver.Models.Promotion.PromotionObj;
 import com.buzzware.iridedriver.Models.RideModel;
 import com.buzzware.iridedriver.Models.SearchedPlaceModel;
+import com.buzzware.iridedriver.Models.User;
 import com.buzzware.iridedriver.Models.response.directions.DirectionsApiResponse;
 import com.buzzware.iridedriver.Models.response.directions.Leg;
 import com.buzzware.iridedriver.Models.response.directions.Route;
@@ -221,7 +222,7 @@ public class DriverHome extends BaseActivity implements OnMapReadyCallback {
 
                     if (rideModel.status.equalsIgnoreCase("rideCompleted")) {
 
-                        createPayout();
+                        getStripeID();
 
                         return;
                     }
@@ -233,7 +234,34 @@ public class DriverHome extends BaseActivity implements OnMapReadyCallback {
                 });
     }
 
-    private void createPayout() {
+    void getStripeID() {
+
+        FirebaseInstances.usersCollection
+                .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .get()
+                .addOnCompleteListener(task -> {
+
+
+                    if (task.isSuccessful()) {
+
+                        User user = task.getResult().toObject(User.class);
+
+                        if (user != null) {
+
+                            if (user.stripeaccount_id != null)
+
+                                createPayout(user.stripeaccount_id);
+                            else {
+
+                                showErrorAlert("Please Add Your Payout Account First.");
+                            }
+                        }
+                    }
+                });
+
+    }
+
+    private void createPayout(String stripeaccount_id) {
 
         FirebaseInstances.settingsCollection
                 .document("driverShare")
@@ -250,8 +278,9 @@ public class DriverHome extends BaseActivity implements OnMapReadyCallback {
 
                         PayoutObj payoutObj = new PayoutObj();
 
-                        payoutObj.amount = String.valueOf(amount);
+                        payoutObj.amount = new Double(amount).intValue();
                         payoutObj.orderId = rideModel.id;
+                        payoutObj.stripeaccount_id = stripeaccount_id;
                         payoutObj.driverId = getUserId();
                         payoutObj.type = "order";
                         payoutObj.status = "unpaid";
@@ -264,7 +293,7 @@ public class DriverHome extends BaseActivity implements OnMapReadyCallback {
 
                                     hideLoader();
 
-                                    checkPromotions();
+                                    checkPromotions(stripeaccount_id);
 
                                 });
 
@@ -273,7 +302,7 @@ public class DriverHome extends BaseActivity implements OnMapReadyCallback {
 
     }
 
-    private void checkPromotions() {
+    private void checkPromotions(String stripeaccount_id) {
 
         long time = new Date().getTime() / 1000L;
 
@@ -297,7 +326,7 @@ public class DriverHome extends BaseActivity implements OnMapReadyCallback {
 
                                 promotionObj.rideModels.add(rideModel);
 
-                                checkAndCreatePayout(promotionObj);
+                                checkAndCreatePayout(promotionObj, stripeaccount_id);
 
                                 FirebaseInstances.promotionsCollection.document(promotionObj.id)
                                         .set(promotionObj);
@@ -317,7 +346,7 @@ public class DriverHome extends BaseActivity implements OnMapReadyCallback {
 
     }
 
-    private void checkAndCreatePayout(PromotionObj promotionObj) {
+    private void checkAndCreatePayout(PromotionObj promotionObj, String stripeaccount_id) {
 
         String userId = FirebaseAuth.getInstance().getUid();
 
@@ -337,21 +366,22 @@ public class DriverHome extends BaseActivity implements OnMapReadyCallback {
 
         if (count == promotionObj.noOfTrips) {
 
-            createPayout(promotionObj);
+            createPayout(promotionObj, stripeaccount_id);
 
         }
 
     }
 
-    private void createPayout(PromotionObj promotionObj) {
+    private void createPayout(PromotionObj promotionObj, String stripeId) {
 
         PayoutObj payoutObj = new PayoutObj();
 
-        payoutObj.amount = promotionObj.amount + "";
+        payoutObj.amount = new Double(Double.parseDouble(promotionObj.amount)).intValue();
         payoutObj.orderId = null;
         payoutObj.driverId = getUserId();
         payoutObj.promotionId = promotionObj.id;
         payoutObj.type = "promotion";
+        payoutObj.stripeaccount_id = stripeId;
         payoutObj.status = "unpaid";
         payoutObj.completionDateTime = new Date().toString();
         payoutObj.completionTimeStamp = new Date().getTime();

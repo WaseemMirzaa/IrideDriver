@@ -73,15 +73,25 @@ public class Notifications extends AppCompatActivity {
 
                     for (QueryDocumentSnapshot document : task.getResult()) {
 
-                        NotificationModel notification = document.toObject(NotificationModel.class);
+                        try {
 
-                        notification.setId(document.getId());
+                            NotificationModel notification = document.toObject(NotificationModel.class);
 
-                        notification.setImage(getImage(notification.getFromId()));
+                            notification.setId(document.getId());
 
-                        if(notification.getToId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
+                            if (notification.isRead != null) {
 
-                            notificationList.add(notification);
+                                if (notification.isRead.containsKey(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+
+                                    notificationList.add(notification);
+
+                                }
+
+                            }
+
+                        } catch (Exception e) {
+
+                            e.printStackTrace();
 
                         }
                     }

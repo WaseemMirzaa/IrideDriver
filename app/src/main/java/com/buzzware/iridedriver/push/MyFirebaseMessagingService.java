@@ -16,8 +16,13 @@ import androidx.core.app.NotificationCompat;
 
 import com.buzzware.iridedriver.R;
 import com.buzzware.iridedriver.Screens.StartUp;
+import com.buzzware.iridedriver.events.NewRideEvent;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.Map;
 
 
 /**
@@ -43,8 +48,34 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
-        if (remoteMessage.getData().size() > 0) {
-            sendUserNotification(remoteMessage.getData().get("title"), remoteMessage.getData().get("text"));
+        Map<String, String> map = remoteMessage.getData();
+
+        try {
+
+            if(map.keySet().toArray().length > 1) {
+
+                String status = map.get(map.keySet().toArray()[0].toString());
+
+                String id = map.get(map.keySet().toArray()[1].toString());
+
+                if (status.equalsIgnoreCase("booked")) {
+
+                    EventBus.getDefault().post(new NewRideEvent(id));
+
+                }
+
+            }
+
+        } catch (Exception e) {
+
+
+        }
+
+
+        if (remoteMessage.getNotification().getTitle() != null && remoteMessage.getNotification().getBody() != null) {
+
+            sendUserNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody());
+
         }
 
     }
@@ -91,11 +122,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private int getNotificationIcon(NotificationCompat.Builder notificationBuilder) {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            int color = 0x036085;
-            notificationBuilder.setColor(color);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            int color = 0x036085;
+//            notificationBuilder.setColor(color);
 
-        }
+//        }
         return R.mipmap.ic_launcher;
     }
 

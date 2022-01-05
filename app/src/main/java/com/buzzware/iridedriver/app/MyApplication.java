@@ -2,6 +2,8 @@ package com.buzzware.iridedriver.app;
 
 import android.app.Application;
 
+import androidx.appcompat.app.AppCompatDelegate;
+
 import com.buzzware.iridedriver.utils.AppConstants;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.net.PlacesClient;
@@ -17,6 +19,8 @@ public class MyApplication extends Application {
 
         // Create a new PlacesClient instance
         PlacesClient placesClient = Places.createClient(this);
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         FirebaseApp.initializeApp(this);
     }

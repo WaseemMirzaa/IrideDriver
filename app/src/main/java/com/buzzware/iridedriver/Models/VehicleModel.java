@@ -44,6 +44,7 @@ public class VehicleModel implements Parcelable {
     public String noOfSeatBelts;
 
     public String name;
+    public String carType;
 
     public VehicleModel() {
 

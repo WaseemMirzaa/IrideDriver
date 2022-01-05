@@ -26,6 +26,7 @@ import com.buzzware.iridedriver.Screens.OnTrip;
 import com.buzzware.iridedriver.databinding.FragmentHomeBinding;
 import com.buzzware.iridedriver.events.OnlineStatusChanged;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -258,7 +259,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
         }
 
-        for (RideModel rideModel : rides) {
+        for (int i = 0; i < rides.size(); i++) {
+
+            RideModel rideModel = rides.get(i);
 
             if (rideModel.driverId == null) {
 
@@ -406,7 +409,37 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
         showLoader();
 
-        checkVehicleDetails();
+        FirebaseInstances.usersCollection
+                .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .get()
+                .addOnCompleteListener(task -> {
+
+                    hideLoader();
+
+                    if (task.isSuccessful()) {
+
+                        User user = task.getResult().toObject(User.class);
+
+                        if (user != null) {
+
+                            if (user.isVerified != null && user.isVerified.equalsIgnoreCase("approved")) {
+
+                                checkVehicleDetails();
+
+                            } else {
+
+                                showErrorAlert("Please Add Vehicle Data First");
+
+                            }
+
+
+                        }
+
+                    }
+
+                });
+
+
     }
 
 
@@ -445,13 +478,40 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
         if (selectedVehicle != null)
 
-            acceptRide(selectedVehicle);
+            checkStripeStatus(selectedVehicle);
 
         else
 
             hideLoader();
     }
 
+    void checkStripeStatus(VehicleModel vehicleModel) {
+
+        FirebaseInstances.usersCollection
+                .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .get()
+                .addOnCompleteListener(task -> {
+
+
+                    if (task.isSuccessful()) {
+
+                        User user = task.getResult().toObject(User.class);
+
+                        if (user != null) {
+
+                            if (user.stripeStatus != null && user.stripeStatus.equalsIgnoreCase("approved"))
+
+                                acceptRide(vehicleModel);
+
+                            else {
+
+                                showErrorAlert("Please Add Your Payout Account First.");
+                            }
+                        }
+                    }
+                });
+
+    }
 
     private void acceptRide(VehicleModel vehicle) {
 

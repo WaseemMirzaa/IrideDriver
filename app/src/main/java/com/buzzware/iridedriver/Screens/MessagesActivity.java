@@ -44,6 +44,7 @@ public class MessagesActivity extends BaseActivity {
     String isFromNew = "false";
 
     String myImageUrl;
+
     String otherUserImageUrl;
 
     FirebaseRequests firebaseRequests;

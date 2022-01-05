@@ -141,7 +141,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="start"
                                     android:fontFamily="@font/gibson_semibd"
-                                    android:text="On Trip"
+                                    android:text="Have a nice trip"
                                     android:textColor="@color/black"
                                     android:textSize="@dimen/_10sdp"
                                     android:textStyle="bold" />
@@ -175,6 +175,74 @@
                     </RelativeLayout>
                 </LinearLayout>
             </LinearLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:id="@+id/profileDetailsCL"
+                android:visibility="gone"
+                android:layout_height="wrap_content">
+
+
+                <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/userPic"
+                    android:layout_width="@dimen/_50sdp"
+                    android:layout_height="@dimen/_50sdp"
+                    android:layout_margin="@dimen/_15sdp"
+                    android:layout_marginStart="116dp"
+                    android:src="@color/black"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:riv_corner_radius="@dimen/_10sdp" />
+
+                <TextView
+                    android:id="@+id/nameTV"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_width="0dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+
+                    android:autoSizeMaxTextSize="@dimen/_15sdp"
+                    android:autoSizeMinTextSize="@dimen/_8sdp"
+                    android:autoSizeTextType="uniform"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:fontFamily="@font/gibson_semibd"
+                    android:text="30 min away"
+
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12sdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/userPic"
+                    app:layout_constraintTop_toTopOf="@+id/userPic" />
+
+
+                <TextView
+                    android:id="@+id/ratingTV"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:autoSizeMaxTextSize="@dimen/_15sdp"
+                    android:autoSizeMinTextSize="@dimen/_8sdp"
+                    android:autoSizeTextType="uniform"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/gibson_regular"
+                    android:maxLines="1"
+                    android:text="30 min away"
+
+                    android:textColor="@color/gray"
+                    android:textSize="@dimen/_9sdp"
+                    app:layout_constraintBottom_toBottomOf="@+id/userPic"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/userPic"
+                    app:layout_constraintTop_toBottomOf="@+id/nameTV" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
             <androidx.cardview.widget.CardView
                 android:id="@+id/rideBt"
                 android:layout_width="match_parent"

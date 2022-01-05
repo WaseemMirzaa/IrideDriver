@@ -1,13 +1,16 @@
 package com.buzzware.iridedriver.Fragments;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -15,21 +18,41 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.buzzware.iridedriver.Models.User;
+import com.buzzware.iridedriver.Models.response.geoCode.ReverseGeoCodeResponse;
 import com.buzzware.iridedriver.R;
 import com.buzzware.iridedriver.Screens.EditProfileActivity;
 import com.buzzware.iridedriver.Screens.Home;
 import com.buzzware.iridedriver.Screens.Notifications;
 import com.buzzware.iridedriver.databinding.FragmentProfileBinding;
+import com.buzzware.iridedriver.retrofit.Controller;
+import com.buzzware.iridedriver.utils.AppConstants;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.gson.Gson;
+import com.nabinbhandari.android.permissions.PermissionHandler;
+import com.nabinbhandari.android.permissions.Permissions;
 
-public class ProfileFragment extends Fragment implements View.OnClickListener {
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import im.delight.android.location.SimpleLocation;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class ProfileFragment extends BaseFragment implements View.OnClickListener {
 
     FragmentProfileBinding binding;
 
     Context context;
+
+    SimpleLocation location;
+    Boolean hasLocationPermissions;
 
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
@@ -50,7 +73,120 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         setListener();
 
+
         return binding.getRoot();
+    }
+
+
+    private void checkPermissionsAndInit() {
+
+//        setRideButton();
+
+        String[] permissions = {Manifest.permission.ACCESS_BACKGROUND_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
+
+        Permissions.check(getActivity()/*context*/, permissions, null, null, new PermissionHandler() {
+            @Override
+            public void onGranted() {
+
+                hasLocationPermissions = true;
+
+                location = new SimpleLocation(getActivity());
+
+                if (!location.hasLocationEnabled()) {
+                    // ask the user to enable location access
+                    showEnableLocationDialog("Please enable location from setting in order to proceed to the app");
+
+                    return;
+                }
+                try {
+
+                    location.endUpdates();
+
+                } catch (Exception e) {
+
+
+                }
+
+                location.beginUpdates();
+
+                location.setListener(() -> reverseGeoCode(location.getLatitude(), location.getLongitude()));
+
+            }
+
+            @Override
+            public void onDenied(Context context, ArrayList<String> deniedPermissions) {
+
+                hasLocationPermissions = false;
+
+                showPermissionsDeniedError("Please enable location permissions from setting in order to proceed to the app.");
+
+            }
+        });
+    }
+
+
+
+    Call<String> reverseCall;
+
+    void reverseGeoCode(double lat, double lng) {
+
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("lat", location.getLatitude());
+        map.put("lng", location.getLongitude());
+
+        FirebaseFirestore.getInstance().collection("Users").document(getUserId())
+                .update(map);
+
+        String url = "/maps/api/geocode/json?latlng=" + lat + "," + lng + "&key=" + AppConstants.GOOGLE_PLACES_API_KEY;
+
+        if (reverseCall != null) {
+
+            reverseCall.cancel();
+
+            reverseCall = null;
+        }
+
+        reverseCall = Controller.getApi().getPlaces(url, "asdasd");
+
+        reverseCall.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+
+                reverseCall = null;
+
+                Gson gson = new Gson();
+
+                if (response.body() != null && response.isSuccessful()) {
+
+                    ReverseGeoCodeResponse reverseGeoCodeResponse = gson.fromJson(response.body(), ReverseGeoCodeResponse.class);
+
+                    setAddress(reverseGeoCodeResponse);
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                reverseCall = null;
+            }
+        });
+    }
+
+    private void setAddress(ReverseGeoCodeResponse reverseGeoCodeResponse) {
+
+        binding.userAddressTV.setText(reverseGeoCodeResponse.results.get(0).formatted_address);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+//        EventBus.getDefault().register(this);
+
+        checkIfPermissionsGranted();
+
     }
 
 
@@ -98,6 +234,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
                 setUserData(user1);
 
+                checkPermissionsAndInit();
+
             });
 
         }
@@ -110,7 +248,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             Glide.with(getContext()).load(user.image).apply(new RequestOptions().centerCrop()).into(binding.userImageIV);
         }
         binding.userNameTV.setText(user.firstName + " " + user.lastName);
-        binding.userAddressTV.setText(user.homeAddress);
+//        binding.userAddressTV.setText(user.homeAddress);
         binding.userPhoneNumberTV.setText(user.phoneNumber);
 
     }
@@ -137,9 +275,40 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+
+    private void checkIfPermissionsGranted() {
+
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            return;
+        }
+
+        hasLocationPermissions = true;
+
+        location = new SimpleLocation(getActivity());
+
+        if (!location.hasLocationEnabled()) {
+            // ask the user to enable location access
+            showEnableLocationDialog("Please enable location from setting in order to proceed to the app");
+
+            return;
+        }
+
+        try {
+
+            location.endUpdates();
+
+        } catch (Exception e) {
+
+
+        }
+
+        location.beginUpdates();
+
+        location.setListener(() -> reverseGeoCode(location.getLatitude(), location.getLongitude()));
+
     }
 
     @Override

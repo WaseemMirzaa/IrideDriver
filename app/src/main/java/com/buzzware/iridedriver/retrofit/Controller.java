@@ -11,6 +11,8 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 public class Controller {
 
     public static final String Base_Url = "https://maps.googleapis.com";
+    public static final String Base_Url_CLoudFunctions = "https://us-central1-myclientsapp-16171.cloudfunctions.net";
+
 
     public static Retrofit retrofit = null;
 
@@ -31,4 +33,23 @@ public class Controller {
 
         return mClient;
     }
+
+    public static Api getApiClient(String base_Url) {
+
+        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient.Builder mOkHttpClient = new OkHttpClient.Builder();
+        mOkHttpClient.connectTimeout(50, TimeUnit.SECONDS).writeTimeout(1, TimeUnit.MINUTES).readTimeout(50, TimeUnit.SECONDS);
+        mOkHttpClient.hostnameVerifier((s, sslSession) -> true);
+
+        Retrofit.Builder mBuilder = new Retrofit.Builder().baseUrl(base_Url).addConverterFactory(ScalarsConverterFactory.create()).addConverterFactory(GsonConverterFactory.create());
+
+        Retrofit mRetrofit = mBuilder.client(mOkHttpClient.addInterceptor(httpLoggingInterceptor).build()).build();
+
+        Api mClient = mRetrofit.create(Api.class);
+
+        return mClient;
+    }
+
 }

@@ -136,9 +136,10 @@ public class FirebaseRequests {
 
     public void LoadMessages(MessagesResponseCallback callback, Context context, String conversationID) {
 
-        List<MessageModel> messageModels = new ArrayList<>();
 
         loadMessagesListener = firebaseFirestore.collection("Chat").document(conversationID).collection("Conversations").addSnapshotListener((value, error) -> {
+
+            List<MessageModel> messageModels = new ArrayList<>();
 
             if (value != null) {
 
@@ -164,9 +165,10 @@ public class FirebaseRequests {
 
     public void LoadAdminMessages(MessagesResponseCallback callback, Context context, String conversationID) {
 
-        List<MessageModel> messageModels = new ArrayList<>();
 
         adminListener = firebaseFirestore.collection("AdminChat").document(conversationID).collection("Conversations").addSnapshotListener((value, error) -> {
+
+            List<MessageModel> messageModels = new ArrayList<>();
 
             if (value != null) {
 

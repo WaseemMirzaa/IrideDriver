@@ -1,16 +1,12 @@
 package com.buzzware.iridedriver.Models;
 
+import java.util.Map;
+
 public class NotificationModel {
-    String id, message, title, toId, fromId, image;
-    long time;
 
-    public long getTime() {
-        return time;
-    }
+    public Map<String, Boolean> isRead;
 
-    public void setTime(long time) {
-        this.time = time;
-    }
+    String id, message, title, type;
 
     public String getId() {
         return id;
@@ -36,27 +32,4 @@ public class NotificationModel {
         this.title = title;
     }
 
-    public String getToId() {
-        return toId;
-    }
-
-    public void setToId(String toId) {
-        this.toId = toId;
-    }
-
-    public String getFromId() {
-        return fromId;
-    }
-
-    public void setFromId(String fromId) {
-        this.fromId = fromId;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
 }

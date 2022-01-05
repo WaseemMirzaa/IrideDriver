@@ -9,7 +9,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.buzzware.iridedriver.R;
+import com.buzzware.iridedriver.Screens.NotificationDetail;
 import com.buzzware.iridedriver.databinding.NotificationReadItemBinding;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -45,16 +49,24 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         NotificationModel notificationModel=list.get(i);
 
-        if (notificationModel.getImage() != null && !notificationModel.getImage().isEmpty()) {
-            Glide.with(mContext).load(notificationModel.getImage()).apply(new RequestOptions().centerCrop()).into(viewHolder.binding.userImageIV);
-        }
-
         viewHolder.binding.titleTV.setText(notificationModel.getTitle());
 
         viewHolder.binding.messageTV.setText(notificationModel.getMessage());
 
-        viewHolder.binding.timeTV.setText(convertFormat(String.valueOf(notificationModel.getTime())));
+//        Glide.with(mContext).load(R.drawable.logo).apply(new RequestOptions().centerCrop())
+//                .into(viewHolder.binding.pic);
 
+        viewHolder.binding.getRoot().setOnClickListener(v -> {
+
+            notificationModel.isRead.put(FirebaseAuth.getInstance().getCurrentUser().getUid(), true);
+
+            FirebaseFirestore.getInstance().collection("Notification")
+                    .document(notificationModel.getId())
+                    .set(notificationModel);
+
+            NotificationDetail.startNotificationDetail(mContext, notificationModel.getTitle(), notificationModel.getMessage());
+
+        });
     }
 
 

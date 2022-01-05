@@ -42,7 +42,7 @@ public class Chat extends BaseActivity {
     FirebaseRequests firebaseRequests;
 
     public Chat() {
-        // Required empty public constructor
+
     }
 
     @Override

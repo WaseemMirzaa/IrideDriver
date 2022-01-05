@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/_70sdp">
+
+    <LinearLayout
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/_20sdp"
+        android:layout_marginLeft="@dimen/_20sdp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/userImageIV"
+            android:layout_width="@dimen/_40sdp"
+            android:visibility="gone"
+            android:layout_height="@dimen/_40sdp"
+            android:src="@drawable/dummy_girl"/>
+
+        <LinearLayout
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_gravity="start"
+                android:layout_width="match_parent"
+                android:maxLines="1"
+                android:layout_height="wrap_content"
+                android:text="title"
+                android:id="@+id/titleTV"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_14sdp"
+                android:textStyle="normal"
+                android:fontFamily="@font/gibson_semibd" />
+
+            <TextView
+                android:id="@+id/messageTV"
+                android:layout_marginTop="5dp"
+                android:layout_gravity="start"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Message"
+                android:textColor="@color/gray_light"
+                android:textSize="@dimen/_10sdp"
+                android:textStyle="normal"
+                android:fontFamily="@font/gibson_regular"/>
+
+            <TextView
+                android:visibility="gone"
+                android:layout_marginTop="5dp"
+                android:layout_gravity="start"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Message"
+                android:gravity="end"
+                android:textColor="@color/gray_light"
+                android:textSize="@dimen/_10sdp"
+                android:textStyle="normal"
+                android:fontFamily="@font/gibson_regular"/>
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
+</layout>
