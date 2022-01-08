@@ -121,6 +121,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         mBinding.navView.findViewById(R.id.vehicleInfoLay).setOnClickListener(this);
         mBinding.navView.findViewById(R.id.documentsLay).setOnClickListener(this);
         mBinding.navView.findViewById(R.id.logoutLay).setOnClickListener(this);
+        mBinding.navView.findViewById(R.id.privacyPolicyLay).setOnClickListener(this);
 
         onlineSwitch = mBinding.navView.findViewById(R.id.OnlineSwitch);
 
@@ -281,12 +282,15 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         } else if (v == mBinding.navView.findViewById(R.id.rideHistoryLay)) {
             OpenCloseDrawer();
             ((AppCompatActivity) this).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CompletedFragment()).addToBackStack("history").commit();
+        } else if (v == mBinding.navView.findViewById(R.id.privacyPolicyLay)) {
+            OpenCloseDrawer();
+            startActivity(new Intent(this, PrivacyPolicyActivity.class));
         } else if (v == mBinding.navView.findViewById(R.id.vehicleInfoLay)) {
             moveToVehicleInfo();
         } else if (v == mBinding.navView.findViewById(R.id.documentsLay)) {
-           moveToVehicleDocumentsInfo();
-        }else if (v == mBinding.navView.findViewById(R.id.logoutLay)) {
-           logout();
+            moveToVehicleDocumentsInfo();
+        } else if (v == mBinding.navView.findViewById(R.id.logoutLay)) {
+            logout();
         }
     }
 
@@ -300,6 +304,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         finish();
 
     }
+
     public static void OpenCloseDrawer() {
         if (Home.mBinding.drawerLayout.isDrawerVisible(GravityCompat.START)) {
             Home.mBinding.drawerLayout.closeDrawer(GravityCompat.START);

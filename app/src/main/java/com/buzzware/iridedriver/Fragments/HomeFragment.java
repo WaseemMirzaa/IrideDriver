@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
@@ -259,6 +260,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
         }
 
+
         for (int i = 0; i < rides.size(); i++) {
 
             RideModel rideModel = rides.get(i);
@@ -271,13 +273,15 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
                 if (distanceInMiles > 10) {
 
-                    rides.remove(rideModel);
+                   rides.remove(rideModel);
 
                 }
 
             }
 
         }
+      //  Toast.makeText(getContext(), ""+rides.size(), Toast.LENGTH_SHORT).show();
+
 
         setAdapter(rides);
     }

@@ -9,4 +9,6 @@
     <string name="select_image">SelectImage</string>
     <string name="camera_permissions_denied_string">Please enable and storage camera permissions from setting in order to proceed to the app.</string>
     <string name="location_updated">Location Updated</string>
+    <string name="location_permission_message">iRide collect your location in background in order to show your location to customer against the accepted ride. This data is not used for support ads and any other purpose.</string>
+
 </resources>

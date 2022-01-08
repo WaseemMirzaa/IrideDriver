@@ -29,7 +29,24 @@ public class RideModel implements Parcelable {
 
     public String price;
 
+    public String scheduledDate;
+    public String scheduledTime;
 
+    public String getScheduledDate() {
+        return scheduledDate;
+    }
+
+    public void setScheduledDate(String scheduledDate) {
+        this.scheduledDate = scheduledDate;
+    }
+
+    public String getScheduledTime() {
+        return scheduledTime;
+    }
+
+    public void setScheduledTime(String scheduledTime) {
+        this.scheduledTime = scheduledTime;
+    }
 
     public RideModel() {
 

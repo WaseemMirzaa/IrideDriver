@@ -23,6 +23,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -85,7 +86,10 @@ public class UpcomingRidesAdapter extends RecyclerView.Adapter<UpcomingRidesAdap
 
         }
 
-        holder.timeTV.setText(getDateTime(ride.bookingDate));
+        //holder.timeTV.setText(getDateTime(ride.bookingDate));
+
+        holder.timeTV.setText(ride.getScheduledDate()+" "+ride.getScheduledTime());
+
 
         if (rideType == RideType.completed)
 
@@ -116,12 +120,13 @@ public class UpcomingRidesAdapter extends RecyclerView.Adapter<UpcomingRidesAdap
 
 
     private String getDateTime(long bookingDate) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(bookingDate);
+        //Date date = new Date(bookingDate);
 
-        Date date = new Date(bookingDate);
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-mm-yyyy hh:mm");
 
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-mm-yyyy HH:MM");
-
-        return formatter.format(date);
+        return formatter.format(calendar.getTime());
 
     }
 

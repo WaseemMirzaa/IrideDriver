@@ -1,5 +1,6 @@
 package com.buzzware.iridedriver.Screens;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -9,7 +10,9 @@ import androidx.databinding.DataBindingUtil;
 
 import com.buzzware.iridedriver.Models.VehicleModel;
 import com.buzzware.iridedriver.R;
+import com.buzzware.iridedriver.classes.SessionManager;
 import com.buzzware.iridedriver.databinding.ActivityStartupBinding;
+import com.buzzware.iridedriver.databinding.AlertDialogPermissionBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
@@ -53,7 +56,24 @@ public class StartUp extends BaseActivity {
 
         if (getUserId().isEmpty()) {
 
-            startActivity(new Intent(this, Authentication.class));
+            if (SessionManager.getInstance().getPermission(StartUp.this)!=null){
+
+                if (SessionManager.getInstance().getPermission(StartUp.this).equals("Allow")){
+
+                    startActivity(new Intent(this, Authentication.class));
+
+                } else {
+
+                    showPermissionDialog();
+
+                }
+
+            } else {
+
+                showPermissionDialog();
+
+            }
+
 
         } else {
 
@@ -61,6 +81,37 @@ public class StartUp extends BaseActivity {
 
         }
     }
+
+    private void showPermissionDialog() {
+
+        final Dialog dialog = new Dialog(this,R.style.DialogTheme);
+
+        dialog.setCancelable(false);
+
+        AlertDialogPermissionBinding permissionDialogBinding = AlertDialogPermissionBinding.inflate(getLayoutInflater());
+
+        dialog.setContentView(permissionDialogBinding.getRoot());
+
+        permissionDialogBinding.acceptBtn.setOnClickListener(v->{
+
+            SessionManager.getInstance().setPermission(StartUp.this,"Allow");
+
+            dialog.dismiss();
+
+            startActivity(new Intent(this, Authentication.class));
+
+        });
+        permissionDialogBinding.cancelBtn.setOnClickListener(v->{
+
+            SessionManager.getInstance().setPermission(StartUp.this,"Denied");
+
+            dialog.dismiss();
+        });
+
+        dialog.show();
+
+    }
+
 
     private void checkVehicleDetails() {
 

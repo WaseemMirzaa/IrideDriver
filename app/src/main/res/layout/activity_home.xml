@@ -129,9 +129,9 @@
                             <ImageView
                                 android:layout_gravity="center"
                                 android:layout_width="20dp"
-                                android:tint="@color/white"
                                 android:layout_height="20dp"
-                                android:src="@drawable/reminder"/>
+                                android:src="@drawable/reminder"
+                                app:tint="@color/white" />
 
                             <TextView
                                 android:layout_marginLeft="@dimen/_15sdp"
@@ -375,7 +375,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="@dimen/_15sdp"
                                 android:text="About Us"
-                                android:textColor="@color/white_O_60"
+                                android:textColor="@color/white"
                                 android:textSize="@dimen/_12sdp"
                                 android:textStyle="normal"
                                 android:fontFamily="@font/gibson_regular"/>
@@ -399,7 +399,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Privacy Policy"
-                                android:textColor="@color/white_O_60"
+                                android:textColor="@color/white"
                                 android:textSize="@dimen/_12sdp"
                                 android:textStyle="normal"
                                 android:fontFamily="@font/gibson_regular"/>

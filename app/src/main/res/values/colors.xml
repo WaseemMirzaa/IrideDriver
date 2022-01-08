@@ -19,4 +19,7 @@
     <color name="gray_white">#F3F3F3</color>
     <color name="yellow">#FFA219</color>
     <color name="pink">#EA4CAB</color>
+
+    <color name="transparent">#66000000</color>
+
 </resources>
