@@ -12,17 +12,22 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
-        android:allowBackup="true"
         android:name=".app.MyApplication"
+        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
         android:supportsRtl="true"
         android:theme="@style/Theme.IrideDriver">
-        <activity android:name=".Screens.PromotionDetails"
-            android:exported="true"/>
-        <activity android:name=".Screens.WebViewActivity"
-            android:exported="true"/>
+        <activity
+            android:name=".Screens.PrivacyPolicyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Screens.PromotionDetails"
+            android:exported="true" />
+        <activity
+            android:name=".Screens.WebViewActivity"
+            android:exported="true" />
         <activity
             android:name=".Screens.CreateNewRequestActivity"
             android:exported="true" />
@@ -67,8 +72,10 @@
             android:exported="true"
             android:foregroundServiceType="location" />
 
-        <activity android:name=".Screens.NotificationDetail"
-            android:exported="true"/>
+        <activity
+            android:name=".Screens.NotificationDetail"
+            android:exported="true" />
+
         <service
             android:name=".push.MyFirebaseMessagingService"
             android:enabled="true"
