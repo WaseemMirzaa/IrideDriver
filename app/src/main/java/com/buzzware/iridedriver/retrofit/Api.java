@@ -16,4 +16,7 @@ public interface Api {
 
     @POST("/widgets/stripelink")
     Call<String> getStripeLink(@Body RequestBody params);
+
+    @POST("/widgets/stripeaccountlogin")
+    Call<String> getLoginLink(@Body RequestBody params);
 }

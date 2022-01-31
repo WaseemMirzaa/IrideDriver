@@ -9,9 +9,7 @@
         android:id="@+id/timeTV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_10sdp"
         android:layout_marginTop="@dimen/_15sdp"
-        android:layout_marginEnd="@dimen/_10sdp"
         android:maxLines="1"
         android:text="%i"
         android:textColor="@color/purple_700"
@@ -22,7 +20,8 @@
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_15sdp"
+        android:layout_marginBottom="@dimen/_10sdp"
         android:background="@drawable/rounded_corner_white"
         android:elevation="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -30,6 +29,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
+            android:layout_marginStart="@dimen/_4sdp"
+            android:layout_marginEnd="@dimen/_4sdp"
             android:layout_height="wrap_content"
             android:background="@drawable/rounded_corner_white_medium"
             android:orientation="horizontal">

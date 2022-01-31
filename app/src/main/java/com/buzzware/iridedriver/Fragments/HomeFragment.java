@@ -8,40 +8,64 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CalendarView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.applandeo.materialcalendarview.EventDay;
+import com.applandeo.materialcalendarview.exceptions.OutOfDateRangeException;
+import com.applandeo.materialcalendarview.listeners.OnDayClickListener;
+import com.buzzware.iridedriver.Adapters.PaymentsAdapter;
+import com.buzzware.iridedriver.Adapters.ScheduledRidesAdapter;
 import com.buzzware.iridedriver.Adapters.UpcomingRidesAdapter;
 import com.buzzware.iridedriver.Firebase.FirebaseInstances;
+import com.buzzware.iridedriver.Models.Payouts.PayoutObj;
+import com.buzzware.iridedriver.Models.Payouts.RideWithPayoutModel;
 import com.buzzware.iridedriver.Models.RideModel;
+import com.buzzware.iridedriver.Models.ScheduleModel;
 import com.buzzware.iridedriver.Models.SearchedPlaceModel;
 import com.buzzware.iridedriver.Models.User;
 import com.buzzware.iridedriver.Models.VehicleModel;
 import com.buzzware.iridedriver.R;
+import com.buzzware.iridedriver.Screens.DriverHome;
 import com.buzzware.iridedriver.Screens.Home;
 import com.buzzware.iridedriver.Screens.OnTrip;
 import com.buzzware.iridedriver.databinding.FragmentHomeBinding;
 import com.buzzware.iridedriver.events.OnlineStatusChanged;
+import com.buzzware.iridedriver.utils.AppConstants;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.nabinbhandari.android.permissions.PermissionHandler;
 import com.nabinbhandari.android.permissions.Permissions;
+//import com.savvi.rangedatepicker.CalendarPickerView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Array;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import im.delight.android.location.SimpleLocation;
 
@@ -59,8 +83,17 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
     Boolean hasLocationPermissions;
 
+    Boolean defaultScheduleSelected;
+
+    int position = 0;
+
     public HomeFragment() {
+        position = 0;
         // Required empty public constructor
+    }
+
+    public HomeFragment(int position) {
+        this.position = position;
     }
 
     @Override
@@ -70,9 +103,16 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
         rideType = RideType.completed;
 
+        mBinding.tabLayout.addTab(mBinding.tabLayout.newTab().setText("COMPLETED"));
+        mBinding.tabLayout.addTab(mBinding.tabLayout.newTab().setText("CURRENT"));
+        mBinding.tabLayout.addTab(mBinding.tabLayout.newTab().setText("ON-DEMAND"));
+        mBinding.tabLayout.addTab(mBinding.tabLayout.newTab().setText("SCHEDULED"));
+
         setListeners();
 
         checkPermissionsAndInit();
+
+        defaultScheduleSelected = true;
 
         return mBinding.getRoot();
     }
@@ -117,7 +157,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
         location.beginUpdates();
 
-        getRides();
+        mBinding.tabLayout.getChildAt(position).setSelected(true);
+        
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -195,14 +236,64 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
     }
 
+    TabLayout.OnTabSelectedListener onTabSelectedListener = new TabLayout.OnTabSelectedListener() {
+        @Override
+        public void onTabSelected(TabLayout.Tab tab) {
+
+            SetupTabView(tab.getPosition());
+
+        }
+
+        @Override
+        public void onTabUnselected(TabLayout.Tab tab) {
+
+        }
+
+        @Override
+        public void onTabReselected(TabLayout.Tab tab) {
+
+        }
+    };
+
     private void setListeners() {
 
-        ////init click
-        mBinding.firstTabLay.setOnClickListener(this);
+        mBinding.calendarCV.setOnDayClickListener(eventDay -> {
 
-        mBinding.secondTabLay.setOnClickListener(this);
+            mBinding.calendarCV.setSelectedDates(new ArrayList<>());
 
-        mBinding.runningTabLay.setOnClickListener(this);
+//            List<Calendar> list = new ArrayList<>();
+
+//            list.add(eventDay.getCalendar());
+
+            try {
+                mBinding.calendarCV.setDate(eventDay.getCalendar().getTime());
+            } catch (OutOfDateRangeException e) {
+                e.printStackTrace();
+            }
+
+            mBinding.calendarCV.setSelected(true);
+
+            selectedDate = new Date().getTime();
+
+            getRides();
+        });
+//        mBinding.calendarCV.setOnDateSelectedListener(new CalendarPickerView.OnDateSelectedListener() {
+//            @Override
+//            public void onDateSelected(Date date) {
+//
+//                getRides();
+//
+//            }
+//
+//            @Override
+//            public void onDateUnselected(Date date) {
+//
+//                getRides();
+//
+//            }
+//        });
+
+        mBinding.tabLayout.addOnTabSelectedListener(onTabSelectedListener);
 
         mBinding.drawerIcon.setOnClickListener(this);
     }
@@ -224,11 +315,18 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                     .whereEqualTo("driverId", getUserId())
                     .whereIn("status", Arrays.asList("driverAccepted", "driverReached", "rideStarted"));
 
+        } else if (rideType == RideType.completed) {
+
+//            query = FirebaseFirestore.getInstance().collection("Bookings")
+//                    .whereEqualTo("driverId", getUserId())
+//                    .whereIn("status", Arrays.asList("rated", "rideCompleted"));
+            getCompletedRides();
+
+            return;
         } else {
 
-            query = FirebaseFirestore.getInstance().collection("Bookings")
-                    .whereEqualTo("driverId", getUserId())
-                    .whereIn("status", Arrays.asList("rated", "rideCompleted"));
+            query = FirebaseFirestore.getInstance().collection("ScheduledRides");
+//                    .whereEqualTo("userId", getUserId());
 
         }
 
@@ -237,9 +335,146 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
             if (value != null) {
 
-                parseSnapshot(value);
+                if (rideType == RideType.scheduled) {
+
+                    parseSchedules(value);
+
+                } else {
+
+                    parseSnapshot(value);
+
+                }
             }
         });
+
+    }
+
+    private void getPayouts() {
+
+        FirebaseInstances.payoutsCollection
+
+                .whereEqualTo("driverId", getUserId())
+
+                .get()
+
+                .addOnCompleteListener(this::onPayoutsInfoReceived);
+
+    }
+
+    private void onPayoutsInfoReceived(Task<QuerySnapshot> task) {
+
+        payouts = new ArrayList<>();
+
+        if (task.isSuccessful()) {
+
+            if (task.getResult() != null) {
+
+                for (DocumentSnapshot snapshot : task.getResult().getDocuments()) {
+
+                    PayoutObj payoutObj = snapshot.toObject(PayoutObj.class);
+
+                    if (payoutObj != null) {
+
+                        payoutObj.id = snapshot.getId();
+
+                        updateRides(payoutObj);
+
+                        payouts.add(payoutObj);
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        List<RideWithPayoutModel> list = new ArrayList<>();
+
+        for (RideWithPayoutModel ride : completedRides) {
+
+            if (ride.payout != null) {
+                list.add(ride);
+            }
+        }
+
+        completedRides.clear();
+        completedRides.addAll(list);
+        hideLoader();
+
+        setAdapter();
+
+    }
+
+
+    private void updateRides(PayoutObj payoutObj) {
+
+        if (payoutObj.orderId == null)
+
+            return;
+
+        for (int i = 0; i < completedRides.size(); i++) {
+
+            if (payoutObj.orderId.equalsIgnoreCase(completedRides.get(i).id)) {
+
+                completedRides.get(i).payout = payoutObj;
+
+                return;
+
+            }
+
+        }
+
+    }
+
+    private void setAdapter() {
+
+        mBinding.ridesRV.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        mBinding.ridesRV.setAdapter(new PaymentsAdapter(getActivity(), completedRides));
+    }
+
+    private void getCompletedRides() {
+
+        showLoader();
+
+        FirebaseInstances.bookingsCollection
+                .whereEqualTo("driverId", getUserId())
+                .whereIn("status", Arrays.asList(AppConstants.RideStatus.RIDE_COMPLETED, AppConstants.RideStatus.RATED))
+                .get()
+                .addOnCompleteListener(this::onGetRidesTaskCompleted);
+
+    }
+
+    List<RideWithPayoutModel> completedRides = new ArrayList<>();
+
+    List<PayoutObj> payouts = new ArrayList<>();
+
+    private void onGetRidesTaskCompleted(Task<QuerySnapshot> task) {
+
+        completedRides = new ArrayList<>();
+
+        if (task.isSuccessful()) {
+
+            if (task.getResult() != null) {
+
+                for (DocumentSnapshot snapshot : task.getResult().getDocuments()) {
+
+                    RideWithPayoutModel rideModel = snapshot.toObject(RideWithPayoutModel.class);
+
+                    if (rideModel != null) {
+
+                        rideModel.id = snapshot.getId();
+
+                        completedRides.add(rideModel);
+                    }
+
+                }
+            }
+
+        }
+
+        getPayouts();
 
     }
 
@@ -271,17 +506,15 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
                 double distanceInMiles = distance(pickUp.lat, pickUp.lng, location.getLatitude(), location.getLongitude());
 
-                if (distanceInMiles > 10) {
+                if (distanceInMiles > 10 && rideType == RideType.upcoming) {
 
-                   rides.remove(rideModel);
+                    rides.remove(rideModel);
 
                 }
 
             }
 
         }
-      //  Toast.makeText(getContext(), ""+rides.size(), Toast.LENGTH_SHORT).show();
-
 
         setAdapter(rides);
     }
@@ -358,6 +591,120 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                     }
                 },
                 rideType));
+
+    }
+
+
+    Query query;
+
+    ArrayList<ScheduleModel> scheduledRides;
+
+
+    void parseSchedules(QuerySnapshot task) {
+
+        query = null;
+
+        hideLoader();
+
+        ArrayList<Calendar> dateArrayList = new ArrayList<>();
+
+        scheduledRides = new ArrayList<>();
+
+        if (task.getDocuments() != null) {
+
+            for (DocumentSnapshot document : task.getDocuments()) {
+
+                ScheduleModel scheduleModel = document.toObject(ScheduleModel.class);
+
+                scheduleModel.id = document.getId();
+
+                double distanceInMiles = distance(scheduleModel.tripDetail.pickUp.lat, scheduleModel.tripDetail.pickUp.lng, location.getLatitude(), location.getLongitude());
+
+                if (selectedDate < 0) {
+
+                    Calendar calendar = Calendar.getInstance();
+
+                    Date date = new Date();
+
+                    date.setTime(scheduleModel.scheduleTimeStamp);
+
+                    calendar.setTime(date);
+
+                    dateArrayList.add(calendar);
+
+                    scheduledRides.add(scheduleModel);
+
+                } else {
+//
+                    for (Calendar c : mBinding.calendarCV.getSelectedDates()) {
+
+                        Date bookingDate = new Date();
+
+                        bookingDate.setTime(scheduleModel.bookingDate);
+
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                        SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("dd/MM/yyyy");
+
+                        String date = simpleDateFormat.format(c.getTime());
+                        String date1 = simpleDateFormat1.format(bookingDate);
+
+                        if (date.equalsIgnoreCase(date1)) {
+
+                            scheduledRides.add(scheduleModel);
+
+                        }
+                    }
+                }
+
+                if (selectedDate < 0) {
+
+                    mBinding.calendarCV.setSelectedDates(dateArrayList);
+
+                }
+
+            }
+
+            selectedDate = new Date().getTime();
+
+        }
+
+        for (int i = 0; i < scheduledRides.size(); i++) {
+
+            ScheduleModel rideModel = scheduledRides.get(i);
+
+            SearchedPlaceModel pickUp = rideModel.tripDetail.pickUp;
+
+            double distanceInMiles = distance(pickUp.lat, pickUp.lng, location.getLatitude(), location.getLongitude());
+
+            if (distanceInMiles > 50 && rideType == RideType.upcoming) {
+
+                scheduledRides.remove(rideModel);
+
+            }
+
+        }
+
+        setScheduleAdapter(scheduledRides);
+
+    }
+
+    long selectedDate = -1;
+
+    private void onDateSelected(CalendarView view, int year, int month, int dayOfMonth) {
+
+//        view.getDate()
+//        selectedDate = mBinding.calendarCV.getDate();
+
+//        SetupTabView(3);
+
+    }
+
+    private void setScheduleAdapter(ArrayList<ScheduleModel> rides) {
+
+        mBinding.ridesRV.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        mBinding.ridesRV.setAdapter(new ScheduledRidesAdapter(getActivity(),
+                rides));
 
     }
 
@@ -543,20 +890,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-
-        if (v == mBinding.firstTabLay) {
-
-            SetupTabView(0);
-
-        } else if (v == mBinding.secondTabLay) {
-
-            SetupTabView(2);
-
-        } else if (v == mBinding.runningTabLay) {
-
-            SetupTabView(1);
-
-        } else if (v == mBinding.drawerIcon) {
+        if (v == mBinding.drawerIcon) {
 
             SetStatusBarColor();
 
@@ -586,55 +920,32 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
     public void SetupTabView(int position) {
 
+
         if (position == 0) {
 
-            mBinding.seconfTabTv.setTextColor(getResources().getColor(R.color.gray_light));
-
-            mBinding.runningTV.setTextColor(getResources().getColor(R.color.gray_light));
-
-            mBinding.seccondTabLine.setBackgroundColor(getResources().getColor(R.color.white));
-
-            mBinding.runningTV.setTextColor(getResources().getColor(R.color.gray_light));
-
-            mBinding.runningTabLine.setBackgroundColor(getResources().getColor(R.color.white));
-
-            mBinding.firstTabTv.setTextColor(getResources().getColor(R.color.black));
-
-            mBinding.firstTabLine.setBackgroundColor(getResources().getColor(R.color.purple_200));
+            mBinding.calendarCV.setVisibility(View.GONE);
 
             rideType = RideType.completed;
 
         } else if (position == 1) {
 
-            mBinding.firstTabTv.setTextColor(getResources().getColor(R.color.gray_light));
-
-            mBinding.firstTabLine.setBackgroundColor(getResources().getColor(R.color.white));
-
-            mBinding.seconfTabTv.setTextColor(getResources().getColor(R.color.gray_light));
-
-            mBinding.seccondTabLine.setBackgroundColor(getResources().getColor(R.color.white));
-
-            mBinding.runningTV.setTextColor(getResources().getColor(R.color.black));
-
-            mBinding.runningTabLine.setBackgroundColor(getResources().getColor(R.color.purple_200));
+            mBinding.calendarCV.setVisibility(View.GONE);
 
             rideType = RideType.running;
 
-        } else {
+        } else if (position == 2) {
 
-            mBinding.firstTabTv.setTextColor(getResources().getColor(R.color.gray_light));
-
-            mBinding.firstTabLine.setBackgroundColor(getResources().getColor(R.color.white));
-
-            mBinding.runningTV.setTextColor(getResources().getColor(R.color.gray_light));
-
-            mBinding.runningTabLine.setBackgroundColor(getResources().getColor(R.color.white));
-
-            mBinding.seconfTabTv.setTextColor(getResources().getColor(R.color.black));
-
-            mBinding.seccondTabLine.setBackgroundColor(getResources().getColor(R.color.purple_200));
+            mBinding.calendarCV.setVisibility(View.GONE);
 
             rideType = RideType.upcoming;
+
+        } else {
+
+            selectedDate = -1;
+
+            mBinding.calendarCV.setVisibility(View.VISIBLE);
+
+            rideType = RideType.scheduled;
 
         }
 

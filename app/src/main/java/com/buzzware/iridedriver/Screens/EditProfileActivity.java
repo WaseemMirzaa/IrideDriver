@@ -17,6 +17,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.buzzware.iridedriver.Firebase.FirebaseInstances;
 import com.buzzware.iridedriver.Models.User;
 import com.buzzware.iridedriver.R;
 import com.buzzware.iridedriver.databinding.ActivityEditProfileBinding;
@@ -76,6 +77,7 @@ public class EditProfileActivity extends BaseActivity {
 
     }
 
+
     DocumentReference documentReferenceBuisnessUser;
     private void getCurrentUserData() {
 
@@ -118,7 +120,12 @@ public class EditProfileActivity extends BaseActivity {
             return;
 
         if (user.image != null && !user.image.isEmpty()) {
-            Glide.with(EditProfileActivity.this).load(user.image).apply(new RequestOptions().centerCrop()).into(binding.userImageIV);
+
+            Glide.with(EditProfileActivity.this)
+                    .load(user.image)
+                    .apply(new RequestOptions().centerCrop())
+                    .into(binding.userImageIV);
+
         }
 
         binding.fNameET.setText(user.firstName);
@@ -129,14 +136,16 @@ public class EditProfileActivity extends BaseActivity {
         binding.stateET.setText(user.state);
         binding.zipET.setText(user.zipcode);
         binding.homeAddressET.setText(user.homeAddress);
-//        binding.workAddressET.setText("");
 
     }
 
     private void checkPermissions() {
 
-        String[] permissions = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
-
+        String[] permissions = {
+                Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+        };
 
         Permissions.check(this/*context*/, permissions, null, null, new PermissionHandler() {
             @Override

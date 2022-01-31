@@ -5,11 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
@@ -17,12 +20,15 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.buzzware.iridedriver.Firebase.FirebaseInstances;
+import com.buzzware.iridedriver.Models.Stripe.UrlResponse;
 import com.buzzware.iridedriver.Models.User;
 import com.buzzware.iridedriver.Models.response.geoCode.ReverseGeoCodeResponse;
 import com.buzzware.iridedriver.R;
 import com.buzzware.iridedriver.Screens.EditProfileActivity;
 import com.buzzware.iridedriver.Screens.Home;
 import com.buzzware.iridedriver.Screens.Notifications;
+import com.buzzware.iridedriver.Screens.WebViewActivity;
 import com.buzzware.iridedriver.databinding.FragmentProfileBinding;
 import com.buzzware.iridedriver.retrofit.Controller;
 import com.buzzware.iridedriver.utils.AppConstants;
@@ -35,12 +41,15 @@ import com.nabinbhandari.android.permissions.PermissionHandler;
 import com.nabinbhandari.android.permissions.Permissions;
 
 import org.greenrobot.eventbus.EventBus;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import im.delight.android.location.SimpleLocation;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -77,6 +86,74 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         return binding.getRoot();
     }
 
+
+    ActivityResultLauncher<Intent> launchSomeActivity = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> FirebaseInstances.usersCollection.document(getUserId())
+                    .update("stripeStatus", "pending"));
+
+    public void openWebViewActivity(User user) {
+
+        launchSomeActivity.launch(new Intent(getActivity(), WebViewActivity.class)
+
+                .putExtra("url", user.stripeaccountlinkurl));
+    }
+
+    private void getLink(User user) {
+
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+
+            jsonObject.put("accid", user.stripeaccount_id);
+
+        } catch (JSONException e) {
+
+            e.printStackTrace();
+
+        }
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObject.toString());
+
+        Controller.getApiClient(Controller.Base_Url_CLoudFunctions)
+                .getLoginLink(body)
+                .enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+
+                        if (response.body() != null) {
+
+                            String url = null;
+                            try {
+
+                                JSONObject jsonObject1 = new JSONObject(response.body());
+
+                                url = jsonObject1.getString("response");
+
+                            } catch (Exception e) {
+
+                                e.printStackTrace();
+                            }
+
+                            if(url != null) {
+
+                                user.stripeaccountlinkurl = url;
+
+                                openWebViewActivity(user);
+
+                            }
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+
+                    }
+                });
+
+    }
 
     private void checkPermissionsAndInit() {
 
@@ -190,7 +267,75 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
 
+    private void getMyProfile() {
+
+        FirebaseInstances.usersCollection
+                .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .get()
+                .addOnCompleteListener(task -> {
+
+                    hideLoader();
+
+                    if (task.isSuccessful()) {
+
+                        User user = task.getResult().toObject(User.class);
+
+                        if (user != null) {
+
+                            if (shouldOpenUrl(user)) {
+
+                                FirebaseInstances.usersCollection.document(getUserId())
+                                        .update("stripeStatus", "await")
+                                        .addOnCompleteListener(task1 -> getLink(user));
+
+
+                            }
+
+                        }
+
+                    }
+
+                });
+
+    }
+
+    private Boolean shouldOpenUrl(User user) {
+
+        if (user.stripeaccount_id != null && !user.stripeaccount_id.isEmpty()) {
+
+            if (user.stripeStatus == null)
+
+                return true;
+
+            if (!user.stripeStatus.equalsIgnoreCase("pending")) {
+
+                return true;
+
+            } else {
+
+                if (user.stripeStatus.equalsIgnoreCase("pending"))
+
+                    showErrorAlert("Please wait, Your account details is under observation. It will take some time to get approved.");
+
+                return false;
+
+            }
+
+        }
+
+        showErrorAlert("Please wait for stripe setup");
+
+        return false;
+    }
+
+
+
+
     private void setListener() {
+
+        binding.editPaymentInfo.setOnClickListener(v -> {
+            getMyProfile();
+        });
 
         binding.editIcon.setOnClickListener(v->{
 

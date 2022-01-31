@@ -2,9 +2,12 @@ package com.buzzware.iridedriver.Screens;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.buzzware.iridedriver.Models.Promotion.PromotionObj;
 import com.buzzware.iridedriver.Models.RideModel;
 import com.buzzware.iridedriver.databinding.ActivityPromotionDetailsBinding;
@@ -43,11 +46,20 @@ public class PromotionDetails extends BaseActivity {
 
             binding.progressBar.setProgress(getProgress(promotionObj.rideModels, promotionObj));
 
+            if(promotionObj.url != null)
+            {
+                binding.picIV.setVisibility(View.VISIBLE);
+
+                Glide.with(PromotionDetails.this)
+                        .load(promotionObj.url)
+                        .apply(new RequestOptions().centerCrop())
+                        .into(binding.picIV);
+            }
             binding.titleTV.setText(promotionObj.getTitle());
             binding.descTV.setText(promotionObj.getMessage());
             binding.endTimeTv.setText("End " + getDateTime(promotionObj.endTime));
             binding.startTimeTV.setText("Start " + getDateTime(promotionObj.startTime));
-            binding.remainingRides.setText("Remaining Rides "+getRemainingRides(promotionObj.rideModels, promotionObj));
+            binding.remainingRides.setText("Required Rides "+getRemainingRides(promotionObj.rideModels, promotionObj));
 
         }
 

@@ -15,6 +15,8 @@ import android.util.Log;
 
 import com.buzzware.iridedriver.R;
 import com.buzzware.iridedriver.Screens.StartUp;
+import com.firebase.geofire.GeoFireUtils;
+import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -267,8 +269,11 @@ public class LocationTracker extends Service {
 
         Map<String, Object> map = new HashMap<>();
 
+        String hash = GeoFireUtils.getGeoHashForLocation(new GeoLocation(location.getLatitude(), location.getLongitude()));
+
         map.put("lat", location.getLatitude());
         map.put("lng", location.getLongitude());
+        map.put("hash", hash);
 
         FirebaseFirestore.getInstance().collection("Users").document(getUserId())
                 .update(map);

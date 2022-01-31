@@ -1,27 +1,42 @@
 package com.buzzware.iridedriver.Screens;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.buzzware.iridedriver.Adapters.MessagesAdapter;
+import com.buzzware.iridedriver.Firebase.FirebaseInstances;
 import com.buzzware.iridedriver.FirebaseRequest.ConversationResponseCallback;
 import com.buzzware.iridedriver.FirebaseRequest.FirebaseRequests;
 import com.buzzware.iridedriver.FirebaseRequest.MessagesResponseCallback;
+import com.buzzware.iridedriver.Models.ConversationParentModel;
+import com.buzzware.iridedriver.Models.LastMessageModel;
 import com.buzzware.iridedriver.Models.MessageModel;
+import com.buzzware.iridedriver.Models.RideModel;
 import com.buzzware.iridedriver.Models.SendConversationModel;
 import com.buzzware.iridedriver.Models.SendLastMessageModel;
 import com.buzzware.iridedriver.Models.User;
 import com.buzzware.iridedriver.databinding.ActivityMessagesBinding;
+import com.buzzware.iridedriver.utils.AppConstants;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class MessagesActivity extends BaseActivity {
@@ -63,6 +78,58 @@ public class MessagesActivity extends BaseActivity {
 
         setListener();
 
+        setListenerOnRide();
+
+    }
+
+
+    ListenerRegistration eventListener;
+
+    AlertDialog messagesDeletedPopup;
+
+    private void setListenerOnRide() {
+
+        eventListener = FirebaseInstances.bookingsCollection.document(conversationID)
+                .addSnapshotListener((value, error) -> {
+
+                    if (value != null) {
+
+                        RideModel rideModel = value.toObject(RideModel.class);
+
+                        if(rideModel != null) {
+
+                            rideModel.id = value.getId();
+
+                            if (AppConstants.RideStatus.RE_BOOKED.equalsIgnoreCase(rideModel.status)||AppConstants.RideStatus.CANCELLED.equalsIgnoreCase(rideModel.status) ||
+                                    AppConstants.RideStatus.RIDE_COMPLETED.equalsIgnoreCase(rideModel.status) ||
+                                    AppConstants.RideStatus.DISPUTE.equalsIgnoreCase(rideModel.status) ||
+                                    AppConstants.RideStatus.DISPUTED.equalsIgnoreCase(rideModel.status) ||
+                                    AppConstants.RideStatus.RATED.equalsIgnoreCase(rideModel.status)) {
+
+                                eventListener.remove();
+
+                                eventListener = null;
+
+                                if (messagesDeletedPopup != null && messagesDeletedPopup.isShowing())
+
+                                    return;
+//                        if(value.getData().to)
+                                messagesDeletedPopup = new AlertDialog.Builder(MessagesActivity.this)
+                                        .setCancelable(false)
+                                        .setTitle("Alert")
+                                        .setMessage("Ride is completed or cancelled. This chat has been deleted")
+                                        .setPositiveButton("OK", (dialogInterface, i) -> {
+
+                                            dialogInterface.dismiss();
+                                            finish();
+
+                                        }).create();
+                                messagesDeletedPopup.show();
+
+                            }
+                        }
+                    }
+                });
 
     }
 
@@ -119,6 +186,10 @@ public class MessagesActivity extends BaseActivity {
 
                         if (user != null) {
 
+                            selectedUserName = user.firstName + " " + user.lastName;
+
+                            binding.tvTitle.setText(selectedUserName);
+
                             otherUserImageUrl = user.image;
 
                         }
@@ -155,21 +226,23 @@ public class MessagesActivity extends BaseActivity {
 
             isFromNew = getIntent().getStringExtra("checkFrom");
 
-            selectedUserId = getIntent().getStringExtra("selectedUserID");
-
-            selectedUserName = getIntent().getStringExtra("selectedUserName");
-
-            binding.tvTitle.setText(selectedUserName);
-
             currentUserId = mAuth.getCurrentUser().getUid();
 
             if (isFromNew.equals("false") || isFromNew.equals("admin")) {
 
                 conversationID = getIntent().getStringExtra("conversationID");
 
-                getMyImage();
+                getConversation(getIntent().getStringExtra("conversationID"));
 
             } else {
+
+                selectedUserId = getIntent().getStringExtra("selectedUserID");
+
+                selectedUserName = getIntent().getStringExtra("selectedUserName");
+
+                binding.tvTitle.setText(selectedUserName);
+
+                currentUserId = getUserId();
 
                 conversationID = UUID.randomUUID().toString();
 
@@ -178,6 +251,43 @@ public class MessagesActivity extends BaseActivity {
             }
 
         }
+
+    }
+
+    private void getConversation(String conversationID) {
+
+        FirebaseInstances.chatCollection.document(conversationID)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.getResult() != null) {
+
+                        if (task.getResult() != null) {
+
+                            LastMessageModel lastMessageModel = task.getResult().get("lastMessage",LastMessageModel.class);
+
+                            if (lastMessageModel != null) {
+
+                                currentUserId = getUserId();
+
+                                selectedUserId = lastMessageModel.fromID;
+
+                                if (currentUserId.equalsIgnoreCase(lastMessageModel.fromID)) {
+
+                                    selectedUserId = lastMessageModel.toID;
+
+                                }
+
+                                this.conversationID = conversationID;
+
+                                getMyImage();
+
+                            }
+
+                        }
+
+
+                    }
+                });
 
     }
 

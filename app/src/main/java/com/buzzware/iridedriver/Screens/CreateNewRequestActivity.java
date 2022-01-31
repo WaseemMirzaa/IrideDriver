@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.buzzware.iridedriver.Fragments.CustomerRequestsFragment;
 import com.buzzware.iridedriver.Models.MyRequests;
 import com.buzzware.iridedriver.Models.SendConversationModel;
 import com.buzzware.iridedriver.Models.SendLastMessageModel;
@@ -43,6 +44,12 @@ public class CreateNewRequestActivity extends BaseActivity {
     }
 
     private void setListeners() {
+
+        binding.requestsList.setOnClickListener(v -> {
+
+            startActivity(new Intent(CreateNewRequestActivity.this, CustomerRequestsFragment.class));
+
+        });
 
         binding.btnContinue.setOnClickListener(v -> validateAndSendMessage());
 
@@ -84,7 +91,7 @@ public class CreateNewRequestActivity extends BaseActivity {
 
                     startActivity(intent);
 
-                    finish();
+//                    finish();
 
                 });
 

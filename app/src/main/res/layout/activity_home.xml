@@ -358,6 +358,31 @@
                         </LinearLayout>
 
                         <LinearLayout
+                            android:id="@+id/covidLay"
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_35sdp">
+
+                            <ImageView
+                                android:layout_gravity="center"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:tint="@color/white"
+                                android:src="@drawable/covid"/>
+
+                            <TextView
+                                android:layout_gravity="center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/_15sdp"
+                                android:text="Covid Instructions"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_12sdp"
+                                android:textStyle="normal"
+                                android:fontFamily="@font/gibson_regular"/>
+                        </LinearLayout>
+
+                        <LinearLayout
                             android:id="@+id/aboutUsLay"
                             android:orientation="horizontal"
                             android:layout_width="match_parent"

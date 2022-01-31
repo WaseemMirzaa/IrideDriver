@@ -301,7 +301,7 @@
 
         </LinearLayout>
 
-        <androidx.cardview.widget.CardView
+        <RelativeLayout
             android:id="@+id/navigateCV"
             android:layout_width="wrap_content"
             android:layout_marginBottom="@dimen/_10sdp"
@@ -309,23 +309,18 @@
             android:layout_marginEnd="@dimen/_10sdp"
             android:layout_above="@+id/btnTripView"
             android:layout_alignParentRight="true"
-            app:cardBackgroundColor="@color/purple_700"
             app:cardCornerRadius="@dimen/_10sdp"
             app:layout_constraintBottom_toTopOf="@+id/btnTripView"
             app:layout_constraintEnd_toEndOf="parent">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:fontFamily="@font/gibson_semibd"
                 android:gravity="center"
-                android:paddingLeft="@dimen/_15sdp"
-                android:paddingRight="@dimen/_15sdp"
-                android:text="Navigate"
-                android:textColor="@color/white"
-                android:textSize="15sp" />
-        </androidx.cardview.widget.CardView>
+                android:src="@drawable/nav_icon"
+               />
+        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="40dp"

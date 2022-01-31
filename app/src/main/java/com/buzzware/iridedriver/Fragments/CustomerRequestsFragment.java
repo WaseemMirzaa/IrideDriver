@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import com.buzzware.iridedriver.Adapters.RequestAdapter;
 import com.buzzware.iridedriver.Models.MyRequests;
 import com.buzzware.iridedriver.R;
+import com.buzzware.iridedriver.Screens.BaseActivity;
 import com.buzzware.iridedriver.Screens.CreateNewRequestActivity;
 import com.buzzware.iridedriver.Screens.Home;
 import com.buzzware.iridedriver.Screens.MessagesActivity;
@@ -31,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class CustomerRequestsFragment extends BaseFragment implements RequestCallback {
+public class CustomerRequestsFragment extends BaseActivity implements RequestCallback {
 
     FragmentCustomerRequestsBinding binding;
 
@@ -43,25 +45,15 @@ public class CustomerRequestsFragment extends BaseFragment implements RequestCal
 
     String adminName = "AdminUser";
 
-    public CustomerRequestsFragment() {
-        // Required empty public constructor
-    }
-
     @Override
-    public View onCreateView(LayoutInflater inflater,
-                             ViewGroup container,
-                             Bundle savedInstanceState) {
+    protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-        binding = DataBindingUtil.inflate(inflater,
-                R.layout.fragment_customer_requests,
-                container,
-                false);
+        binding = DataBindingUtil.setContentView(CustomerRequestsFragment.this, R.layout.fragment_customer_requests);
 
         setListener();
 
         showRequest();
-
-        return binding.getRoot();
     }
 
     private void showRequest() {
@@ -96,11 +88,11 @@ public class CustomerRequestsFragment extends BaseFragment implements RequestCal
 
     private void setRecycler() {
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(CustomerRequestsFragment.this);
 
         binding.requestRV.setLayoutManager(layoutManager);
 
-        RequestAdapter requestAdapter = new RequestAdapter(getContext(), myRequests, this);
+        RequestAdapter requestAdapter = new RequestAdapter(CustomerRequestsFragment.this, myRequests, this);
 
         binding.requestRV.setAdapter(requestAdapter);
 
@@ -109,15 +101,15 @@ public class CustomerRequestsFragment extends BaseFragment implements RequestCal
 
     private void setListener() {
 
-        binding.drawerIcon.setOnClickListener(v -> OpenCloseDrawer());
+        binding.drawerIcon.setOnClickListener(v -> finish());
 
-        binding.createNewRequestBtn.setOnClickListener(v -> startActivity(new Intent(getContext(), CreateNewRequestActivity.class)));
+        binding.createNewRequestBtn.setOnClickListener(v -> startActivity(new Intent(CustomerRequestsFragment.this, CreateNewRequestActivity.class)));
 
     }
 
     @Override
     public void onItemClick(String requestId, String ConversationId) {
-        Intent intent = new Intent(getContext(), MessagesActivity.class);
+        Intent intent = new Intent(CustomerRequestsFragment.this, MessagesActivity.class);
 
         intent.putExtra("conversationID", ConversationId);
         intent.putExtra("selectedUserID", adminId);

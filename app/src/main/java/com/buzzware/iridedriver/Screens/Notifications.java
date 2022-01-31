@@ -26,7 +26,10 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class Notifications extends AppCompatActivity {
@@ -79,7 +82,7 @@ public class Notifications extends AppCompatActivity {
 
                             notification.setId(document.getId());
 
-                            if (notification.isRead != null) {
+                            if (notification.isRead != null && notification.timestamp > getCurrentWeekDayStartTime().getTime()) {
 
                                 if (notification.isRead.containsKey(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
 
@@ -100,6 +103,25 @@ public class Notifications extends AppCompatActivity {
             }
         });
 
+    }
+
+    private final static SimpleDateFormat shortSdf = new SimpleDateFormat(
+            "yyyy-MM-dd");
+
+    private final static SimpleDateFormat longSdf = new SimpleDateFormat(
+            "yyyy-MM-dd HH:mm:ss");
+
+    public static Date getCurrentWeekDayStartTime() {
+        Calendar c = Calendar.getInstance();
+        try {/*from  w w  w.  ja v a 2s .com*/
+            int weekday = c.get(Calendar.DAY_OF_WEEK) - 2;
+            c.add(Calendar.DATE, -weekday);
+            c.setTime(longSdf.parse(shortSdf.format(c.getTime())
+                    + " 00:00:00"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return c.getTime();
     }
 
     private void setRecycler() {

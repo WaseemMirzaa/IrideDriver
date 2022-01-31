@@ -1,6 +1,12 @@
 package com.buzzware.iridedriver.Screens;
 
-import androidx.annotation.NonNull;
+import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.view.GravityCompat;
@@ -8,22 +14,8 @@ import androidx.databinding.DataBindingUtil;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
-import android.content.Intent;
-import android.os.Build;
-import android.os.Bundle;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.Switch;
-import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.buzzware.iridedriver.Firebase.FirebaseInstances;
 import com.buzzware.iridedriver.Fragments.CompletedFragment;
-import com.buzzware.iridedriver.Fragments.CustomerRequestsFragment;
-import com.buzzware.iridedriver.Fragments.CustomerServiceFragment;
 import com.buzzware.iridedriver.Fragments.DriverHome;
 import com.buzzware.iridedriver.Fragments.HomeFragment;
 import com.buzzware.iridedriver.Fragments.InvitationFragment;
@@ -32,20 +24,16 @@ import com.buzzware.iridedriver.Fragments.ProfileFragment;
 import com.buzzware.iridedriver.Fragments.PromotionFragment;
 import com.buzzware.iridedriver.Fragments.RemaindersFragment;
 import com.buzzware.iridedriver.Fragments.WalletFragment;
-import com.buzzware.iridedriver.Models.Reminder;
 import com.buzzware.iridedriver.Models.User;
 import com.buzzware.iridedriver.R;
 import com.buzzware.iridedriver.databinding.ActivityHomeBinding;
 import com.buzzware.iridedriver.events.OnlineStatusChanged;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.greenrobot.eventbus.EventBus;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -76,7 +64,6 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
 
                     if (!task.isSuccessful()) {
 
-//                            Log.w("FireBase Token", "Fetching FCM registration token failed", task.getException());
                         return;
 
                     }
@@ -100,12 +87,39 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
 
     private void Init() {
 
-        selectedFragment = new DriverHome();
+        if (getIntent().getExtras() != null && getIntent().getStringExtra("action") != null) {
+
+            String action = getIntent().getStringExtra("action");
+
+            if(action.equalsIgnoreCase("remainderFragment")) {
+
+                selectedFragment = new RemaindersFragment();
+
+            } else if (getIntent().getBooleanExtra("l", false))
+
+                selectedFragment = new HomeFragment();
+
+            else  {
+
+                selectedFragment = new HomeFragment(2);
+
+            }
+
+//            if (getIntent().getBooleanExtra("newRide", false))
+//                selectedFragment = new HomeFragment();
+//            else if (getIntent().getBooleanExtra("newRemainder", false))
+//                selectedFragment = new RemaindersFragment();
+//            else
+//                selectedFragment = new HomeFragment(2);
+        } else {
+
+            selectedFragment = new DriverHome();
+
+        }
 
         drawerListener();
 
-        ///set defualt fragment
-        SetFragemnt();
+        ((AppCompatActivity) this).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).addToBackStack("bookingsfragment").commit();
 
         ///init clicks
         mBinding.navView.findViewById(R.id.homeLay).setOnClickListener(this);
@@ -122,15 +136,24 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         mBinding.navView.findViewById(R.id.documentsLay).setOnClickListener(this);
         mBinding.navView.findViewById(R.id.logoutLay).setOnClickListener(this);
         mBinding.navView.findViewById(R.id.privacyPolicyLay).setOnClickListener(this);
+        mBinding.navView.findViewById(R.id.covidLay).setOnClickListener(v -> {
+
+            OpenCloseDrawer();
+
+            startActivity(new Intent(Home.this, Covid.class));
+
+        });
+        mBinding.navView.findViewById(R.id.aboutUsLay).setOnClickListener(v -> {
+
+            OpenCloseDrawer();
+
+            startActivity(new Intent(Home.this, AboutUs.class));
+
+        });
 
         onlineSwitch = mBinding.navView.findViewById(R.id.OnlineSwitch);
 
         onlineSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> setOnline(isChecked));
-
-        //   mBinding.vehicleInfoLay.setOnClickListener(v -> moveToVehicleInfo());
-        //   mBinding.documentsLay.setOnClickListener(v -> moveToVehicleDocumentsInfo());
-        //  mBinding.rideHistoryLay.setOnClickListener(v -> moveToRideHistory());
-
 
         getCurrentUserData();
 
@@ -141,7 +164,6 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         if (user == null)
 
             return;
-
 
         if (user.isOnline != null) {
 
@@ -277,14 +299,20 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
             OpenCloseDrawer();
             ((AppCompatActivity) this).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new RemaindersFragment()).addToBackStack("reminder").commit();
         } else if (v == mBinding.navView.findViewById(R.id.csLay)) {
+
             OpenCloseDrawer();
-            ((AppCompatActivity) this).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CustomerRequestsFragment()).addToBackStack("cService").commit();
+
+            startActivity(new Intent(Home.this, CreateNewRequestActivity.class));
+
         } else if (v == mBinding.navView.findViewById(R.id.rideHistoryLay)) {
             OpenCloseDrawer();
             ((AppCompatActivity) this).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CompletedFragment()).addToBackStack("history").commit();
         } else if (v == mBinding.navView.findViewById(R.id.privacyPolicyLay)) {
             OpenCloseDrawer();
-            startActivity(new Intent(this, PrivacyPolicyActivity.class));
+            startActivity(new Intent(Home.this, PrivacyPolicyActivity.class));
+
+
+//            startActivity(new Intent(this, PrivacyPolicyActivity.class));
         } else if (v == mBinding.navView.findViewById(R.id.vehicleInfoLay)) {
             moveToVehicleInfo();
         } else if (v == mBinding.navView.findViewById(R.id.documentsLay)) {

@@ -14,4 +14,6 @@ public class Reminder {
     public String message;
 
     public String id;
+
+    public String url;
 }

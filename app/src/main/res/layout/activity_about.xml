@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/include"
+            layout="@layout/back_app_bar" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="@dimen/_10sdp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/include">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/gibson_bold"
+                    android:text="About Us"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_18ssp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:autoLink="all"
+                    android:fontFamily="@font/gibson_regular"
+                    android:text="Let s navigate the world TOGETHER\n\n
+To build an amazing company, you first have to start with amazing people. iRide is constantly creating diverse teams of smart, passionate people who feel comfortable being themselves, and are motivated by our shared goal — improving people’s lives with the world’s best transportation and technology.\n\n
+We put our customers first! All iRide staff members are on the front lines of customer service, no matter what role we’re in. We go above and beyond to serve others with high-quality products and hospitality they can rely on. We work hard to leave our customers with a smile.\n\n
+We create an inclusive environment where everyone is safe to be themselves. We build trust by listening attentively, speaking candidly, and treating others respectfully. We have each other’s backs; and mostly importantly we have our customers backs.\n\n
+We take extreme pride in our work and whatever we do, we do it well. We assess our own work critically and we’re the first to call out our shortcomings. We continuously push ourselves and others to improve our services.\n\n
+Our mission is to provide affordable top of the line\n\n
+transportation services, package delivery, and scooter
+rental- for everyone, everywhere.\n\n
+“We are all going somewhere, with Ride, we'll get there together.” DeMario Chris Lee, CEO\n\n
+Customer service (305) 890-6502'\n\n
+Email: Info@iridecompany.com\n\n
+www.iridecompany.com\n\n
+"
+                    android:textAlignment="inherit"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_13ssp" />
+
+            </LinearLayout>
+        </ScrollView>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>

@@ -14,12 +14,14 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.buzzware.iridedriver.Firebase.FirebaseInstances;
 import com.buzzware.iridedriver.LocationServices.LocationTracker;
 import com.buzzware.iridedriver.Models.Payouts.PayoutObj;
 import com.buzzware.iridedriver.Models.Promotion.PromotionObj;
 import com.buzzware.iridedriver.Models.RideModel;
+import com.buzzware.iridedriver.Models.ScheduleModel;
 import com.buzzware.iridedriver.Models.SearchedPlaceModel;
 import com.buzzware.iridedriver.Models.User;
 import com.buzzware.iridedriver.Models.response.directions.DirectionsApiResponse;
@@ -43,9 +45,13 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.google.maps.android.PolyUtil;
 import com.nabinbhandari.android.permissions.PermissionHandler;
@@ -110,7 +116,23 @@ public class DriverHome extends BaseActivity implements OnMapReadyCallback {
                             Toast.makeText(this, "Ride Cancelled", Toast.LENGTH_SHORT).show();
 
                             finish();
-                        } else if (r.status.equalsIgnoreCase(AppConstants.RideStatus.RIDE_COMPLETED)) {
+                        } else  if (r.status.equalsIgnoreCase(AppConstants.RideStatus.DISPUTE)) {
+
+                            FirebaseInstances.usersCollection.document(getUserId())
+                                    .update("isActive", true);
+
+                            Toast.makeText(this, "Ride Cancelled", Toast.LENGTH_SHORT).show();
+
+                            finish();
+                        }   if (r.status.equalsIgnoreCase(AppConstants.RideStatus.DISPUTED)) {
+
+                            FirebaseInstances.usersCollection.document(getUserId())
+                                    .update("isActive", true);
+
+                            Toast.makeText(this, "Ride Cancelled", Toast.LENGTH_SHORT).show();
+
+                            finish();
+                        }  else if (r.status.equalsIgnoreCase(AppConstants.RideStatus.RIDE_COMPLETED)) {
 
                             FirebaseInstances.usersCollection.document(getUserId())
                                     .update("isActive", true);
@@ -135,7 +157,6 @@ public class DriverHome extends BaseActivity implements OnMapReadyCallback {
 
                 });
     }
-
 
     private void startLocationService() {
 
@@ -188,6 +209,8 @@ public class DriverHome extends BaseActivity implements OnMapReadyCallback {
 
                         rideModel.status = "rideCompleted";
 
+                        FirebaseInstances.chatCollection.document(rideModel.id).delete();
+
                         stopLocationService();
 
                     }
@@ -195,6 +218,8 @@ public class DriverHome extends BaseActivity implements OnMapReadyCallback {
                 } else {
 
                     rideModel.status = "rideCompleted";
+
+                    FirebaseInstances.chatCollection.document(rideModel.id).delete();
 
                     stopLocationService();
 

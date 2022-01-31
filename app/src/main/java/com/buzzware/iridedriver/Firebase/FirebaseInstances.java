@@ -15,6 +15,8 @@ public class FirebaseInstances {
 
     public static CollectionReference usersCollection = firebaseFirestore.collection("Users");
 
+    public static CollectionReference chatCollection = firebaseFirestore.collection("Chat");
+
     public static CollectionReference scheduledRidesCollection = firebaseFirestore.collection("ScheduledRides");
 
     public static CollectionReference payoutsCollection = firebaseFirestore.collection("Payouts");

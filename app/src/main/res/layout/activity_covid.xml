@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/include"
+            layout="@layout/back_app_bar" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="@dimen/_10sdp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/include">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/gibson_bold"
+                    android:text="COVID PRECAUTIONS"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_18ssp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:autoLink="all"
+                    android:fontFamily="@font/gibson_regular"
+                    android:text="Health and Safety First\n\n
+
+Before riding or driving with iRide, you must agree that you’re symptom-free, and will follow CDC guidance related to COVID-19, including wearing a face mask that covers your mouth and nose (as required by federal order). A mask is required even if you’ve been vaccinated.\n\n
+
+
+MAKE LOGO CLICK BACK TO MAP AREA “SEARCH”
+"
+                    android:textAlignment="inherit"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_13ssp" />
+
+            </LinearLayout>
+        </ScrollView>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>

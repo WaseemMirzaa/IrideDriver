@@ -184,6 +184,7 @@ public class SignInFragment extends BaseFragment {
                         startActivity(new Intent(getActivity(), Home.class));
 
                         getActivity().finish();
+
                     }
                     else {
 

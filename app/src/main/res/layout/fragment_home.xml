@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
@@ -52,111 +52,145 @@
                 android:layout_height="@dimen/_40sdp"
                 android:layout_below="@+id/tvTitle">
 
-                <View
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="@color/blackOpacity_30" />
+                    android:layout_height="match_parent"
+                    app:tabIndicatorColor="@color/purple_200"
+                    app:tabMode="scrollable" />
+
+                <!--                <View-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="0.5dp"-->
+                <!--                    android:background="@color/blackOpacity_30" />-->
+
+                <!--                <LinearLayout-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="match_parent"-->
+                <!--                    android:orientation="horizontal"-->
+                <!--                    android:weightSum="3">-->
+
+                <!--                    <RelativeLayout-->
+                <!--                        android:id="@+id/firstTabLay"-->
+                <!--                        android:layout_width="match_parent"-->
+                <!--                        android:layout_height="match_parent"-->
+                <!--                        android:layout_weight="1">-->
+
+                <!--                        <TextView-->
+                <!--                            android:id="@+id/firstTabTv"-->
+                <!--                            android:layout_width="wrap_content"-->
+                <!--                            android:layout_height="wrap_content"-->
+                <!--                            android:layout_centerInParent="true"-->
+                <!--                            android:fontFamily="@font/gibson_regular"-->
+                <!--                            android:text="Completed"-->
+                <!--                            android:textAllCaps="true"-->
+                <!--                            android:textColor="@color/black"-->
+                <!--                            android:textSize="@dimen/_10sdp"-->
+                <!--                            android:textStyle="bold" />-->
+
+                <!--                        <View-->
+                <!--                            android:id="@+id/firstTabLine"-->
+                <!--                            android:layout_width="match_parent"-->
+                <!--                            android:layout_height="@dimen/_3sdp"-->
+                <!--                            android:layout_alignParentBottom="true"-->
+                <!--                            android:background="@color/purple_200" />-->
+                <!--                    </RelativeLayout>-->
+
+                <!--                    <View-->
+                <!--                        android:layout_width="0.5dp"-->
+                <!--                        android:layout_height="match_parent"-->
+                <!--                        android:background="@color/blackOpacity_30" />-->
+
+                <!--                    <RelativeLayout-->
+                <!--                        android:id="@+id/runningTabLay"-->
+                <!--                        android:layout_width="match_parent"-->
+                <!--                        android:layout_height="match_parent"-->
+                <!--                        android:layout_weight="1">-->
+
+                <!--                        <TextView-->
+                <!--                            android:id="@+id/runningTV"-->
+                <!--                            android:layout_width="wrap_content"-->
+                <!--                            android:layout_height="wrap_content"-->
+                <!--                            android:layout_centerInParent="true"-->
+                <!--                            android:fontFamily="@font/gibson_regular"-->
+                <!--                            android:text="CURRENT RIDE"-->
+                <!--                            android:textAllCaps="true"-->
+                <!--                            android:textColor="@color/black"-->
+                <!--                            android:textSize="@dimen/_10sdp"-->
+                <!--                            android:textStyle="bold" />-->
+
+                <!--                        <View-->
+                <!--                            android:id="@+id/runningTabLine"-->
+                <!--                            android:layout_width="match_parent"-->
+                <!--                            android:layout_height="@dimen/_3sdp"-->
+                <!--                            android:layout_alignParentBottom="true"-->
+                <!--                            android:background="@color/white" />-->
+                <!--                    </RelativeLayout>-->
+
+                <!--                    <View-->
+                <!--                        android:layout_width="0.5dp"-->
+                <!--                        android:layout_height="match_parent"-->
+                <!--                        android:background="@color/blackOpacity_30" />-->
+
+                <!--                    <RelativeLayout-->
+                <!--                        android:id="@+id/secondTabLay"-->
+                <!--                        android:layout_width="match_parent"-->
+                <!--                        android:layout_height="match_parent"-->
+                <!--                        android:layout_weight="1">-->
+
+                <!--                        <TextView-->
+                <!--                            android:id="@+id/seconfTabTv"-->
+                <!--                            android:layout_width="wrap_content"-->
+                <!--                            android:layout_height="wrap_content"-->
+                <!--                            android:layout_centerInParent="true"-->
+                <!--                            android:fontFamily="@font/gibson_regular"-->
+                <!--                            android:text="ON-DEMAND"-->
+                <!--                            android:textAllCaps="true"-->
+                <!--                            android:textColor="@color/gray_light"-->
+                <!--                            android:textSize="@dimen/_10sdp"-->
+                <!--                            android:textStyle="bold" />-->
+
+                <!--                        <View-->
+                <!--                            android:id="@+id/seccondTabLine"-->
+                <!--                            android:layout_width="match_parent"-->
+                <!--                            android:layout_height="@dimen/_3sdp"-->
+                <!--                            android:layout_alignParentBottom="true" />-->
+                <!--                    </RelativeLayout>-->
+                <!--                </LinearLayout>-->
+            </RelativeLayout>
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/ridesRL">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:weightSum="3">
+                    android:orientation="vertical">
 
-                    <RelativeLayout
-                        android:id="@+id/firstTabLay"
+                    <com.applandeo.materialcalendarview.CalendarView
+                        android:id="@+id/calendarCV"
+                        app:type="many_days_picker"
+                        android:visibility="gone"
+                        app:selectionColor="@color/red"
+                        app:highlightedDaysLabelsColor="@color/red"
+                        app:selectionLabelColor="@color/white"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/ridesRV"
+                        android:nestedScrollingEnabled="false"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1">
+                        android:layout_below="@+id/ridesRL"
+                        android:layout_margin="@dimen/_15sdp" />
 
-                        <TextView
-                            android:id="@+id/firstTabTv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:fontFamily="@font/gibson_regular"
-                            android:text="Completed"
-                            android:textAllCaps="true"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_10sdp"
-                            android:textStyle="bold" />
-
-                        <View
-                            android:id="@+id/firstTabLine"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/_3sdp"
-                            android:layout_alignParentBottom="true"
-                            android:background="@color/purple_200" />
-                    </RelativeLayout>
-
-                    <View
-                        android:layout_width="0.5dp"
-                        android:layout_height="match_parent"
-                        android:background="@color/blackOpacity_30" />
-
-                    <RelativeLayout
-                        android:id="@+id/runningTabLay"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1">
-
-                        <TextView
-                            android:id="@+id/runningTV"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:fontFamily="@font/gibson_regular"
-                            android:text="Running"
-                            android:textAllCaps="true"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_10sdp"
-                            android:textStyle="bold" />
-
-                        <View
-                            android:id="@+id/runningTabLine"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/_3sdp"
-                            android:layout_alignParentBottom="true"
-                            android:background="@color/white" />
-                    </RelativeLayout>
-
-                    <View
-                        android:layout_width="0.5dp"
-                        android:layout_height="match_parent"
-                        android:background="@color/blackOpacity_30" />
-
-                    <RelativeLayout
-                        android:id="@+id/secondTabLay"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1">
-
-                        <TextView
-                            android:id="@+id/seconfTabTv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:fontFamily="@font/gibson_regular"
-                            android:text="UPCOMMING"
-                            android:textAllCaps="true"
-                            android:textColor="@color/gray_light"
-                            android:textSize="@dimen/_10sdp"
-                            android:textStyle="bold" />
-
-                        <View
-                            android:id="@+id/seccondTabLine"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/_3sdp"
-                            android:layout_alignParentBottom="true" />
-                    </RelativeLayout>
                 </LinearLayout>
-            </RelativeLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/ridesRV"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/ridesRL" />
+            </androidx.core.widget.NestedScrollView>
+
         </RelativeLayout>
     </RelativeLayout>
 </layout>

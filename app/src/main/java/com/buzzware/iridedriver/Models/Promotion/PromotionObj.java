@@ -22,6 +22,7 @@ public class PromotionObj implements Parcelable {
 
     public String title;
     public String message;
+    public String url;
 
     public List<RideModel> rideModels;
 

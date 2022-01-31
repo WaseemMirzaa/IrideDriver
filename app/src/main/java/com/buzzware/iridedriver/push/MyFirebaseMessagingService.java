@@ -14,7 +14,10 @@ import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
+import com.buzzware.iridedriver.Fragments.HomeFragment;
 import com.buzzware.iridedriver.R;
+import com.buzzware.iridedriver.Screens.Home;
+import com.buzzware.iridedriver.Screens.MessagesActivity;
 import com.buzzware.iridedriver.Screens.StartUp;
 import com.buzzware.iridedriver.events.NewRideEvent;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -50,19 +53,26 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         Map<String, String> map = remoteMessage.getData();
 
+        String status = null;
+
+        String id = null;
         try {
 
-            if(map.keySet().toArray().length > 1) {
+            if (map.keySet().toArray().length > 1) {
 
-                String status = map.get(map.keySet().toArray()[0].toString());
+                status = map.get(map.keySet().toArray()[0].toString());
 
-                String id = map.get(map.keySet().toArray()[1].toString());
+                id = map.get(map.keySet().toArray()[1].toString());
 
                 if (status.equalsIgnoreCase("booked")) {
 
                     EventBus.getDefault().post(new NewRideEvent(id));
 
                 }
+
+            } else if (map.keySet().toArray().length == 1) {
+
+                id = map.get(map.keySet().toArray()[0].toString());
 
             }
 
@@ -71,23 +81,67 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         }
 
-
         if (remoteMessage.getNotification().getTitle() != null && remoteMessage.getNotification().getBody() != null) {
 
-            sendUserNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody());
+            sendUserNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), status, id);
 
         }
 
     }
 
 
-    private void sendUserNotification(String title, String mess) {
+    private void sendUserNotification(String title, String mess, String status, String id) {
+
         int notifyID = 1;
-        Intent intent;
+
+        Intent intent = null;
+
         NotificationChannel mChannel;
+
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        intent = new Intent(context, StartUp.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+
+        if (title.equalsIgnoreCase("New Reminder")) {
+
+            intent = new Intent(context, Home.class);
+
+            intent.putExtra("action", "remainderFragment");
+            intent.putExtra("newRemainder", true);
+
+        } else if (status != null) {
+
+            intent = new Intent(context, Home.class);
+            intent.putExtra("action", "homeFragment");
+            intent.putExtra("newRide", false);
+
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        } else {
+
+            if (title.toLowerCase().contains("remainder")) {
+
+                intent = new Intent(context, Home.class);
+
+                intent.putExtra("action", "homeFragment");
+                intent.putExtra("newRemainder", true);
+
+            } else if (id != null) {
+                intent = new Intent(context, MessagesActivity.class);
+                intent.putExtra("conversationID", id);
+                intent.putExtra("checkFrom", "false");
+            } else if (status.equalsIgnoreCase("booked")) {
+
+                intent.putExtra("action", "homeFragment");
+                intent.putExtra("newRide", true);
+
+            } else {
+
+                intent = new Intent(context, StartUp.class);
+            }
+
+        }
+
+
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         String CHANNEL_ID = context.getPackageName();// The id of the channel.
@@ -113,6 +167,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
             notificationManager.createNotificationChannel(mChannel);
         }
+
         if (notificationManager != null) {
             notificationManager.notify(notifyID /* ID of notification */, notificationBuilder.build());
         }

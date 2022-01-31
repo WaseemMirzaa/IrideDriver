@@ -153,10 +153,6 @@ public class FirebaseRequests {
 
                 callback.onResponse(messageModels, false, "Null");
 
-            } else {
-
-                callback.onResponse(messageModels, true, error.getMessage());
-
             }
         });
     }

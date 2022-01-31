@@ -9,13 +9,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
-
 import com.bumptech.glide.Glide;
 import com.buzzware.iridedriver.Firebase.FirebaseInstances;
 import com.buzzware.iridedriver.LocationServices.LocationTracker;
@@ -128,7 +126,6 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
     private void setOrderListener() {
 
-
         FirebaseFirestore.getInstance().collection("Bookings")
                 .document(rideModel.id)
                 .addSnapshotListener((value, error) -> {
@@ -156,6 +153,29 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
                             startActivity(new Intent(OnTrip.this, Home.class)
                             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
                             finish();
+
+                        } else if (r.status.equalsIgnoreCase(AppConstants.RideStatus.DISPUTED)) {
+
+                            FirebaseInstances.usersCollection.document(getUserId())
+                                    .update("isActive", true);
+
+                            Toast.makeText(this, "Ride Cancelled", Toast.LENGTH_SHORT).show();
+
+                            startActivity(new Intent(OnTrip.this, Home.class)
+                                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                            finish();
+
+                        } else if (r.status.equalsIgnoreCase(AppConstants.RideStatus.DISPUTE)) {
+
+                            FirebaseInstances.usersCollection.document(getUserId())
+                                    .update("isActive", true);
+
+                            Toast.makeText(this, "Ride Cancelled", Toast.LENGTH_SHORT).show();
+
+                            startActivity(new Intent(OnTrip.this, Home.class)
+                                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                            finish();
+
                         } else if (r.status.equalsIgnoreCase(AppConstants.RideStatus.RIDE_COMPLETED)) {
 
                             FirebaseInstances.usersCollection.document(getUserId())
@@ -264,8 +284,6 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
         }
 
-
-
         showLoader();
 
         updateRideModel();
@@ -370,7 +388,6 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
                         }
 
                     }
-
 
                     setRideButton();
 
@@ -948,7 +965,6 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
         mBinding.cancelCV.setVisibility(View.GONE);
 
-
         mBinding.actionTV.setText("Complete First Drop Off");
         if (rideModel.status.equalsIgnoreCase("driverAccepted")) {
 
@@ -1004,6 +1020,10 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
         FirebaseFirestore.getInstance().collection("Bookings")
                 .document(rideModel.id).
                 set(rideModel);
+
+        FirebaseInstances.chatCollection.document(rideModel.id).delete();
+//                .document(rideModel.id).
+//                set(rideModel);
 
         startActivity(new Intent(OnTrip.this, Home.class)
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));

@@ -149,8 +149,6 @@ public class DriverHome extends BaseFragment {
 
     private void checkPermissionsAndInit() {
 
-//        setRideButton();
-
         String[] permissions = {Manifest.permission.ACCESS_BACKGROUND_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
 
         Permissions.check(getActivity()/*context*/, permissions, null, null, new PermissionHandler() {
@@ -490,6 +488,7 @@ public class DriverHome extends BaseFragment {
                         RideModel rideModel = task.getResult().toObject(RideModel.class);
 
                         if (rideModel != null) {
+
                             rideModel.id = task.getResult().getId();
 
                             if(rideModel.vehicleId != null && !rideModel.vehicleId.isEmpty()) {
@@ -498,6 +497,7 @@ public class DriverHome extends BaseFragment {
 
                                 return;
                             }
+
                             rideModel.driverId = getUserId();
                             rideModel.vehicleId = vehicle.getId();
                             rideModel.status = "driverAccepted";

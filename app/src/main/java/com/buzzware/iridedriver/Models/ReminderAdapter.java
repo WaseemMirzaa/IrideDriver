@@ -53,7 +53,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
 
         viewHolder.binding.getRoot().setOnClickListener(v -> {
 
-            NotificationDetail.startNotificationDetail(mContext, "Reminder", notificationModel.message);
+            NotificationDetail.startNotificationDetail(mContext, "Reminder", notificationModel.message,notificationModel.url);
 
         });
     }
@@ -69,7 +69,6 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         ReminderItemBinding binding;
-
 
         public ViewHolder(@NonNull ReminderItemBinding binding) {
             super(binding.getRoot());

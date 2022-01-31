@@ -64,7 +64,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     .document(notificationModel.getId())
                     .set(notificationModel);
 
-            NotificationDetail.startNotificationDetail(mContext, notificationModel.getTitle(), notificationModel.getMessage());
+            NotificationDetail.startNotificationDetail(mContext, notificationModel.getTitle(), notificationModel.getMessage(), notificationModel.url);
 
         });
     }
