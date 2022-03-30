@@ -91,7 +91,11 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
 
             String action = getIntent().getStringExtra("action");
 
-            if(action.equalsIgnoreCase("remainderFragment")) {
+            if (action.equalsIgnoreCase("promotionFragment")) {
+
+                selectedFragment = new PromotionFragment();
+
+            } else if (action.equalsIgnoreCase("remainderFragment")) {
 
                 selectedFragment = new RemaindersFragment();
 
@@ -99,7 +103,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
 
                 selectedFragment = new HomeFragment();
 
-            else  {
+            else {
 
                 selectedFragment = new HomeFragment(2);
 
@@ -113,7 +117,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
 //                selectedFragment = new HomeFragment(2);
         } else {
 
-            selectedFragment = new DriverHome();
+            selectedFragment = new HomeFragment();
 
         }
 
@@ -268,7 +272,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
     }
 
     public void SetFragemnt() {
-        ((AppCompatActivity) this).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new DriverHome()).addToBackStack("home").commit();
+        ((AppCompatActivity) this).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).addToBackStack("home").commit();
     }
 
     @Override
@@ -278,7 +282,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
             OpenCloseDrawer();
         } else if (v == mBinding.navView.findViewById(R.id.bookingsLay)) {
             OpenCloseDrawer();
-            ((AppCompatActivity) this).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).addToBackStack("promotion").commit();
+            ((AppCompatActivity) this).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).addToBackStack("home").commit();
 
         } else if (v == mBinding.navView.findViewById(R.id.promotionLay)) {
             OpenCloseDrawer();

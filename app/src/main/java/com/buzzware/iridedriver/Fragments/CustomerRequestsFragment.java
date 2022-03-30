@@ -133,5 +133,4 @@ public class CustomerRequestsFragment extends BaseActivity implements RequestCal
 
     }
 
-
 }

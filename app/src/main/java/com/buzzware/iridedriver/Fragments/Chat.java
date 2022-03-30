@@ -57,8 +57,13 @@ public class Chat extends BaseActivity {
 
         setListener();
 
-        getList();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        getList();
     }
 
     private void init() {

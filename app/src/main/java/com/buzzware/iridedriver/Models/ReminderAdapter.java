@@ -45,15 +45,15 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int i) {
 
-        Reminder notificationModel=list.get(i);
+        Reminder notificationModel = list.get(i);
 
-        viewHolder.binding.messageTV.setText(notificationModel.message);
+        viewHolder.binding.titleTV.setText(notificationModel.r_message);
 
         viewHolder.binding.messageTV.setText(notificationModel.r_date);
 
         viewHolder.binding.getRoot().setOnClickListener(v -> {
 
-            NotificationDetail.startNotificationDetail(mContext, "Reminder", notificationModel.message,notificationModel.url);
+            NotificationDetail.startNotificationDetail(mContext, "Reminder", notificationModel.r_message, notificationModel.url);
 
         });
     }
@@ -79,7 +79,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
 
     }
 
-    public  String convertFormat(String inputDate) {
+    public String convertFormat(String inputDate) {
         Date date = null;
 
         date = new Date(Long.parseLong(inputDate));

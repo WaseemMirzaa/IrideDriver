@@ -20,7 +20,7 @@
             android:layout_height="@dimen/_40sdp"
             android:adjustViewBounds="true"
             android:scaleType="fitXY"
-            android:src="@drawable/dummy_two"
+            android:src="@drawable/logo_black"
             app:riv_corner_radius="@dimen/_10sdp" />
 
         <LinearLayout

@@ -32,6 +32,7 @@ public class PromotionDetails extends BaseActivity {
         setContentView(binding.getRoot());
 
         binding.include2.backIcon.setOnClickListener(v -> onBackPressed());
+
         binding.include2.backAppBarTitle.setText("Promotion");
 
         getExtrasFromIntent();
@@ -55,10 +56,15 @@ public class PromotionDetails extends BaseActivity {
                         .apply(new RequestOptions().centerCrop())
                         .into(binding.picIV);
             }
+
             binding.titleTV.setText(promotionObj.getTitle());
+
             binding.descTV.setText(promotionObj.getMessage());
+
             binding.endTimeTv.setText("End " + getDateTime(promotionObj.endTime));
+
             binding.startTimeTV.setText("Start " + getDateTime(promotionObj.startTime));
+
             binding.remainingRides.setText("Required Rides "+getRemainingRides(promotionObj.rideModels, promotionObj));
 
         }
@@ -139,14 +145,14 @@ public class PromotionDetails extends BaseActivity {
         } else return 0;
     }
 
+
     private String getDateTime(long bookingDate) {
 
         Date date = new Date(bookingDate);
 
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat tf = new SimpleDateFormat(" HH:mm a");
+        SimpleDateFormat formatter = new SimpleDateFormat("MMM dd - HH:mm a");
 
-        return "Date: " + df.format(date) + ", Time: " + tf.format(date);
+        return formatter.format(date);
 
     }
 

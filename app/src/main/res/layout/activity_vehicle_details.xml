@@ -22,6 +22,7 @@
             app:layout_constraintTop_toBottomOf="@+id/appBarTitleInclude">
 
             <RelativeLayout
+
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
@@ -33,43 +34,7 @@
                     android:layout_marginLeft="@dimen/_20sdp"
                     android:layout_marginRight="@dimen/_20sdp"
                     android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/black"
-                        android:fontFamily="@font/gibson_regular"
-                        android:lineSpacingExtra="1dp"
-                        android:maxLines="2"
-                        android:layout_marginTop="@dimen/_15sdp"
-                        android:layout_marginBottom="@dimen/_8sdp"
-                        android:text="Vehicle Name"
-                        android:textSize="@dimen/_10sdp" />
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_45sdp"
-
-                        android:background="@drawable/rounded_corner_white">
-
-                        <EditText
-                            android:id="@+id/vehicleNameET"
-                            android:layout_width="333dp"
-                            android:layout_height="match_parent"
-                            android:layout_marginLeft="@dimen/_10sdp"
-                            android:layout_marginRight="@dimen/_10sdp"
-                            android:backgroundTint="@android:color/transparent"
-                            android:fontFamily="@font/gibson_regular"
-                            android:hint="Vehicle Name"
-                            android:imeOptions="actionNext"
-                            android:inputType="text"
-                            android:maxLines="1"
-                            android:singleLine="true"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_12sdp" />
-                    </RelativeLayout>
-
-                    <TextView
+                <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/black"
@@ -95,6 +60,39 @@
                             android:backgroundTint="@android:color/transparent"
                             android:fontFamily="@font/gibson_regular"
                             android:hint="Make"
+                            android:imeOptions="actionNext"
+                            android:inputType="text"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12sdp" />
+                    </RelativeLayout>
+  <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/gibson_regular"
+                        android:lineSpacingExtra="1dp"
+                        android:maxLines="2"
+                        android:layout_marginTop="@dimen/_15sdp"
+                        android:layout_marginBottom="@dimen/_8sdp"
+                        android:text="Color"
+                        android:textSize="@dimen/_10sdp" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_45sdp"
+                        android:background="@drawable/rounded_corner_white">
+
+                        <EditText
+                            android:id="@+id/colorET"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/_10sdp"
+                            android:layout_marginRight="@dimen/_10sdp"
+                            android:backgroundTint="@android:color/transparent"
+                            android:fontFamily="@font/gibson_regular"
+                            android:hint="Color"
                             android:imeOptions="actionNext"
                             android:inputType="text"
                             android:maxLines="1"

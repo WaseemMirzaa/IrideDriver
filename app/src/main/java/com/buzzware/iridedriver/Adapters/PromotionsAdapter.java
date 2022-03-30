@@ -99,17 +99,16 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
 
     }
 
+
     private String getDateTime(long bookingDate) {
 
         Date date = new Date(bookingDate);
 
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat tf = new SimpleDateFormat(" HH:mm a");
+        SimpleDateFormat formatter = new SimpleDateFormat("MMM dd - HH:mm a");
 
-        return "Date: " + df.format(date) + ", Time: " + tf.format(date);
+        return formatter.format(date);
 
     }
-
 
     @Override
     public int getItemCount() {

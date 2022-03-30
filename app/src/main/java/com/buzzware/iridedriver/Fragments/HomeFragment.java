@@ -39,9 +39,13 @@ import com.buzzware.iridedriver.Screens.OnTrip;
 import com.buzzware.iridedriver.databinding.FragmentHomeBinding;
 import com.buzzware.iridedriver.events.OnlineStatusChanged;
 import com.buzzware.iridedriver.utils.AppConstants;
+import com.firebase.geofire.GeoFireUtils;
+import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQueryBounds;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -64,8 +68,10 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import im.delight.android.location.SimpleLocation;
 
@@ -101,16 +107,16 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false);
 
-        rideType = RideType.completed;
+        rideType = RideType.upcoming;
 
-        mBinding.tabLayout.addTab(mBinding.tabLayout.newTab().setText("COMPLETED"));
-        mBinding.tabLayout.addTab(mBinding.tabLayout.newTab().setText("CURRENT"));
         mBinding.tabLayout.addTab(mBinding.tabLayout.newTab().setText("ON-DEMAND"));
-        mBinding.tabLayout.addTab(mBinding.tabLayout.newTab().setText("SCHEDULED"));
+        mBinding.tabLayout.addTab(mBinding.tabLayout.newTab().setText("CURRENT"));
+//        mBinding.tabLayout.addTab(mBinding.tabLayout.newTab().setText("SCHEDULED"));
+        mBinding.tabLayout.addTab(mBinding.tabLayout.newTab().setText("COMPLETED"));
 
         setListeners();
 
-        checkPermissionsAndInit();
+//        checkPermissionsAndInit();
 
         defaultScheduleSelected = true;
 
@@ -129,8 +135,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private void checkIfPermissionsGranted() {
 
         if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                && ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             return;
         }
@@ -158,7 +163,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         location.beginUpdates();
 
         mBinding.tabLayout.getChildAt(position).setSelected(true);
-        
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -171,8 +176,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     void checkPermissionsAndGetRide() {
 
         if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                && ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             showErrorAlert("Please enable location permissions first.");
             return;
@@ -185,7 +189,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
 //        setRideButton();
 
-        String[] permissions = {Manifest.permission.ACCESS_BACKGROUND_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
+        String[] permissions = { Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
 
         Permissions.check(getActivity()/*context*/, permissions, null, null, new PermissionHandler() {
             @Override
@@ -232,7 +236,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         super.onResume();
 
         EventBus.getDefault().register(this);
-        checkIfPermissionsGranted();
+        checkPermissionsAndInit();
 
     }
 
@@ -266,9 +270,13 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 //            list.add(eventDay.getCalendar());
 
             try {
+
                 mBinding.calendarCV.setDate(eventDay.getCalendar().getTime());
+
             } catch (OutOfDateRangeException e) {
+
                 e.printStackTrace();
+
             }
 
             mBinding.calendarCV.setSelected(true);
@@ -277,21 +285,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
             getRides();
         });
-//        mBinding.calendarCV.setOnDateSelectedListener(new CalendarPickerView.OnDateSelectedListener() {
-//            @Override
-//            public void onDateSelected(Date date) {
-//
-//                getRides();
-//
-//            }
-//
-//            @Override
-//            public void onDateUnselected(Date date) {
-//
-//                getRides();
-//
-//            }
-//        });
 
         mBinding.tabLayout.addOnTabSelectedListener(onTabSelectedListener);
 
@@ -315,7 +308,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                     .whereEqualTo("driverId", getUserId())
                     .whereIn("status", Arrays.asList("driverAccepted", "driverReached", "rideStarted"));
 
-        } else if (rideType == RideType.completed) {
+        } else {
 
 //            query = FirebaseFirestore.getInstance().collection("Bookings")
 //                    .whereEqualTo("driverId", getUserId())
@@ -323,11 +316,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             getCompletedRides();
 
             return;
-        } else {
-
-            query = FirebaseFirestore.getInstance().collection("ScheduledRides");
-//                    .whereEqualTo("userId", getUserId());
-
         }
 
         showLoader();
@@ -732,7 +720,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private void moveToOnTrip(RideModel rideModel) {
 
 
-        String[] permissions = {Manifest.permission.ACCESS_BACKGROUND_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
+        String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
 
         Permissions.check(getActivity()/*context*/, permissions, null, null, new PermissionHandler() {
             @Override
@@ -856,7 +844,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
                             else {
 
-                                showErrorAlert("Please Add Your Payout Account First.");
+                                showErrorAlert("Please wait for admin approval.");
                             }
                         }
                     }
@@ -920,12 +908,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
     public void SetupTabView(int position) {
 
-
         if (position == 0) {
 
             mBinding.calendarCV.setVisibility(View.GONE);
 
-            rideType = RideType.completed;
+            rideType = RideType.upcoming;
 
         } else if (position == 1) {
 
@@ -933,19 +920,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
             rideType = RideType.running;
 
-        } else if (position == 2) {
+        } else {
 
             mBinding.calendarCV.setVisibility(View.GONE);
 
-            rideType = RideType.upcoming;
-
-        } else {
-
-            selectedDate = -1;
-
-            mBinding.calendarCV.setVisibility(View.VISIBLE);
-
-            rideType = RideType.scheduled;
+            rideType = RideType.completed;
 
         }
 

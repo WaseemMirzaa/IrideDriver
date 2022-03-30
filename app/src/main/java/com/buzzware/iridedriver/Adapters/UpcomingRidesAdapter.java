@@ -8,6 +8,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.buzzware.iridedriver.Firebase.FirebaseInstances;
@@ -86,14 +87,19 @@ public class UpcomingRidesAdapter extends RecyclerView.Adapter<UpcomingRidesAdap
 
         }
 
-        //holder.timeTV.setText(getDateTime(ride.bookingDate));
+        holder.priceTV.setText("$"+String.format("%.2f", Double.parseDouble(ride.price)));
 
-        holder.timeTV.setText(ride.getScheduledDate()+" "+ride.getScheduledTime());
+        holder.timeTV.setText(getDateTime(ride.bookingDate)+"\n"+"Price: $"+ride.price);
 
+        holder.timeTV.setText(getDateTime(ride.bookingDate));
 
-        if (rideType == RideType.completed)
+        if (rideType == RideType.completed) {
 
-            holder.acceptNowBt.setVisibility(View.GONE);
+            holder.acceptTV.setVisibility(View.VISIBLE);
+
+            holder.acceptTV.setText("$"+String.format("%.2f", Double.parseDouble(ride.price)));
+
+        }
 
         else if (rideType == RideType.running) {
 
@@ -103,7 +109,7 @@ public class UpcomingRidesAdapter extends RecyclerView.Adapter<UpcomingRidesAdap
 
             holder.acceptTV.setText("Accept Now");
 
-        holder.acceptNowBt.setOnClickListener(v -> {
+        holder.acceptTV.setOnClickListener(v -> {
 
             if (rideType == RideType.running) {
 
@@ -118,15 +124,13 @@ public class UpcomingRidesAdapter extends RecyclerView.Adapter<UpcomingRidesAdap
 
     }
 
-
     private String getDateTime(long bookingDate) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(bookingDate);
-        //Date date = new Date(bookingDate);
 
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-mm-yyyy hh:mm");
+        Date date = new Date(bookingDate);
 
-        return formatter.format(calendar.getTime());
+        SimpleDateFormat formatter = new SimpleDateFormat("MMM dd - HH:mm a");
+
+        return formatter.format(date);
 
     }
 
@@ -162,9 +166,10 @@ public class UpcomingRidesAdapter extends RecyclerView.Adapter<UpcomingRidesAdap
         public TextView timeTV;
 
         public TextView acceptTV;
+        public TextView priceTV;
 
-        public RelativeLayout acceptNowBt;
-        public RelativeLayout relativeLayout;
+//        public RelativeLayout acceptNowBt;
+        public ConstraintLayout relativeLayout;
         public View dropOffVw;
         public RelativeLayout dropOffLL;
         public TextView dropOffTv;
@@ -180,13 +185,14 @@ public class UpcomingRidesAdapter extends RecyclerView.Adapter<UpcomingRidesAdap
             pickUpAddressTV = itemView.findViewById(R.id.pickUpAddressTV);
 
             timeTV = itemView.findViewById(R.id.timeTV);
+            priceTV = itemView.findViewById(R.id.priceTV);
 
             destinationAddressTV = itemView.findViewById(R.id.destinationAddressTV);
 
-            acceptNowBt = itemView.findViewById(R.id.acceptNowBt);
+//            acceptNowBt = itemView.findViewById(R.id.acceptNowBt);
 
-            acceptTV = itemView.findViewById(R.id.acceptTV);
-            relativeLayout = (RelativeLayout) itemView.findViewById(R.id.relativeLayout);
+            acceptTV = itemView.findViewById(R.id.actionTV);
+            relativeLayout = (ConstraintLayout) itemView.findViewById(R.id.relativeLayout);
             dropOffVw = (View) itemView.findViewById(R.id.dropOffVw);
             dropOffLL = (RelativeLayout) itemView.findViewById(R.id.dropOffLL);
             dropOffTv = (TextView) itemView.findViewById(R.id.dropOffTv);

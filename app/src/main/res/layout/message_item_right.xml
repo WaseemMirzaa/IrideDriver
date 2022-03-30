@@ -51,7 +51,7 @@
             android:id="@+id/userImageIV"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/dummy_girl" />
+            android:src="@drawable/logo_black" />
     </RelativeLayout>
 </RelativeLayout>
 </layout>

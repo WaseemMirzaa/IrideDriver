@@ -185,7 +185,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_below="@+id/ridesRL"
-                        android:layout_margin="@dimen/_15sdp" />
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginBottom="@dimen/_10sdp"/>
 
                 </LinearLayout>
 

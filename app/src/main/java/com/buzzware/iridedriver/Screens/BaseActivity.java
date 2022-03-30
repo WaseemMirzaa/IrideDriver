@@ -77,29 +77,29 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public void showEnableLocationDialog(String msg) {
-
-        if (alertDialog != null && alertDialog.isShowing())
-
-            alertDialog.dismiss();
-
-        if (locationPermissionsDialog != null && locationPermissionsDialog.isShowing())
-
-            return;
-
-        locationPermissionsDialog = new AlertDialog.Builder(BaseActivity.this)
-                .setMessage(msg)
-                .setTitle("Alert")
-                .setCancelable(false)
-                .setPositiveButton("Settings", (dialog, which) -> {
-
-                    dialog.dismiss();
-
-                    SimpleLocation.openSettings(BaseActivity.this);
-
-                })
-                .create();
-
-        locationPermissionsDialog.show();
+//
+//        if (alertDialog != null && alertDialog.isShowing())
+//
+//            alertDialog.dismiss();
+//
+//        if (locationPermissionsDialog != null && locationPermissionsDialog.isShowing())
+//
+//            return;
+//
+//        locationPermissionsDialog = new AlertDialog.Builder(BaseActivity.this)
+//                .setMessage(msg)
+//                .setTitle("Alert")
+//                .setCancelable(false)
+//                .setPositiveButton("Settings", (dialog, which) -> {
+//
+//                    dialog.dismiss();
+//
+//                    SimpleLocation.openSettings(BaseActivity.this);
+//
+//                })
+//                .create();
+//
+//        locationPermissionsDialog.show();
     }
 
     public void showLoader() {

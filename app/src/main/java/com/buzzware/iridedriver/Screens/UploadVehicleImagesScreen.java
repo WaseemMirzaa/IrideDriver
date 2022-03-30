@@ -127,7 +127,7 @@ public class UploadVehicleImagesScreen extends BaseActivity implements VehicleIm
 
             if(validateVerification()) {
 
-                isVerified = "Approved";
+                isVerified = "approved";
 
             }
 
@@ -578,11 +578,11 @@ public class UploadVehicleImagesScreen extends BaseActivity implements VehicleIm
 
         }
 
-        if (vehicle.getName().isEmpty()) {
-
-            return false;
-
-        }
+//        if (vehicle.getName().isEmpty()) {
+//
+//            return false;
+//
+//        }
 
         if (vehicle.getYear().isEmpty()) {
 

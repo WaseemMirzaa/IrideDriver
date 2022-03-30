@@ -185,11 +185,11 @@ public class SignInFragment extends BaseFragment {
 
                         getActivity().finish();
 
-                    }
-                    else {
+                    } else {
 
                         showErrorAlert("This user has been disabled by admin.");
                     }
+
                 } else {
 
                     FirebaseAuth.getInstance().signOut();

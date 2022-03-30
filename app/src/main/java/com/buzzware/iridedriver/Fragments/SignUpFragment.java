@@ -114,6 +114,8 @@ public class SignUpFragment extends BaseFragment {
             user.homeAddress = "";
             user.workAddress = "";
             user.city = "";
+//            user.isVerified = false;
+            user.isActive = true;
             user.email = mBinding.emailET.getText().toString();
             user.firstName = mBinding.fNameET.getText().toString();
             user.lastName = mBinding.lNameET.getText().toString();

@@ -75,7 +75,7 @@ public class WalletFragment extends BaseFragment {
 
         mBinding.addAccountBt.setOnClickListener(v -> {
 
-            getMyProfile();
+//            getMyProfile();
 
         });
 
@@ -96,118 +96,12 @@ public class WalletFragment extends BaseFragment {
 
                         if (user != null) {
 
-                            if (shouldOpenUrl(user)) {
-
-                                FirebaseInstances.usersCollection.document(getUserId())
-                                        .update("stripeStatus", "await")
-                                        .addOnCompleteListener(task1 -> getLink(user));
-
-
-                            }
-
                         }
 
                     }
 
                 });
 
-    }
-
-    private void getLink(User user) {
-
-        JSONObject jsonObject = new JSONObject();
-
-        try {
-            jsonObject.put("account_id", user.stripeaccount_id);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObject.toString());
-
-        Controller.getApiClient(Controller.Base_Url_CLoudFunctions)
-                .getStripeLink(body)
-                .enqueue(new Callback<String>() {
-                    @Override
-                    public void onResponse(Call<String> call, Response<String> response) {
-
-                        if (response.body() != null) {
-
-                            UrlResponse urlResponse = null;
-                            try {
-
-                                urlResponse = new Gson().fromJson(response.body(), UrlResponse.class);
-
-                            } catch (Exception e) {
-
-                                e.printStackTrace();
-                            }
-
-                            if(urlResponse != null && urlResponse.url != null) {
-
-                                user.stripeaccountlinkurl = urlResponse.url;
-
-                                openWebViewActivity(user);
-
-                            }
-
-                        }
-
-                        Log.d(TAG, "onResponse: " + response.body());
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<String> call, Throwable t) {
-
-                    }
-                });
-
-    }
-
-    ActivityResultLauncher<Intent> launchSomeActivity = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> FirebaseInstances.usersCollection.document(getUserId())
-                    .update("stripeStatus", "pending"));
-
-    public void openWebViewActivity(User user) {
-
-        launchSomeActivity.launch(new Intent(getActivity(), WebViewActivity.class)
-
-                .putExtra("url", user.stripeaccountlinkurl));
-    }
-
-    private Boolean shouldOpenUrl(User user) {
-
-        if (user.stripeaccount_id != null && !user.stripeaccount_id.isEmpty()) {
-
-            if (user.stripeStatus == null)
-
-                return true;
-
-            if (!user.stripeStatus.equalsIgnoreCase("approved") && !user.stripeStatus.equalsIgnoreCase("pending")) {
-
-                return true;
-
-            } else {
-
-                if (user.stripeStatus.equalsIgnoreCase("approved"))
-
-                    showErrorAlert("Your Account is Already Approved");
-
-                if (user.stripeStatus.equalsIgnoreCase("pending"))
-
-                    showErrorAlert("Please wait, Your account details is under observation. It will take some time to get approved.");
-
-                return false;
-
-            }
-
-        }
-
-        showErrorAlert("Please wait for stripe setup");
-
-        return false;
     }
 
     private void getRides() {

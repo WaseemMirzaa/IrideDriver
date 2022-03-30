@@ -38,6 +38,7 @@ public class PromotionObj implements Parcelable {
         noOfTrips = in.readInt();
         title = in.readString();
         message = in.readString();
+        url = in.readString();
         rideModels = in.createTypedArrayList(RideModel.CREATOR);
     }
 
@@ -112,6 +113,7 @@ public class PromotionObj implements Parcelable {
         dest.writeInt(noOfTrips);
         dest.writeString(title);
         dest.writeString(message);
+        dest.writeString(url);
         dest.writeTypedList(rideModels);
     }
 }

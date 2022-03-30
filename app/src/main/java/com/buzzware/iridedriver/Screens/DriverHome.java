@@ -90,8 +90,6 @@ public class DriverHome extends BaseActivity implements OnMapReadyCallback {
 
         getExtrasFromIntent();
 
-        checkPermissionsAndInit();
-
         setListeners();
 
         setOrderListener();
@@ -276,9 +274,10 @@ public class DriverHome extends BaseActivity implements OnMapReadyCallback {
                             if (user.stripeaccount_id != null)
 
                                 createPayout(user.stripeaccount_id);
+
                             else {
 
-                                showErrorAlert("Please Add Your Payout Account First.");
+                                showErrorAlert("Please wait for admin approval.");
                             }
                         }
                     }
@@ -1004,7 +1003,7 @@ public class DriverHome extends BaseActivity implements OnMapReadyCallback {
 
         setRideButton();
 
-        String[] permissions = {Manifest.permission.ACCESS_BACKGROUND_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
+        String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
 
         Permissions.check(DriverHome.this/*context*/, permissions, null, null, new PermissionHandler() {
             @Override
@@ -1014,12 +1013,12 @@ public class DriverHome extends BaseActivity implements OnMapReadyCallback {
 
                 location = new SimpleLocation(DriverHome.this);
 
-                if (!location.hasLocationEnabled()) {
-                    // ask the user to enable location access
-                    showEnableLocationDialog("Please enable location from setting in order to proceed to the app");
-
-                    return;
-                }
+//                if (!location.hasLocationEnabled()) {
+//                    // ask the user to enable location access
+//                    showEnableLocationDialog("Please enable location from setting in order to proceed to the app");
+//
+//                    return;
+//                }
 
                 location.beginUpdates();
 
@@ -1034,7 +1033,7 @@ public class DriverHome extends BaseActivity implements OnMapReadyCallback {
 
                 hasLocationPermissions = false;
 
-                showPermissionsDeniedError("Please enable location permissions from setting in order to proceed to the app.");
+//                showPermissionsDeniedError("Please enable location permissions from setting in order to proceed to the app.");
 
             }
         });
@@ -1045,7 +1044,8 @@ public class DriverHome extends BaseActivity implements OnMapReadyCallback {
     protected void onResume() {
         super.onResume();
 
-        checkIfPermissionsGranted();
+        checkPermissionsAndInit();
+
 
     }
 
@@ -1053,7 +1053,7 @@ public class DriverHome extends BaseActivity implements OnMapReadyCallback {
 
         if (ContextCompat.checkSelfPermission(DriverHome.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(DriverHome.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(DriverHome.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ) {
 
             stopLocationService();
 

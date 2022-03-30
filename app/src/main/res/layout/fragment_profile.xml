@@ -171,6 +171,7 @@
             </LinearLayout>
 
             <Button
+                android:visibility="invisible"
                 android:id="@+id/editPaymentInfo"
                 android:layout_marginEnd="@dimen/_20sdp"
                 android:layout_marginStart="@dimen/_20sdp"

@@ -11,7 +11,7 @@
             android:id="@+id/image"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_180sdp"
-            android:src="@drawable/dummy_two"
+            android:src="@drawable/logo_black"
             android:adjustViewBounds="true">
             <LinearLayout
                 android:layout_centerInParent="true"
@@ -63,11 +63,12 @@
                         android:fontFamily="@font/gibson_semibd"
                         android:textSize="@dimen/_11sdp"
                         android:textColor="@color/white"
-                        android:text="Withdraw Now"/>
+                        android:text="@string/withdraw_now"/>
                 </RelativeLayout>
             </LinearLayout>
 
             <Button
+                android:visibility="invisible"
                 android:id="@+id/addAccountBt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

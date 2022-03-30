@@ -60,15 +60,15 @@
                 <!--                this is dummy layout use recyclerview-->
 
                 <RelativeLayout
-                    android:elevation="@dimen/_8sdp"
-                    android:background="@drawable/rounded_corner_white"
-                    android:layout_marginBottom="@dimen/_20sdp"
+                    android:id="@+id/bottomLay"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_alignParentBottom="true"
                     android:layout_marginLeft="@dimen/_20sdp"
                     android:layout_marginRight="@dimen/_20sdp"
-                    android:id="@+id/bottomLay"
-                    android:layout_alignParentBottom="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_40sdp">
+                    android:layout_marginBottom="@dimen/_20sdp"
+                    android:background="@drawable/rounded_corner_white"
+                    android:elevation="@dimen/_8sdp">
 
                     <EditText
                         android:id="@+id/messageET"
@@ -84,16 +84,17 @@
                         android:textStyle="normal" />
 
                     <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_alignParentRight="true"
                         android:layout_width="@dimen/_50sdp"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:layout_alignParentRight="true"
+                        android:orientation="horizontal">
+
                         <View
                             android:layout_width="0.5dp"
                             android:layout_height="match_parent"
                             android:layout_marginTop="@dimen/_10sdp"
                             android:layout_marginBottom="@dimen/_10sdp"
-                            android:background="@color/gray_light"/>
+                            android:background="@color/gray_light" />
 
                         <RelativeLayout
                             android:id="@+id/sendBtn"

@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.buzzware.iridedriver.Fragments.RideType;
@@ -72,28 +74,17 @@ public class ScheduledRidesAdapter extends RecyclerView.Adapter<ScheduledRidesAd
 
         }
 
-        holder.timeTV.setText("Date: " + getDate(ride.bookingDate) + "\nTime: " + getTime(ride.scheduleTimeStamp));
+        holder.timeTV.setText(getDateTime(ride.scheduleTimeStamp));
 
 //        holder.acceptNowBt.setVisibility(View.GONE);
 
     }
 
-    private String getTime(long bookingDate) {
+    private String getDateTime(long bookingDate) {
 
         Date date = new Date(bookingDate);
 
-        SimpleDateFormat formatter = new SimpleDateFormat("HH:MM");
-
-        return formatter.format(date);
-
-    }
-
-
-    private String getDate(long bookingDate) {
-
-        Date date = new Date(bookingDate);
-
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("MMM dd - HH:mm a");
 
         return formatter.format(date);
 
@@ -132,8 +123,8 @@ public class ScheduledRidesAdapter extends RecyclerView.Adapter<ScheduledRidesAd
 
 //        public TextView acceptTV;
 
-        public RelativeLayout acceptNowBt;
-        public RelativeLayout relativeLayout;
+//        public RelativeLayout acceptNowBt;
+        public ConstraintLayout relativeLayout;
         public View dropOffVw;
         public RelativeLayout dropOffLL;
         public TextView dropOffTv;
@@ -152,9 +143,9 @@ public class ScheduledRidesAdapter extends RecyclerView.Adapter<ScheduledRidesAd
 
             destinationAddressTV = itemView.findViewById(R.id.destinationAddressTV);
 
-            acceptNowBt = itemView.findViewById(R.id.acceptNowBt);
+//            acceptNowBt = itemView.findViewById(R.id.actionTV);
 
-            relativeLayout = (RelativeLayout) itemView.findViewById(R.id.relativeLayout);
+            relativeLayout = (ConstraintLayout) itemView.findViewById(R.id.relativeLayout);
             dropOffVw = (View) itemView.findViewById(R.id.dropOffVw);
             dropOffLL = (RelativeLayout) itemView.findViewById(R.id.dropOffLL);
             dropOffTv = (TextView) itemView.findViewById(R.id.dropOffTv);

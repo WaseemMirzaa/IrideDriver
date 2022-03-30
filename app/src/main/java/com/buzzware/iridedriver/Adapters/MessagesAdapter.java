@@ -56,7 +56,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
             //my message layout
 
             Glide.with(mContext).load(myImageUrl)
-                    .apply(new RequestOptions().centerCrop().placeholder(R.drawable.dummy_girl))
+                    .apply(new RequestOptions().centerCrop().placeholder(R.drawable.logo_black))
                     .into(viewHolder.binding.myMessageLay.userImageIV);
 
             viewHolder.binding.othersMessageLay.getRoot().setVisibility(View.GONE);
@@ -77,7 +77,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
             ///other message layout
 
             Glide.with(mContext).load(otherUserImageUrl)
-                    .apply(new RequestOptions().centerCrop().placeholder(R.drawable.dummy_girl))
+                    .apply(new RequestOptions().centerCrop().placeholder(R.drawable.logo_black))
                     .into(viewHolder.binding.othersMessageLay.userImageIV);
 
             viewHolder.binding.myMessageLay.getRoot().setVisibility(View.GONE);

@@ -25,8 +25,8 @@ public class PaymentsAdapter extends RecyclerView.Adapter<PaymentsAdapter.Paymen
 
     List<RideWithPayoutModel> list;
 
-    public PaymentsAdapter(Context context, List<RideWithPayoutModel
-            > list) {
+    public PaymentsAdapter(Context context, List<RideWithPayoutModel>
+            list) {
 
         this.context = context;
 
@@ -78,11 +78,11 @@ public class PaymentsAdapter extends RecyclerView.Adapter<PaymentsAdapter.Paymen
 
             if (ride.payout != null)
 
-                binding.statusTV.setText(getPayoutStatus(ride.payout.status));
+                binding.actionTV.setText(getPayoutStatus(ride.payout.status));
 
             else
 
-                binding.statusTV.setText("Pending");
+                binding.actionTV.setText("Pending");
 
             if (ride.price != null)
 
@@ -138,17 +138,16 @@ public class PaymentsAdapter extends RecyclerView.Adapter<PaymentsAdapter.Paymen
             return "";
         }
 
+
         private String getDateTime(long bookingDate) {
 
             Date date = new Date(bookingDate);
 
-            @SuppressLint("SimpleDateFormat") SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-            @SuppressLint("SimpleDateFormat") SimpleDateFormat tf = new SimpleDateFormat(" HH:mm");
+            SimpleDateFormat formatter = new SimpleDateFormat("MMM dd - HH:mm a");
 
-            return "Date: " + df.format(date) + "\nTime: " + tf.format(date);
+            return formatter.format(date);
 
         }
-
         private String getPickUpAddress(RideWithPayoutModel
                                                 ride) {
 

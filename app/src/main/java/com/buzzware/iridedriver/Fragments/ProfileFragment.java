@@ -36,6 +36,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.gson.Gson;
 import com.nabinbhandari.android.permissions.PermissionHandler;
 import com.nabinbhandari.android.permissions.Permissions;
@@ -45,6 +46,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.EventListener;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -94,72 +96,16 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     public void openWebViewActivity(User user) {
 
-        launchSomeActivity.launch(new Intent(getActivity(), WebViewActivity.class)
+//        launchSomeActivity.launch(new Intent(getActivity(), WebViewActivity.class)
 
-                .putExtra("url", user.stripeaccountlinkurl));
+//                .putExtra("url", user.stripeaccountlinkurl));
     }
 
-    private void getLink(User user) {
-
-        JSONObject jsonObject = new JSONObject();
-
-        try {
-
-            jsonObject.put("accid", user.stripeaccount_id);
-
-        } catch (JSONException e) {
-
-            e.printStackTrace();
-
-        }
-
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObject.toString());
-
-        Controller.getApiClient(Controller.Base_Url_CLoudFunctions)
-                .getLoginLink(body)
-                .enqueue(new Callback<String>() {
-                    @Override
-                    public void onResponse(Call<String> call, Response<String> response) {
-
-                        if (response.body() != null) {
-
-                            String url = null;
-                            try {
-
-                                JSONObject jsonObject1 = new JSONObject(response.body());
-
-                                url = jsonObject1.getString("response");
-
-                            } catch (Exception e) {
-
-                                e.printStackTrace();
-                            }
-
-                            if(url != null) {
-
-                                user.stripeaccountlinkurl = url;
-
-                                openWebViewActivity(user);
-
-                            }
-
-                        }
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<String> call, Throwable t) {
-
-                    }
-                });
-
-    }
-
-    private void checkPermissionsAndInit() {
+      private void checkPermissionsAndInit() {
 
 //        setRideButton();
 
-        String[] permissions = {Manifest.permission.ACCESS_BACKGROUND_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
+        String[] permissions = { Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
 
         Permissions.check(getActivity()/*context*/, permissions, null, null, new PermissionHandler() {
             @Override
@@ -262,7 +208,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
 //        EventBus.getDefault().register(this);
 
-        checkIfPermissionsGranted();
+//        checkPermissionsAndInit();
 
     }
 
@@ -282,14 +228,14 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
                         if (user != null) {
 
-                            if (shouldOpenUrl(user)) {
-
-                                FirebaseInstances.usersCollection.document(getUserId())
-                                        .update("stripeStatus", "await")
-                                        .addOnCompleteListener(task1 -> getLink(user));
-
-
-                            }
+//                            if (shouldOpenUrl(user)) {
+//
+//                                FirebaseInstances.usersCollection.document(getUserId())
+//                                        .update("stripeStatus", "await")
+//                                        .addOnCompleteListener(task1 -> getLink(user));
+//
+//
+//                            }
 
                         }
 
@@ -334,7 +280,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     private void setListener() {
 
         binding.editPaymentInfo.setOnClickListener(v -> {
-            getMyProfile();
+//            getMyProfile();
         });
 
         binding.editIcon.setOnClickListener(v->{
@@ -365,6 +311,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     }
 
+    ListenerRegistration snapshotListener;
+
     private void getCurrentUserData() {
 
         FirebaseUser user = mAuth.getCurrentUser();
@@ -373,7 +321,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
             DocumentReference reference = firebaseFirestore.collection("Users").document(user.getUid());
 
-            reference.addSnapshotListener((value, error) -> {
+            snapshotListener = reference.addSnapshotListener((value, error) -> {
 
                 User user1 = value.toObject(User.class);
 
@@ -387,7 +335,18 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        if(snapshotListener != null)
+            snapshotListener.remove();
+    }
+
     private void setUserData(User user) {
+
+        if(user == null)
+            return;
 
         if (user.image != null && !user.image.isEmpty()) {
             Glide.with(getContext()).load(user.image).apply(new RequestOptions().centerCrop()).into(binding.userImageIV);
@@ -425,7 +384,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ) {
 
             return;
         }

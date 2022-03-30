@@ -13,7 +13,7 @@
         <com.makeramen.roundedimageview.RoundedImageView
             android:layout_width="@dimen/_45sdp"
             android:layout_height="@dimen/_45sdp"
-            android:src="@drawable/dummy_girl"/>
+            android:src="@drawable/logo_black"/>
 
         <LinearLayout
             android:layout_marginLeft="10dp"

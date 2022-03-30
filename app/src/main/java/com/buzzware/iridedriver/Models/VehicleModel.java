@@ -43,8 +43,9 @@ public class VehicleModel implements Parcelable {
     @SerializedName("noofSeatbelts")
     public String noOfSeatBelts;
 
-    public String name;
+//    public String name;
     public String carType;
+    public String color;
 
     public VehicleModel() {
 
@@ -68,7 +69,8 @@ public class VehicleModel implements Parcelable {
         year = in.readString();
         noOfDoors = in.readString();
         noOfSeatBelts = in.readString();
-        name = in.readString();
+//        name = in.readString();
+        color = in.readString();
     }
 
     @Override
@@ -90,7 +92,8 @@ public class VehicleModel implements Parcelable {
         dest.writeString(year);
         dest.writeString(noOfDoors);
         dest.writeString(noOfSeatBelts);
-        dest.writeString(name);
+//        dest.writeString(name);
+        dest.writeString(color);
     }
 
     @Override
@@ -118,15 +121,15 @@ public class VehicleModel implements Parcelable {
 
         return id;
     }
-
-    public String getName() {
-
-        if (name == null)
-
-            return "";
-
-        return name;
-    }
+//
+//    public String getName() {
+//
+//        if (name == null)
+//
+//            return "";
+//
+//        return name;
+//    }
 
     public String getBackInCarUrl() {
 

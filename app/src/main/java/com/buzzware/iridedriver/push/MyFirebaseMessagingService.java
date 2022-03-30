@@ -32,7 +32,8 @@ import java.util.Map;
  * Created by prabh on 25-10-2017.
  */
 
-public class MyFirebaseMessagingService extends FirebaseMessagingService {
+public class
+MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "FCM Service";
 
@@ -83,8 +84,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         if (remoteMessage.getNotification().getTitle() != null && remoteMessage.getNotification().getBody() != null) {
 
-            sendUserNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), status, id);
 
+            if (remoteMessage.getData().size() > 0) {
+
+                String title = remoteMessage.getData().get("title");
+                String text = remoteMessage.getData().get("text");
+
+                if(title == null)
+                    title = remoteMessage.getNotification().getTitle();
+                if(text == null)
+                    text = remoteMessage.getNotification().getBody();
+
+                sendUserNotification(title, text,status,id);
+            }
         }
 
     }
@@ -100,8 +112,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
+        if (title.toLowerCase().contains("promo")) {
 
-        if (title.equalsIgnoreCase("New Reminder")) {
+            intent = new Intent(context, Home.class);
+
+            intent.putExtra("action", "promotionFragment");
+            intent.putExtra("newRemainder", true);
+        } else if (title.equalsIgnoreCase("New Reminder")) {
 
             intent = new Intent(context, Home.class);
 
@@ -153,12 +170,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, CHANNEL_ID);
         notificationBuilder.setContentTitle(title);
         notificationBuilder.setAutoCancel(true);
+        notificationBuilder.setSmallIcon(R.mipmap.ic_launcher);
         notificationBuilder.setPriority(Notification.PRIORITY_HIGH);
         notificationBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
         notificationBuilder.setContentIntent(pendingIntent);
         notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(mess));
         notificationBuilder.setContentText(mess);
-        notificationBuilder.setDefaults(Notification.DEFAULT_VIBRATE);
+        notificationBuilder.setDefaults(Notification.DEFAULT_ALL);
         notificationBuilder.setSmallIcon(getNotificationIcon(notificationBuilder));
 
         NotificationManager notificationManager =
@@ -177,12 +195,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private int getNotificationIcon(NotificationCompat.Builder notificationBuilder) {
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            int color = 0x036085;
-//            notificationBuilder.setColor(color);
-
-//        }
         return R.mipmap.ic_launcher;
+
     }
 
 }

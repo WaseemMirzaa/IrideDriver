@@ -34,23 +34,12 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int i) {
+
         final ConversationModel conversationModel= list.get(i);
+
         viewHolder.binding.userNameTV.setText(conversationModel.getName());
+
         viewHolder.binding.lastMessageTV.setText(conversationModel.getLastMessage());
-//        if(!conversationModel.getImage().equals("null") && !conversationModel.getImage().equals("NULL") && !conversationModel.getImage().equals("")) {
-//            Picasso.with(context).load(conversationModel.getImage()).fit().into(viewHolder.binding.userImageIV, new Callback() {
-//                @Override
-//                public void onSuccess() {
-//                }
-//
-//                @Override
-//                public void onError() {
-//                    viewHolder.binding.userImageIV.setImageResource(R.drawable.dummy_girl);
-//                }
-//            });
-//        }else{
-//            viewHolder.binding.userImageIV.setImageResource(R.drawable.dummy_girl);
-//        }
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

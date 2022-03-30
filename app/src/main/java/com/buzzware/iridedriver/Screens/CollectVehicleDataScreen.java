@@ -87,25 +87,25 @@ public class CollectVehicleDataScreen extends BaseActivity {
 
                         Prices settings = task.getResult().toObject(Prices.class);
 
-                        if(settings == null)
+                        if (settings == null)
 
                             return;
 
-                        if(settings.iRide != null) {
+                        if (settings.iRide != null) {
 
                             names.add(settings.iRide);
 
                         }
 
-                        if(settings.iRideLux != null )
+                        if (settings.iRideLux != null)
 
                             names.add(settings.iRideLux);
 
-                        if(settings.iRidePlus != null)
+                        if (settings.iRidePlus != null)
 
                             names.add(settings.iRidePlus);
 
-                        binding.carTypeSp.setAdapter(new CustomSpinnerAdapter(getApplicationContext(),names));
+                        binding.carTypeSp.setAdapter(new CustomSpinnerAdapter(getApplicationContext(), names));
 
 
                     } else {
@@ -165,9 +165,9 @@ public class CollectVehicleDataScreen extends BaseActivity {
 
         String isVerified = "notApproved";
 
-        if(validateVerification()) {
+        if (validateVerification()) {
 
-            isVerified = "Approved";
+            isVerified = "approved";
 
         }
 
@@ -175,7 +175,7 @@ public class CollectVehicleDataScreen extends BaseActivity {
 
         map.put("vehicleId", vehicle.id);
 
-        map.put("isVerified",isVerified);
+        map.put("isVerified", isVerified);
 
         FirebaseInstances.usersCollection
                 .document(getUserId())
@@ -211,7 +211,9 @@ public class CollectVehicleDataScreen extends BaseActivity {
 
         vehicle.noOfSeatBelts = binding.seatBeltsET.getText().toString();
 
-        vehicle.name = binding.vehicleNameET.getText().toString();
+//        vehicle.name = binding.vehicleNameET.getText().toString();
+
+        vehicle.color = binding.colorET.getText().toString();
 
         vehicle.carType = getCarType();
 
@@ -221,7 +223,7 @@ public class CollectVehicleDataScreen extends BaseActivity {
 
     private String getCarType() {
 
-        int pos =  binding.carTypeSp.getSelectedItemPosition();
+        int pos = binding.carTypeSp.getSelectedItemPosition();
 
         if (pos == 0) {
 
@@ -240,9 +242,9 @@ public class CollectVehicleDataScreen extends BaseActivity {
 
     private boolean validate() {
 
-        if (binding.vehicleNameET.getText().toString().isEmpty()) {
+        if (binding.colorET.getText().toString().isEmpty()) {
 
-            showErrorAlert("Vehicle Name Required");
+            showErrorAlert("Vehicle Color Required");
 
             return false;
         }
@@ -336,7 +338,7 @@ public class CollectVehicleDataScreen extends BaseActivity {
 
     private void setData() {
 
-        binding.vehicleNameET.setText(vehicle.getName());
+//        binding.vehicleNameET.setText(vehicle.getName());
 
         binding.yearET.setText(vehicle.getYear());
 
@@ -349,6 +351,10 @@ public class CollectVehicleDataScreen extends BaseActivity {
         binding.tagNumberET.setText(vehicle.getTagNumber());
 
         binding.modelET.setText(vehicle.getModel());
+
+        if (vehicle.color != null)
+
+            binding.colorET.setText(vehicle.color);
     }
 
     Boolean validateVerification() {
@@ -406,12 +412,16 @@ public class CollectVehicleDataScreen extends BaseActivity {
             return false;
 
         }
+//
+//        if (vehicle.getName().isEmpty()) {
+//
+//            return false;
+//
+//        }
 
-        if (vehicle.getName().isEmpty()) {
+        if(vehicle.color == null)
 
             return false;
-
-        }
 
         if (vehicle.getYear().isEmpty()) {
 

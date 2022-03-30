@@ -88,6 +88,46 @@ public class FirebaseRequests {
                 });
     }
 
+    public void GetConversationList(ConversationResponseCallback callback, String conversationId, String uID, Context context) {
+
+        final ArrayList<LastMessageModel> list = new ArrayList<>();
+
+        firebaseFirestore
+                .collection("Chat")
+                .whereEqualTo("participants." + uID, true)
+                .get()
+                .addOnCompleteListener(task -> {
+
+                    if (task.isSuccessful()) {
+
+                        for (DocumentSnapshot snapshot : task.getResult().getDocuments()) {
+
+                            LastMessageModel lastMessageModel = snapshot.get("lastMessage", LastMessageModel.class);
+
+                            lastMessageModel.conversationId = snapshot.getId();
+
+                            if (lastMessageModel.conversationId.equalsIgnoreCase(conversationId))
+
+                                list.add(lastMessageModel);
+                        }
+
+                        callback.onResponse(list, false, null);
+
+                    } else {
+
+                        if (task.getException() == null)
+
+                            return;
+
+                        if ((task.getException().getLocalizedMessage() != null))
+
+                            callback.onResponse(null, true, task.getException().getLocalizedMessage());
+
+                    }
+
+                });
+    }
+
 
 //    void getUsersList()
 

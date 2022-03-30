@@ -12,18 +12,29 @@ android {
         applicationId "com.buzzware.iridedriver"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        versionCode 19
+        versionName "19.0"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         
     }
 
+    lintOptions {
+
+        checkReleaseBuilds false
+
+    }
+
     buildTypes {
+
         release {
+
             minifyEnabled false
+
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
         }
+
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -38,6 +49,8 @@ android {
 dependencies {
 
     implementation 'com.applandeo:material-calendar-view:1.7.0'
+
+    implementation 'com.firebase:geofire-android-common:3.1.0'
 
     //image downloading
     implementation 'com.github.bumptech.glide:glide:4.12.0'

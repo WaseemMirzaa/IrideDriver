@@ -39,6 +39,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:autoLink="all"
+                    android:textColorLink="@color/black"
                     android:fontFamily="@font/gibson_regular"
                     android:text="Let s navigate the world TOGETHER\n\n
 To build an amazing company, you first have to start with amazing people. iRide is constantly creating diverse teams of smart, passionate people who feel comfortable being themselves, and are motivated by our shared goal — improving people’s lives with the world’s best transportation and technology.\n\n
@@ -49,9 +50,10 @@ Our mission is to provide affordable top of the line\n\n
 transportation services, package delivery, and scooter
 rental- for everyone, everywhere.\n\n
 “We are all going somewhere, with Ride, we'll get there together.” DeMario Chris Lee, CEO\n\n
-Customer service (305) 890-6502'\n\n
+Customer service  786-980-2484'\n\n
 Email: Info@iridecompany.com\n\n
 www.iridecompany.com\n\n
+Address: 218 NW 24th St. 2nd and third floors. Miami, FL 33127
 "
                     android:textAlignment="inherit"
                     android:textColor="@color/black"

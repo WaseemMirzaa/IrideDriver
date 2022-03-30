@@ -86,8 +86,6 @@ public class DriverHome extends BaseFragment {
 
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_driver_home, container, false);
 
-        checkPermissionsAndInit();
-
         mBinding.backIV.setOnClickListener(v -> Home.OpenCloseDrawer());
 
         mBinding.homeMapView.onCreate(savedInstanceState);
@@ -101,8 +99,7 @@ public class DriverHome extends BaseFragment {
     private void checkIfPermissionsGranted() {
 
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             return;
         }
@@ -137,8 +134,7 @@ public class DriverHome extends BaseFragment {
     void checkPermissionsAndGetRide() {
 
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             showErrorAlert("Please enable location permissions first.");
             return;
@@ -149,7 +145,7 @@ public class DriverHome extends BaseFragment {
 
     private void checkPermissionsAndInit() {
 
-        String[] permissions = {Manifest.permission.ACCESS_BACKGROUND_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
+        String[] permissions = { Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
 
         Permissions.check(getActivity()/*context*/, permissions, null, null, new PermissionHandler() {
             @Override
@@ -200,7 +196,7 @@ public class DriverHome extends BaseFragment {
         EventBus.getDefault().register(this);
 
         mBinding.homeMapView.onResume();
-        checkIfPermissionsGranted();
+        checkPermissionsAndInit();
 
     }
 
@@ -459,7 +455,7 @@ public class DriverHome extends BaseFragment {
 
                             else {
 
-                                showErrorAlert("Please Add Your Payout Account First.");
+                                showErrorAlert("Please wait for admin approval.");
                             }
                         }
                     }
@@ -524,7 +520,7 @@ public class DriverHome extends BaseFragment {
     private void moveToOnTrip(RideModel rideModel) {
 
 
-        String[] permissions = {Manifest.permission.ACCESS_BACKGROUND_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
+        String[] permissions = { Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
 
         Permissions.check(getActivity()/*context*/, permissions, null, null, new PermissionHandler() {
             @Override

@@ -17,7 +17,7 @@
             android:layout_width="@dimen/_40sdp"
             android:visibility="gone"
             android:layout_height="@dimen/_40sdp"
-            android:src="@drawable/dummy_girl"/>
+            android:src="@drawable/logo_black"/>
 
         <LinearLayout
             android:layout_marginLeft="@dimen/_10sdp"

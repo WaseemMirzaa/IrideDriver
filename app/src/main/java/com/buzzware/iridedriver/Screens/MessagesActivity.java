@@ -25,6 +25,7 @@ import com.buzzware.iridedriver.utils.AppConstants;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -96,11 +97,11 @@ public class MessagesActivity extends BaseActivity {
 
                         RideModel rideModel = value.toObject(RideModel.class);
 
-                        if(rideModel != null) {
+                        if (rideModel != null) {
 
                             rideModel.id = value.getId();
 
-                            if (AppConstants.RideStatus.RE_BOOKED.equalsIgnoreCase(rideModel.status)||AppConstants.RideStatus.CANCELLED.equalsIgnoreCase(rideModel.status) ||
+                            if (AppConstants.RideStatus.RE_BOOKED.equalsIgnoreCase(rideModel.status) || AppConstants.RideStatus.CANCELLED.equalsIgnoreCase(rideModel.status) ||
                                     AppConstants.RideStatus.RIDE_COMPLETED.equalsIgnoreCase(rideModel.status) ||
                                     AppConstants.RideStatus.DISPUTE.equalsIgnoreCase(rideModel.status) ||
                                     AppConstants.RideStatus.DISPUTED.equalsIgnoreCase(rideModel.status) ||
@@ -232,7 +233,10 @@ public class MessagesActivity extends BaseActivity {
 
                 conversationID = getIntent().getStringExtra("conversationID");
 
-                getConversation(getIntent().getStringExtra("conversationID"));
+                if (isFromNew.equals("admin"))
+                    getConversation(getIntent().getStringExtra("conversationID"), FirebaseInstances.adminChatCollection);
+                else
+                    getConversation(getIntent().getStringExtra("conversationID"), FirebaseInstances.chatCollection);
 
             } else {
 
@@ -246,6 +250,10 @@ public class MessagesActivity extends BaseActivity {
 
                 conversationID = UUID.randomUUID().toString();
 
+                if (getIntent().getStringExtra("conversationID") != null)
+
+                    conversationID = getIntent().getStringExtra("conversationID");
+
                 checkAlreadyHaveChatOrNot();
 
             }
@@ -254,16 +262,16 @@ public class MessagesActivity extends BaseActivity {
 
     }
 
-    private void getConversation(String conversationID) {
+    private void getConversation(String conversationID, CollectionReference reference) {
 
-        FirebaseInstances.chatCollection.document(conversationID)
+        reference.document(conversationID)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.getResult() != null) {
 
                         if (task.getResult() != null) {
 
-                            LastMessageModel lastMessageModel = task.getResult().get("lastMessage",LastMessageModel.class);
+                            LastMessageModel lastMessageModel = task.getResult().get("lastMessage", LastMessageModel.class);
 
                             if (lastMessageModel != null) {
 
@@ -299,7 +307,7 @@ public class MessagesActivity extends BaseActivity {
 
     private void getListToCheck() {
 
-        firebaseRequests.GetConversationList(callbackCheck, mAuth.getCurrentUser().getUid(), MessagesActivity.this);
+        firebaseRequests.GetConversationList(callbackCheck, conversationID, mAuth.getCurrentUser().getUid(), MessagesActivity.this);
 
     }
 
@@ -311,16 +319,16 @@ public class MessagesActivity extends BaseActivity {
 
                 for (int i = 0; i < list.size(); i++) {
 
-                    if (list.get(i).getToID().equals(selectedUserId) || list.get(i).getFromID().equals(selectedUserId)) {
+                    if (list.get(i).getToID() != null && list.get(i).getFromID() != null)
 
-                        conversationID = list.get(i).conversationId;
+                        if (list.get(i).getToID().equals(selectedUserId) || list.get(i).getFromID().equals(selectedUserId)) {
 
-                        isFromNew = "false";
+                            isFromNew = "false";
 
-                        getMyImage();
+                            getMyImage();
 
-                        return;
-                    }
+                            return;
+                        }
                 }
             }
 
@@ -404,7 +412,7 @@ public class MessagesActivity extends BaseActivity {
 
             lasthashMap.put("participants", participents);
 
-            conversationID = UUID.randomUUID().toString();
+//            conversationID = UUID.randomUUID().toString();
 
             firebaseFirestore.collection("Chat").document(conversationID).collection("Conversations").document(String.valueOf(currentTimeStamp)).set(sendConversationModel);
             firebaseFirestore.collection("Chat").document(conversationID).set(lasthashMap);
@@ -448,6 +456,8 @@ public class MessagesActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
 
+        if (eventListener != null)
+            eventListener.remove();
         firebaseRequests.deInit();
 
     }

@@ -108,6 +108,8 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
                  customer = task.getResult().toObject(User.class);
 
+                 customer.id = task.getResult().getId();
+
                 Glide.with(OnTrip.this)
                         .load(customer.image)
                         .into(mBinding.userPic);
@@ -116,6 +118,15 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
                 mBinding.ratingTV.setText("");
 
+                mBinding.msgIV.setOnClickListener(v -> startChat(customer));
+
+                mBinding.callIV.setOnClickListener(v -> {
+
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    intent.setData(Uri.parse("tel:" + customer.phoneNumber));
+                    startActivity(intent);
+
+                });
             }
 
             setOrderListener();
@@ -124,6 +135,18 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
     }
 
+
+    private void startChat(User user) {
+
+        Intent intent = new Intent(OnTrip.this, MessagesActivity.class);
+        intent.putExtra("conversationID", rideModel.id);
+        intent.putExtra("rideID", rideModel.id);
+        intent.putExtra("selectedUserID", user.id);
+        intent.putExtra("selectedUserName", user.firstName);
+        intent.putExtra("checkFrom", "true");
+        startActivity(intent);
+
+    }
     private void setOrderListener() {
 
         FirebaseFirestore.getInstance().collection("Bookings")
@@ -148,6 +171,9 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
                             FirebaseInstances.usersCollection.document(getUserId())
                                     .update("isActive", true);
 
+                            FirebaseInstances.chatCollection.document(rideModel.id)
+                                    .delete();
+
                             Toast.makeText(this, "Ride Cancelled", Toast.LENGTH_SHORT).show();
 
                             startActivity(new Intent(OnTrip.this, Home.class)
@@ -161,6 +187,9 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
                             Toast.makeText(this, "Ride Cancelled", Toast.LENGTH_SHORT).show();
 
+                            FirebaseInstances.chatCollection.document(rideModel.id)
+                                    .delete();
+
                             startActivity(new Intent(OnTrip.this, Home.class)
                                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
                             finish();
@@ -171,6 +200,9 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
                                     .update("isActive", true);
 
                             Toast.makeText(this, "Ride Cancelled", Toast.LENGTH_SHORT).show();
+
+                            FirebaseInstances.chatCollection.document(rideModel.id)
+                                    .delete();
 
                             startActivity(new Intent(OnTrip.this, Home.class)
                                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
@@ -183,6 +215,9 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
                             Toast.makeText(this, "Ride Completed", Toast.LENGTH_SHORT).show();
 
+                            FirebaseInstances.chatCollection.document(rideModel.id)
+                                    .delete();
+
                             startActivity(new Intent(OnTrip.this, Home.class)
                                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
                             finish();
@@ -193,6 +228,9 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
                                     .update("isActive", true);
 
                             Toast.makeText(this, "Order Rated", Toast.LENGTH_SHORT).show();
+
+                            FirebaseInstances.chatCollection.document(rideModel.id)
+                                    .delete();
 
                             startActivity(new Intent(OnTrip.this, Home.class)
                                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
@@ -1034,7 +1072,7 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
         setRideButton();
 
-        String[] permissions = {Manifest.permission.ACCESS_BACKGROUND_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
+        String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
 
         Permissions.check(OnTrip.this/*context*/, permissions, null, null, new PermissionHandler() {
             @Override
@@ -1075,7 +1113,7 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
     protected void onResume() {
         super.onResume();
 
-        checkIfPermissionsGranted();
+//        checkIfPermissionsGranted();
 
     }
 
@@ -1083,7 +1121,7 @@ public class OnTrip extends BaseActivity implements OnMapReadyCallback {
 
         if (ContextCompat.checkSelfPermission(OnTrip.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(OnTrip.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(OnTrip.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ) {
 
             stopLocationService();
 

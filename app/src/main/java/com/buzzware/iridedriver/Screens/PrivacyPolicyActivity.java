@@ -27,7 +27,7 @@ public class PrivacyPolicyActivity extends BaseActivity {
         binding=ActivityPrivacyPolicyBinding.inflate(getLayoutInflater());
 
         setContentView(binding.getRoot());
-
+        binding.wbVw.loadUrl("https://iridecompany.com/iridego-drivers-privacy-policy/");
         setView();
         setListener();
 
